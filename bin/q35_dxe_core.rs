@@ -22,6 +22,8 @@ use uefi_sdk::{log::Format, serial::uart::Uart16550};
 extern crate alloc;
 use alloc::vec;
 
+use performance::Performance;
+
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     log::error!("{}", info);
@@ -85,6 +87,7 @@ pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
         .with_component(uefi_sdk_services::sw_mmi_manager::SwMmiManager::new())
         .with_component(uefi_sdk_services::mm_communicator::MmCommunicator::new())
         .with_component(q35_services::mm_test::QemuQ35MmTest::new())
+        .with_component(Performance)
         .start()
         .unwrap();
 

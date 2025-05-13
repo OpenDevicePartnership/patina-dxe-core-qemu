@@ -19,6 +19,7 @@ name = "qemu_resources"
 path = "src/lib.rs"
 
 [dependencies]
+patina_performance = { path = "D:\\Repositories\\patina\\components\\performance" }
 adv_logger = {version = "15", registry = "patina-fw" }
 dxe_core = { version = "15", registry = "patina-fw" }
 log = { version = "^0.4", default-features = false, features = [
