@@ -141,8 +141,8 @@ This should launch QEMU and waits for the initial break in:
 2. Set symbol and source paths:
 
    ```cmd
-   .sympath+ C:\r\patina-dxe-core-qemu\target\x86_64-unknown-uefi\debug
-   .srcpath+ C:\r\patina-dxe-core-qemu
+   .sympath+ <path to pdb dir> ; usually <cloned dir>\target\x86_64-unknown-uefi\debug\deps
+   .srcpath+ <path to src dir> ; usually <cloned dir>\src
    ```
 
 3. Initialize the UEFI debugger extension:
