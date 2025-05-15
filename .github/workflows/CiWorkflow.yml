@@ -1,0 +1,137 @@
+# @file CiWorkflow.yml
+#
+# A reusable CI workflow that runs basic CI tests and Rust CI tests.
+#
+##
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: BSD-2-Clause-Patent
+##
+name: CI
+
+on:
+  workflow_call:
+
+jobs:
+  basic_ci:
+    name: Basic Repo CI
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ✅ Checkout Repository ✅
+        uses: actions/checkout@v4
+
+      - name: 🔤 Check Spelling 🔤
+        uses: streetsidesoftware/cspell-action@v6
+        with:
+          treat_flagged_words_as_errors: true
+          strict: true
+          inline: warning
+          incremental_files_only: false
+
+      - name: Markdown Linting
+        uses: avto-dev/markdown-lint@v1.5.0
+        with:
+          config: .markdownlint.yml
+          args: "**/*.md"
+
+  run:
+    name: Rust CI
+
+    needs: [basic_ci]
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: ✅ Checkout Repository ✅
+        uses: actions/checkout@v4
+
+      - name: 🛠️ Download Rust Tools 🛠️
+        uses: opendevicepartnership/patina/.github/actions/rust-tool-cache@main
+
+      - name: Setup Cred Provider
+        if: runner.os == 'Linux'
+        run: |
+          mkdir -p ~/.cargo
+          cat <<EOF >> ~/.cargo/config.toml
+          [registry]
+          global-credential-providers = ["cargo:token"]
+          EOF
+
+      - name: Setup Cred Provider
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $path = "$HOME\.cargo\config.toml"
+          New-Item -ItemType Directory -Force -Path "$HOME\.cargo" | Out-Null
+          "[registry]" | Out-File -Append -FilePath $path
+          'global-credential-providers = ["cargo:token"]' | Out-File -Append -FilePath $path
+
+      - name: Run cargo-fmt
+        run: cargo fmt --all --check
+        env:
+          RUSTC_BOOTSTRAP: 1
+
+      - name: Run cargo-deny
+        run: cargo make deny
+
+      - name: Run cargo-clippy
+        run: cargo make clippy
+        env:
+          RUSTC_BOOTSTRAP: 1
+
+      - name: 🧪 Run Tests 🧪
+        run: cargo make coverage
+
+      - name: Test Documentation
+        run: cargo test --doc
+        env:
+          RUSTC_BOOTSTRAP: 1
+
+      - name: Build documentation
+        run: cargo make doc
+
+      - name: Upload Coverage Report
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: target/cobertura.xml
+          fail_ci_if_error: false # Expect it to fail while repository is private
+
+      - name: Build std
+        run: cargo make build
+
+      - name: Build Q35 Debug
+        run: cargo make q35
+
+      - name: Build SBSA Debug
+        run: cargo make sbsa
+
+      - name: Build Q35 Release
+        run: cargo make q35-release
+
+      - name: Build SBSA Release
+        run: cargo make sbsa-release
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ runner.os }}-ci-artifacts
+          path: |
+            Cargo.lock
+            target/cobertura.xml
+
+  finalize:
+    name: Finalize
+
+    needs: [run]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Finish
+        run: echo "CI Complete"

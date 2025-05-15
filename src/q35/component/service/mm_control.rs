@@ -8,7 +8,7 @@
 //!
 //! SPDX-License-Identifier: BSD-2-Clause-Patent
 //!
-#![cfg(any(all(target_os = "uefi", target_arch = "x86_64")))]
+#![cfg(all(target_os = "uefi", target_arch = "x86_64"))]
 
 use uefi_sdk::component::config::mm::MmCommunicationConfiguration;
 use uefi_sdk::component::service::platform_mm_control::PlatformMmControl;
