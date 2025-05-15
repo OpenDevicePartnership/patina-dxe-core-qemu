@@ -10,6 +10,9 @@ name: Publish
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - nuget_test
   release:
     types: [published]
 
@@ -33,14 +36,14 @@ jobs:
       - name: Build Q35 Debug
         run: cargo make q35
 
-      - name: Build SBSA Debug
-        run: cargo make sbsa
+      # - name: Build SBSA Debug
+      #   run: cargo make sbsa
 
-      - name: Build Q35 Release
-        run: cargo make q35-release
+      # - name: Build Q35 Release
+      #   run: cargo make q35-release
 
-      - name: Build SBSA Release
-        run: cargo make sbsa-release
+      # - name: Build SBSA Release
+      #   run: cargo make sbsa-release
 
       - name: Collect Binaries
         run: |
@@ -51,12 +54,12 @@ jobs:
           # Copy the binaries to the artifacts directory
           cp target/x86_64-unknown-uefi/debug/qemu_q35_dxe_core.efi artifacts/debug/qemu_q35_dxe_core.efi
           cp target/x86_64-unknown-uefi/debug/qemu_q35_dxe_core.pdb artifacts/debug/qemu_q35_dxe_core.pdb
-          cp target/x86_64-unknown-uefi/release/qemu_q35_dxe_core.efi artifacts/release/qemu_q35_dxe_core.efi
-          cp target/x86_64-unknown-uefi/release/qemu_q35_dxe_core.pdb artifacts/release/qemu_q35_dxe_core.pdb
-          cp target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.efi artifacts/debug/qemu_sbsa_dxe_core.efi
-          cp target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.pdb artifacts/debug/qemu_sbsa_dxe_core.pdb
-          cp target/aarch64-unknown-uefi/release/qemu_sbsa_dxe_core.efi artifacts/release/qemu_sbsa_dxe_core.efi
-          cp target/aarch64-unknown-uefi/release/qemu_sbsa_dxe_core.pdb artifacts/release/qemu_sbsa_dxe_core.pdb
+          # cp target/x86_64-unknown-uefi/release/qemu_q35_dxe_core.efi artifacts/release/qemu_q35_dxe_core.efi
+          # cp target/x86_64-unknown-uefi/release/qemu_q35_dxe_core.pdb artifacts/release/qemu_q35_dxe_core.pdb
+          # cp target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.efi artifacts/debug/qemu_sbsa_dxe_core.efi
+          # cp target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.pdb artifacts/debug/qemu_sbsa_dxe_core.pdb
+          # cp target/aarch64-unknown-uefi/release/qemu_sbsa_dxe_core.efi artifacts/release/qemu_sbsa_dxe_core.efi
+          # cp target/aarch64-unknown-uefi/release/qemu_sbsa_dxe_core.pdb artifacts/release/qemu_sbsa_dxe_core.pdb
 
       - name: Upload Binaries
         if: ${{ github.event_name != 'release' }}
@@ -106,7 +109,15 @@ jobs:
           configFilePath=$NUGET_PACKAGE_CONFIG_FILE_PATH
           customLicensePath=$GITHUB_WORKSPACE/$LICENSE_FILE_PATH
           inputFolderPath=$CONTENTS_PATH
-          packageVersion=$TAG
+          packageVersion=0.0.0
+          outputLogPath=NugetPackagingLog.txt
           pip install edk2-pytool-extensions
-          nuget-publish --Operation PackAndPush --ConfigFilePath "$configFilePath" --InputFolderPath "$inputFolderPath" --Version "$packageVersion" --ApiKey "$apiKey" --CustomLicensePath "$customLicensePath"
+          nuget-publish --Operation PackAndPush --OutputLog "$outputLogPath"  --ConfigFilePath "$configFilePath" --InputFolderPath "$inputFolderPath" --Version "$packageVersion" --ApiKey "$apiKey" --CustomLicensePath "$customLicensePath"
         shell: bash
+
+      - name: Upload Publish Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: NugetPackagingLog
+          path: NugetPackagingLog.txt
