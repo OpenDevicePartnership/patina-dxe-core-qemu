@@ -26,16 +26,22 @@ minWordLength: 4
 caseSensitive: false
 allowCompoundWords: true
 words:
-  - "acpi"
-  - "apmc"
-  - "depex"
-  - "dxecore"
-  - "mmio"
-  - "mmram"
-  - "pmbase"
-  - "pmcon"
-  - "pytool"
-  - "rustc"
-  - "sbsa"
-  - "supv"
-  - "uefi"
+  - acpi
+  - apmc
+  - depex
+  - dxecore
+  - keccak
+  - mdbook
+  - mmio
+  - mmram
+  - msuefi
+  - pdata
+  - pmbase
+  - pmcon
+  - pytool
+  - rustc
+  - sbsa
+  - supv
+  - uefi
+  - zbuild
+  - zunstable

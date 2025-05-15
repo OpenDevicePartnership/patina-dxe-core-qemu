@@ -15,10 +15,10 @@ Set the `RUSTC_BOOTSTRAP` environment variable to `1` in the terminal used for t
 
 ---
 
-- **QEMU Q35**: `cargo build_q35`
-  - Release build: `cargo build_q35 --profile=release`
-- **QEMU SBSA**: `cargo build_sbsa`
-  - Release build: `cargo build_sbsa --profile=release`
+- **QEMU Q35**: `cargo make q35`
+  - Release build: `cargo make q35-release`
+- **QEMU SBSA**: `cargo make sbsa`
+  - Release build: `cargo make sbsa-release`
 
 The binaries are produced in the `target` directory.
 

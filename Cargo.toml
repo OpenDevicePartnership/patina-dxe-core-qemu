@@ -2,6 +2,7 @@
 name = "qemu_dxe_core"
 version = "0.3.1"
 edition = "2021"
+license = "BSD-2-Clause-Patent"
 
 [[bin]]
 name = "qemu_q35_dxe_core"
@@ -18,17 +19,17 @@ name = "qemu_resources"
 path = "src/lib.rs"
 
 [dependencies]
-adv_logger = {version = "13" }
-dxe_core = { version = "13" }
+adv_logger = {version = "15", registry = "patina-fw" }
+dxe_core = { version = "15", registry = "patina-fw" }
 log = { version = "^0.4", default-features = false, features = [
     "release_max_level_warn",
 ] }
 r-efi = { version = "^5", default-features = false }
-sample_components = { version = "13" }
-section_extractor = { version = "14" }
-stacktrace = { version = "14" }
-uefi_debugger = { version = "14" }
-uefi_sdk = { version = "6" }
+sample_components = { version = "15", registry = "patina-fw" }
+section_extractor = { version = "15", registry = "patina-fw" }
+stacktrace = { version = "15", registry = "patina-fw" }
+uefi_debugger = { version = "15", registry = "patina-fw" }
+uefi_sdk = { version = "15", registry = "patina-fw" }
 x86_64 = { version = "=0.15.2", default-features = false, features = [
   "instructions"
 ], optional = true }
@@ -46,3 +47,5 @@ opt-level = 0
 default = []
 x64 = ["x86_64"]
 aarch64 = []
+doc = []
+std = []
