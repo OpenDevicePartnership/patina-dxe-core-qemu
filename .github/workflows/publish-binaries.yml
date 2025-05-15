@@ -85,7 +85,7 @@ jobs:
           release_tag="${tag_name#v}"
 
           echo "Release Tag: $release_tag"
-          echo "TAG=$release_tag" >> $GITHUB_OUTPUT
+          echo "TAG=$release_tag" >> $GITHUB_ENV
         shell: bash
 
       - name: Set up Python
@@ -108,5 +108,5 @@ jobs:
           inputFolderPath=$CONTENTS_PATH
           packageVersion=$TAG
           pip install edk2-pytool-extensions
-          nuget-publish --Operation PackAndPush --ConfigFilePath "$configFilePath" --InputFolderPath "$inputFolderPath" --Version "$packageVersion" --ApiKey "$NUGET_KEY" --CustomLicensePath "$customLicensePath"
+          nuget-publish --Operation PackAndPush --ConfigFilePath "$configFilePath" --InputFolderPath "$inputFolderPath" --Version "$packageVersion" --ApiKey "$apiKey" --CustomLicensePath "$customLicensePath"
         shell: bash
