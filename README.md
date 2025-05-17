@@ -11,22 +11,30 @@ To build an executable, this repo uses the same compiler setup steps that are us
 [readme.md file build section](https://github.com/OpenDevicePartnership/patina#Build).  Once the compiler is installed,
 executing cargo make will output a DXE core .EFI file that is a direct replacement for the dxe core driver in the
 [patina-qemu](https://github.com/OpenDevicePartnership/patina-qemu) UEFI build.
+
    - Q35 (x64) debug
+
       ```
       Compile Command:  'cargo make q35'
       Output File:      'target/x86_64-unknown-uefi/debug/qemu_q35_dxe_core.efi'
       ```
+      
    - Q35 (x64) release
+
       ```
       Compile Command:  'cargo make q35-release'
       Output File:      'target/x86_64-unknown-uefi/release/qemu_q35_dxe_core.efi'
       ```
+
    - SBSA (aarch64) debug
+
       ```
       Compile Command:  'cargo make sbsa'
       Output File:      'target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.efi'
       ```
+
    - SBSA (aarch64) release
+
       ```
       Compile Command:  'cargo make sbsa-release'
       Output File:      'target/aarch64-unknown-uefi/release/qemu_sbsa_dxe_core.efi'
