@@ -3,13 +3,13 @@
 ## Overview
 
 The main purpose of this repository is to integrate the Rust components and dependencies necessary to build a sample
-Rust DXE Core binary that can be used in QEMU UEFI firmware build.
+Rust DXE Core binary that can be used in a QEMU UEFI firmware build.
 
 Currently, two QEMU platforms are supported, Q35 for x64 architecture and SBSA for aarch64 architecture.
 
 To build an executable, this repo uses the same compiler setup steps that are used in the patina project
 [readme.md file build section](https://github.com/OpenDevicePartnership/patina#Build).  Once the compiler is installed,
-executing cargo make will output a DXE core .EFI file that is a direct replacement for the dxe core driver in the
+executing cargo make will create a DXE core .EFI file that is a replacement for the dxe core driver in the
 [patina-qemu](https://github.com/OpenDevicePartnership/patina-qemu) UEFI build.
 
 - Q35 (x64) debug
