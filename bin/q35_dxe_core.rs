@@ -52,7 +52,8 @@ static LOGGER: AdvancedLogger<Uart16550> = AdvancedLogger::new(
 
 static DEBUGGER: uefi_debugger::UefiDebugger<Uart16550> =
     uefi_debugger::UefiDebugger::new(Uart16550::Io { base: 0x3F8 })
-        .with_default_config(false, true, 0)
+        .with_default_config(true, true, 0)            // WinDbg break on boot
+        //.with_default_config(false, true, 0)           // Original code
         .with_debugger_logging();
 
 #[cfg_attr(target_os = "uefi", export_name = "efi_main")]
@@ -64,6 +65,12 @@ pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
     uefi_debugger::set_debugger(&DEBUGGER);
 
     log::info!("DXE Core Platform Binary v{}", env!("CARGO_PKG_VERSION"));
+
+
+    log::info!("XXXXXXXXXXXXXXXXXXXXXX");
+    log::info!("XX   DEMO: WinDbg   XX");
+    log::info!("XXXXXXXXXXXXXXXXXXXXXX");
+
 
     Core::default()
         .with_section_extractor(section_extractor::CompositeSectionExtractor::default())
