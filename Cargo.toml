@@ -19,17 +19,17 @@ name = "qemu_resources"
 path = "src/lib.rs"
 
 [dependencies]
-patina_adv_logger = { version = "0", registry = "patina-fw" }
-patina_dxe_core = { version = "0", registry = "patina-fw" }
 log = { version = "^0.4", default-features = false, features = [
     "release_max_level_warn",
 ] }
+patina_adv_logger = { version = "1", registry = "patina-fw" }
+patina_debugger = { version = "1", registry = "patina-fw" }
+patina_dxe_core = { version = "1", registry = "patina-fw" }
+patina_samples = { version = "1", registry = "patina-fw" }
+patina_sdk = { version = "1", registry = "patina-fw" }
+patina_section_extractor = { version = "1", registry = "patina-fw" }
+patina_stacktrace = { version = "1", registry = "patina-fw" }
 r-efi = { version = "^5", default-features = false }
-patina_samples = { version = "0", registry = "patina-fw" }
-patina_section_extractor = { version = "0", registry = "patina-fw" }
-patina_stacktrace = { version = "0", registry = "patina-fw" }
-patina_debugger = { version = "0", registry = "patina-fw" }
-patina_sdk = { version = "0", registry = "patina-fw" }
 x86_64 = { version = "=0.15.2", default-features = false, features = [
   "instructions"
 ], optional = true }
