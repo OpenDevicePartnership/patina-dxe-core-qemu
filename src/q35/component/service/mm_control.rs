@@ -14,7 +14,7 @@ use patina_sdk::component::config::mm::MmCommunicationConfiguration;
 use patina_sdk::component::service::platform_mm_control::PlatformMmControl;
 
 use crate::q35::registers as register;
-use patina_sdk::component::{service::IntoService, IntoComponent, Storage};
+use patina_sdk::component::{IntoComponent, Storage, service::IntoService};
 
 use x86_64::instructions::port::Port;
 

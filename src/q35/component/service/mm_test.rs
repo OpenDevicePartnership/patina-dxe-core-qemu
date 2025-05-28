@@ -13,7 +13,7 @@
 use patina_sdk::component::service::mm_communicator::MmCommunication;
 use r_efi::efi;
 
-use patina_sdk::component::{service::Service, IntoComponent};
+use patina_sdk::component::{IntoComponent, service::Service};
 
 /// MM Supervisor Request Header
 ///

@@ -10,10 +10,10 @@
 //!
 
 use patina_sdk::component::{
+    IntoComponent,
     config::mm::{CommunicateBuffer, MmCommunicationConfiguration},
     hob::{FromHob, Hob},
     params::ConfigMut,
-    IntoComponent,
 };
 
 use crate::q35::registers as register;
