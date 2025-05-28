@@ -54,7 +54,7 @@ static DEBUGGER: patina_debugger::UefiDebugger<Uart16550> =
         .with_default_config(false, true, 0)
         .with_debugger_logging();
 
-#[cfg_attr(target_os = "uefi", export_name = "efi_main")]
+#[cfg_attr(target_os = "uefi", unsafe(export_name = "efi_main"))]
 pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
     log::set_logger(&LOGGER).map(|()| log::set_max_level(log::LevelFilter::Trace)).unwrap();
     let adv_logger_component = AdvancedLoggerComponent::<Uart16550>::new(&LOGGER);
