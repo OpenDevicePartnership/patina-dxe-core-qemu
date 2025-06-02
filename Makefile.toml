@@ -149,12 +149,36 @@ release ${3}
 private = true
 script_runner = "@duckscript"
 script = '''
+# Finds the package version provided package name.
+fn <scope> get_version
+    # ${1} is the target package name
+    # ${2} is the list of packages to search in
+    for package in ${2}
+        name = map_get ${package} name
+        if eq ${name} ${1}
+            version = map_get ${package} version
+            return ${version}
+        end
+    end
+    echo "Package ${1} not found in provided packages."
+    return ""
+end
+    
 1 = get_env CARGO_MAKE_TASK_ARGS
 needs_patch = not is_empty ${1}
 patch_str = concat "\n[patch.patina-fw]"
 
 if ${needs_patch}
     2 = split ${1} ;
+
+    output = exec cargo metadata --format-version 1 --manifest-path Cargo.toml
+    if not eq ${output.code} 0
+        echo "Error running cargo metadata on Cargo.toml"
+        exit 1
+    end
+    local_metadata = json_parse --collection ${output.stdout}
+    local_packages = map_get ${local_metadata} packages
+
     for repo in ${2}
         echo "Processing repo: ${repo}"
         if not is_path_exists ${repo}/Cargo.toml
@@ -173,6 +197,28 @@ if ${needs_patch}
 
         for package in ${packages}
             name = map_get ${package} name
+            echo "Processing package: ${name}"
+
+            # The current version of the crate in the local workspace
+            local_version = get_version ${name} ${local_packages}
+
+            if is_empty ${local_version}
+                echo "Local package ${name} not found in workspace."
+                exit 1
+            end
+            
+            # The version of the crate in the external repository we are patching with
+            version = map_get ${package} version
+
+            # External version must be greater than the local version
+            if not semver_is_newer ${version} ${local_version}
+                if not semver_is_equal ${version} ${local_version}
+                    echo "Package ${name} patch version (${version}) must be greater than or equal to the local version (${local_version})."
+                    echo "  hint: Consider bumping the version in the Cargo.toml of the external repository."
+                    exit 1
+                end
+            end
+
             path = map_get ${package} id
 
             path = replace ${path} "path+file:///" ""
@@ -197,6 +243,7 @@ if ${needs_patch}
 
     # Patch the Cargo.toml file
     appendfile Cargo.toml ${patch_str}
+    exec cargo update
 end
 
 # Execute the actual cargo command
@@ -205,6 +252,7 @@ exit_code = exec --get-exit-code cargo make build-efi
 if ${needs_patch}
     # Revert the Cargo.toml file to the original state
     mv Cargo.toml.bak Cargo.toml
+    exec cargo update
 end
 
 exit ${exit_code}
