@@ -35,8 +35,15 @@ x86_64 = { version = "=0.15.2", default-features = false, features = [
   "instructions"
 ], optional = true }
 
+# These release settings reduce the qemu binary size significantly(~35%).
 [profile.release]
-debug = true
+codegen-units = 1
+debug = "full"
+lto = true
+opt-level = "s"
+split-debuginfo = "packed"
+strip = "symbols"
+incremental = true
 
 [profile.dev]
 opt-level = 3
