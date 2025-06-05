@@ -123,18 +123,14 @@ dependencies = [
 
 [[package]]
 name = "dm_dxe_core"
-version = "0.3.2"
+version = "0.1.0"
 dependencies = [
  "log",
  "patina_adv_logger",
  "patina_debugger",
  "patina_dxe_core",
- "patina_mm",
- "patina_samples",
  "patina_sdk",
  "patina_section_extractor",
- "patina_stacktrace",
- "r-efi",
 ]
 
 [[package]]
@@ -442,19 +438,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "patina_mm"
-version = "2.0.0"
-source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "422ba0beb464e6db8bf26445d552eecc4c7a437eee095e195f3d10afd9274cac"
-dependencies = [
- "cfg-if",
- "log",
- "patina_sdk",
- "r-efi",
- "x86_64",
-]
-
-[[package]]
 name = "patina_mtrr"
 version = "1.0.0"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
@@ -490,16 +473,6 @@ dependencies = [
  "r-efi",
  "scroll 0.12.0",
  "uuid",
-]
-
-[[package]]
-name = "patina_samples"
-version = "2.0.0"
-source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "a26ec80be250d7098ef77efe3cd3319522e5092e47ca1c5a5d6b85932a38abef"
-dependencies = [
- "log",
- "patina_sdk",
 ]
 
 [[package]]
