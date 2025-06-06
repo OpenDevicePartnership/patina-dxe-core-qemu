@@ -44,8 +44,8 @@ static LOGGER: AdvancedLogger<UartPl011> = AdvancedLogger::new(
     UartPl011::new(0x6000_0000),
 );
 
-static DEBUGGER: patina_debugger::UefiDebugger<UartPl011> =
-    patina_debugger::UefiDebugger::new(UartPl011::new(0x6000_0000)).with_default_config(false, true, 0);
+static DEBUGGER: patina_debugger::PatinaDebugger<UartPl011> =
+    patina_debugger::PatinaDebugger::new(UartPl011::new(0x6000_0000)).with_force_enable(false);
 
 #[cfg_attr(target_os = "uefi", unsafe(export_name = "efi_main"))]
 pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
