@@ -1,4 +1,5 @@
 # DM build for DXE Core
 
-Build: "./b.sh"
-Clean: "cargo clean"
+Build: ```./b.sh```
+
+Clean: ```cargo clean```
