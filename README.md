@@ -57,4 +57,4 @@ was included in the size comparison.
 This repository has a GitHub action to build and publish the output .EFI files to a public NuGet package feed
 [qemu-dxe-core](https://dev.azure.com/patina-fw/artifacts/_artifacts/feed/qemu-dxe-core).  That feed is then consumed
 by the [patina-qemu](https://github.com/OpenDevicePartnership/patina-qemu) repository to demonstrate a UEFI
-build that uses the Rust DXE core driver.
+build that uses the Patina DXE core driver.
