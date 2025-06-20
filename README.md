@@ -44,7 +44,7 @@ executing cargo make will create a DXE core .EFI file that can be used as a repl
 
 ## Size Comparison
 
-The code in both C and Rust modules is always changing and depending on compression used, size comparisons between the
+The code in both C and Rust modules is always changing and depending on the compression algorithm used, size comparisons between the
 Rust and C modules can be difficult.  But to give a general idea where current development stands, this Q35 build was
 compiled both as debug and release, then compared to a Q35 build that contains the normal C based DXE core.  Note
 the Rust core includes performance tracing and support normally provided by the CpuDxe and RuntimeDxe drivers, so that
