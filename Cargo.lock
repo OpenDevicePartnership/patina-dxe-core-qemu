@@ -317,9 +317,9 @@ checksum = "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a"
 
 [[package]]
 name = "patina_adv_logger"
-version = "3.0.0"
+version = "4.0.1"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "c703d736188d9ef8de74dde3a3e22fe8447b21d9006c2a000e67b76585c8c332"
+checksum = "7a7221cb99fcde39698f67e22dc748154c92896905c4030272d06a8b869a0b56"
 dependencies = [
  "log",
  "mu_pi",
@@ -331,9 +331,9 @@ dependencies = [
 
 [[package]]
 name = "patina_debugger"
-version = "3.0.0"
+version = "4.0.1"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "10db7a593e654193c36673c6e213c07b4f963f3dc421f4bc468bb94d6661730d"
+checksum = "47659d5bb6c5008bc8db35d55d9838b60b245534d39606e67b499b4064dd63b4"
 dependencies = [
  "bitfield-struct",
  "cfg-if",
@@ -347,9 +347,9 @@ dependencies = [
 
 [[package]]
 name = "patina_dxe_core"
-version = "3.0.0"
+version = "4.0.1"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "cb957afbbc07fb91c97eaad424e42b8031badeb8582ab927c75aa5d9be5ae712"
+checksum = "6bd4b070b71465439d8279c2897200e7261832f5d86345f2ad0e3bdf375f5683"
 dependencies = [
  "arm-gic",
  "compile-time",
@@ -377,18 +377,18 @@ dependencies = [
 
 [[package]]
 name = "patina_internal_collections"
-version = "3.0.0"
+version = "4.0.1"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "da90622b5e0ec7956e9ddc3dd6f82f48e38774af6015b613aa7c6d2f2de78c56"
+checksum = "955fdbf0daf473c78fe18ac90a1afce8db120097e7882790e04521c4ae477037"
 dependencies = [
  "log",
 ]
 
 [[package]]
 name = "patina_internal_cpu"
-version = "3.0.0"
+version = "4.0.1"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "e6fe1318890931fcd956459abd93cbffbf470fd3f846c55cb2055b99a82f794a"
+checksum = "235971ebafe13d21dcd09590c52904b7e829c559680fefb2d4abd1539067b3dd"
 dependencies = [
  "arm-gic",
  "cfg-if",
@@ -406,9 +406,9 @@ dependencies = [
 
 [[package]]
 name = "patina_internal_depex"
-version = "3.0.0"
+version = "4.0.1"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "22ce64594579c23dc0fad271de920f46224459140d766475ab90139729270526"
+checksum = "72abd0ffb1de73e84e5a137f53a6a93d9dc5e983f7d81a001cda46ab34ce07e0"
 dependencies = [
  "log",
  "r-efi",
@@ -417,18 +417,18 @@ dependencies = [
 
 [[package]]
 name = "patina_internal_device_path"
-version = "3.0.0"
+version = "4.0.1"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "386b4e29bd804904a0cb11361d69d0450f337a6cfaf95e6aae1a567b0c67e820"
+checksum = "3a973a9ac93225e745c960a7831f01805dc463109bf12784ab58319c9ca88b16"
 dependencies = [
  "r-efi",
 ]
 
 [[package]]
 name = "patina_mm"
-version = "3.0.0"
+version = "4.0.1"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "f2107323968918d2801a46cb3470d88a544d903c8648287c2fd07b66dfb3afdb"
+checksum = "67f1bf72f864f6094818612aa117564c78f229952848469f02737825eb88abcf"
 dependencies = [
  "cfg-if",
  "log",
@@ -461,9 +461,9 @@ dependencies = [
 
 [[package]]
 name = "patina_performance"
-version = "3.0.0"
+version = "4.0.1"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "6f67b8e235b605710bb3adff460d3d3c5c2f596418d36132945793a5ac39b759"
+checksum = "f9055500943f22296eee6a39c142b7ecfb3c51c99c946adc61c81f92d917e19b"
 dependencies = [
  "log",
  "mu_pi",
@@ -477,9 +477,9 @@ dependencies = [
 
 [[package]]
 name = "patina_samples"
-version = "3.0.0"
+version = "4.0.1"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "6fa4c66d55c7f78147a95277c43f8576664e706fd81c11f6c720b6b63bf4d9f3"
+checksum = "f393de5bee2399313b005066b77d202ea0c2a608a04c2c0d4d315e7506d50b63"
 dependencies = [
  "log",
  "patina_sdk",
@@ -487,9 +487,9 @@ dependencies = [
 
 [[package]]
 name = "patina_sdk"
-version = "3.0.0"
+version = "4.0.1"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "d269e09a07d522c4c3bf4e94d423ef409728c8616ce04ebb73f5e560b0c51b2c"
+checksum = "2da83559bdf9b680991fa3b71779d74e436395be67158cfeeec5a5c25893d228"
 dependencies = [
  "cfg-if",
  "fallible-streaming-iterator",
@@ -505,9 +505,9 @@ dependencies = [
 
 [[package]]
 name = "patina_sdk_macro"
-version = "3.0.0"
+version = "4.0.1"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "301b57b4d2dca884c7fe05c1d7a389f689095e3eefa8f28a54555e1b695dd51d"
+checksum = "4ba7b994e6e64d68aaf0a6cf3f54e2b503f77709d1b853bbb4959544cdc358d2"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -517,9 +517,9 @@ dependencies = [
 
 [[package]]
 name = "patina_section_extractor"
-version = "3.0.0"
+version = "4.0.1"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "5effdb380947082b0f83011481081f86238ecf68b7d2e0b1ae3c655bfe2ea36c"
+checksum = "77983d1de1038b707b5bc16f2fd864393c2b3ac29d19fb0cb26ef6462a8c2fa3"
 dependencies = [
  "alloc-no-stdlib",
  "brotli-decompressor",
@@ -533,9 +533,9 @@ dependencies = [
 
 [[package]]
 name = "patina_stacktrace"
-version = "3.0.0"
+version = "4.0.1"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "917612ecd55389a8530407672eeb7fb3c2c6a79dac19bde1838835746a6037cf"
+checksum = "eea868d4d41c56a31ecdbb8ddab8b68b61f182b977f78fd42ea15f1599e44bbe"
 dependencies = [
  "cfg-if",
  "log",
