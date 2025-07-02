@@ -52,7 +52,8 @@ opt-level = 3
 opt-level = 0
 
 [features]
-default = []
+default = ["compatibility_mode_allowed"]
+compatibility_mode_allowed = ["patina_dxe_core/compatibility_mode_allowed"]
 x64 = ["x86_64"]
 aarch64 = []
 doc = []
