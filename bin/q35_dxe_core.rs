@@ -82,6 +82,18 @@ pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
         .with_component(patina_mm::component::sw_mmi_manager::SwMmiManager::new())
         .with_component(patina_mm::component::communicator::MmCommunicator::new())
         .with_component(q35_services::mm_test::QemuQ35MmTest::new())
+        .with_config(patina_performance::config::PerfConfig {
+            enable_component: true,
+            enabled_measurements: {
+                patina_sdk::performance::Measurement::DriverBindingStart         // Adds driver binding start measurements.
+               | patina_sdk::performance::Measurement::DriverBindingStop        // Adds driver binding stop measurements.
+               | patina_sdk::performance::Measurement::DriverBindingSupport     // Adds driver binding support measurements.
+               | patina_sdk::performance::Measurement::LoadImage                // Adds load image measurements.
+               | patina_sdk::performance::Measurement::StartImage // Adds start image measurements.
+            },
+        })
+        .with_component(patina_performance::component::performance_config_provider::PerformanceConfigurationProvider)
+        .with_component(patina_performance::component::performance::Performance)
         .start()
         .unwrap();
 

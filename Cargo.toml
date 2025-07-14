@@ -26,6 +26,7 @@ patina_adv_logger = { version = "5", registry = "patina-fw" }
 patina_debugger = { version = "5", registry = "patina-fw" }
 patina_dxe_core = { version = "5", registry = "patina-fw" }
 patina_mm = { version = "5", registry = "patina-fw" }
+patina_performance = { version = "5", registry = "patina-fw"}
 patina_samples = { version = "5", registry = "patina-fw" }
 patina_sdk = { version = "5", registry = "patina-fw", features = ["enable_patina_tests"] }
 patina_section_extractor = { version = "5", registry = "patina-fw" }

@@ -577,6 +577,7 @@ dependencies = [
  "patina_debugger",
  "patina_dxe_core",
  "patina_mm",
+ "patina_performance",
  "patina_samples",
  "patina_sdk",
  "patina_section_extractor",
