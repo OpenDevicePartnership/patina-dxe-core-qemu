@@ -8,7 +8,7 @@
 //!
 //! SPDX-License-Identifier: BSD-2-Clause-Patent
 //!
-#![cfg(all(target_os = "uefi", target_arch = "x86_64"))]
+#![cfg(all(target_os = "uefi", target_arch = "x86_64", feature = "x64"))]
 
 use patina_mm::config::MmCommunicationConfiguration;
 use patina_mm::service::platform_mm_control::PlatformMmControl;
