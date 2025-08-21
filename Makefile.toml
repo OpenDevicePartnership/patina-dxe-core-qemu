@@ -181,10 +181,43 @@ if not is_empty ${1}
     end
 end
 
-needs_patch = not is_empty ${patch_repos}
+needs_patch = not array_is_empty ${patch_repos}
+patch_tag = set [patch.patina-fw]
 
 if ${needs_patch}
-    patch_str = concat "\n[patch.patina-fw]"
+    # Remove existing patch section from Cargo.toml
+    # Create a backup to revert to
+    cp Cargo.toml Cargo.toml.bak
+
+    # Read Cargo.toml lines
+    lines = readfile Cargo.toml
+    lines = split ${lines} "\n"
+    new_lines = array
+    in_patch = set false
+
+    for line in ${lines}
+        trimmed = trim ${line}
+        if starts_with ${trimmed} ${patch_tag}
+            in_patch = set true
+        else if ${in_patch}
+            if starts_with ${trimmed} "["
+                in_patch = set false
+            end
+        end
+        if not ${in_patch}
+            array_push ${new_lines} ${line}
+        end
+    end
+
+    # Write filtered lines back to Cargo.toml
+    write_lines = array_join ${new_lines} "\n"
+    writefile Cargo.toml ${write_lines}
+    release ${lines}
+    release ${new_lines}
+end
+
+if ${needs_patch}
+    patch_str = set ${patch_tag}
     for repo in ${patch_repos}
         echo "Processing repo: ${repo}"
         if not is_path_exists ${repo}/Cargo.toml
@@ -222,9 +255,6 @@ if ${needs_patch}
 end
 
 if ${needs_patch}
-    # Create a backup to revert to
-    cp Cargo.toml Cargo.toml.bak
-
     # Patch the Cargo.toml file
     appendfile Cargo.toml ${patch_str}
 end
