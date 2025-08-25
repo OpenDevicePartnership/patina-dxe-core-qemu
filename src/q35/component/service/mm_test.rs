@@ -101,10 +101,7 @@ impl QemuQ35MmTest {
         let patch_level = mm_supv_ver_info.patch_level;
         let max_request_level = mm_supv_ver_info.max_supervisor_request_level;
         log::info!(
-            "MM Supervisor Version: {:#X}, Patch Level: {:#X}, Max Request Level: {:#X}",
-            version,
-            patch_level,
-            max_request_level
+            "MM Supervisor Version: {version:#X}, Patch Level: {patch_level:#X}, Max Request Level: {max_request_level:#X}",
         );
 
         Ok(())

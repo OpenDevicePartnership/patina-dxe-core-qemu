@@ -71,7 +71,7 @@ impl MmConfigurationProvider {
     ) -> patina_sdk::error::Result<()> {
         log::debug!("MM Configuration Provider Entry Point");
 
-        log::debug!("Incoming MM Configuration: {:?}", config_mut);
+        log::debug!("Incoming MM Configuration: {config_mut:?}");
 
         let pm_base: *const u16 = (register::PCI_EXPRESS_BASE_ADDRESS as usize
             + patina_sdk::pci_address!(0, 0x1F, 0, register::ich9::PMBASE) as usize)
@@ -79,7 +79,7 @@ impl MmConfigurationProvider {
         let pm_base_value: u16 = unsafe { core::ptr::read_volatile(pm_base) } & register::ich9::PMBASE_MASK;
 
         log::info!("ACPI I/O Port Address: {:#X}", pm_base as usize);
-        log::info!("ACPI (PMBASE) I/O Port: {:#X}", pm_base_value);
+        log::info!("ACPI (PMBASE) I/O Port: {pm_base_value:#X}");
 
         config_mut.acpi_base = pm_base_value.into();
 
@@ -99,7 +99,7 @@ impl MmConfigurationProvider {
             }
         }
 
-        log::debug!("Outgoing MM Configuration: {:?}", config_mut);
+        log::debug!("Outgoing MM Configuration: {config_mut:?}");
 
         config_mut.lock();
 
