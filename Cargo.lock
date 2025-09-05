@@ -19,11 +19,14 @@ checksum = "cc7bb162ec39d46ab1ca8c77bf72e890535becd1751bb45f64c597edb4c8c6b3"
 
 [[package]]
 name = "arm-gic"
-version = "0.1.2"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8f0dcb1a29e42b98d24e0706354839b8d02f0d01445d819dc06cef8919a57548"
+checksum = "527b6e1c87b792f272e4964bef31a852077c35a395085833c8b51dc0ef3b4e13"
 dependencies = [
  "bitflags 2.9.1",
+ "safe-mmio",
+ "thiserror",
+ "zerocopy",
 ]
 
 [[package]]
@@ -83,6 +86,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "byteorder"
+version = "1.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1fd0f2584146f6f2ef48085050886acf353beff7305ebd1ae69500e27c67f64b"
+
+[[package]]
 name = "cfg-if"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -101,6 +110,21 @@ dependencies = [
  "semver",
  "time",
 ]
+
+[[package]]
+name = "crc"
+version = "3.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9710d3b3739c2e349eb44fe848ad0b7c8cb1e42bd87ee49371df2f7acaf3e675"
+dependencies = [
+ "crc-catalog",
+]
+
+[[package]]
+name = "crc-catalog"
+version = "2.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "19d374276b40fb8bbdee95aef7c7fa6b5316ec764510eb64b8dd0e2ed0d7e7f5"
 
 [[package]]
 name = "crc32fast"
@@ -237,9 +261,9 @@ checksum = "0ca88d725a0a943b096803bd34e73a4437208b6077654cc4ecb2947a5f91618d"
 
 [[package]]
 name = "mu_pi"
-version = "5.2.3"
+version = "6.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7e842f7441b9946fcc0942bdddd404a171133a7df066ac84c18ba409bb285391"
+checksum = "51fbea3fc90df41fbdd0da2019726d289b53cb2711eb0368721b82226bac0c3f"
 dependencies = [
  "indoc",
  "num-traits",
@@ -317,9 +341,9 @@ checksum = "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a"
 
 [[package]]
 name = "patina_adv_logger"
-version = "6.0.0"
+version = "8.0.0"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "a49a22784f01ce660039eac0d0fdd5db6a5ebd0fdca06c26311c31fe9f4bc84c"
+checksum = "dfe82158b87cd0ea9effa9e8a2dbd09239eeab6cce59a1360412c51ba243c356"
 dependencies = [
  "log",
  "mu_pi",
@@ -327,13 +351,15 @@ dependencies = [
  "patina_sdk",
  "r-efi",
  "spin",
+ "zerocopy",
+ "zerocopy-derive",
 ]
 
 [[package]]
 name = "patina_debugger"
-version = "6.0.0"
+version = "8.0.0"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "703fbc7376b4ae8c67c19ef3605dd59be58205853b0c7cc9fe4b62e3a77ca811"
+checksum = "47a9e5fa9b961a7906b2ef8a7048194aab3b666e1bf954ced7ba87217742e484"
 dependencies = [
  "bitfield-struct",
  "cfg-if",
@@ -347,9 +373,9 @@ dependencies = [
 
 [[package]]
 name = "patina_dxe_core"
-version = "6.0.0"
+version = "8.0.0"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "b647cdceca8c4ecd18af9192e4809a11a5bf3627094a59b4281bcd98dea447a0"
+checksum = "519df6e21e6a96b6d70ffcb9a7c5587b38596bd92cbee11a05b4774bf7436d4b"
 dependencies = [
  "arm-gic",
  "cfg-if",
@@ -362,6 +388,7 @@ dependencies = [
  "mu_pi",
  "mu_rust_helpers",
  "patina_debugger",
+ "patina_ffs",
  "patina_internal_collections",
  "patina_internal_cpu",
  "patina_internal_depex",
@@ -377,19 +404,48 @@ dependencies = [
 ]
 
 [[package]]
-name = "patina_internal_collections"
-version = "6.0.0"
+name = "patina_ffs"
+version = "8.0.0"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "e86c09243273b6af1029c5849255163cc6be33997402212a0e768aa3b7d95819"
+checksum = "fae025fdd63d504401c69b52baf51a641d937bff9ef388983d6518e084cd54eb"
+dependencies = [
+ "log",
+ "mu_pi",
+ "patina_sdk",
+ "r-efi",
+]
+
+[[package]]
+name = "patina_ffs_extractors"
+version = "8.0.0"
+source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
+checksum = "bee1d4ca53a951a6c7d61fa1e7ebea944d33fc4640a6a1365d949eef33b851b5"
+dependencies = [
+ "alloc-no-stdlib",
+ "brotli-decompressor",
+ "crc32fast",
+ "log",
+ "mu_pi",
+ "patina_ffs",
+ "patina_lzma_rs",
+ "patina_sdk",
+ "r-efi",
+]
+
+[[package]]
+name = "patina_internal_collections"
+version = "8.0.0"
+source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
+checksum = "3cf3f1e00650593e80cd9f228789c8ccca234136796f8f4e3dcf53317c619391"
 dependencies = [
  "log",
 ]
 
 [[package]]
 name = "patina_internal_cpu"
-version = "6.0.0"
+version = "8.0.0"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "8b44be6a514c201f761cb4f555aded7ec0414ea40efb003b5f0996bb494b8510"
+checksum = "3fbd19afa7d6e087b716738d85f508d682436054a8fefa4718150eb813fa4b25"
 dependencies = [
  "arm-gic",
  "cfg-if",
@@ -401,15 +457,16 @@ dependencies = [
  "patina_sdk",
  "patina_stacktrace",
  "r-efi",
+ "safe-mmio",
  "spin",
  "x86_64",
 ]
 
 [[package]]
 name = "patina_internal_depex"
-version = "6.0.0"
+version = "8.0.0"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "d2a1f26f8866db6277b294693bfe2eecc089e07178fd39633904693e3122a359"
+checksum = "d5b94bef27fd779f81f43451ae6530b7b5bb66a9a0281d931a06cf14b8238741"
 dependencies = [
  "log",
  "r-efi",
@@ -418,9 +475,9 @@ dependencies = [
 
 [[package]]
 name = "patina_internal_device_path"
-version = "6.0.0"
+version = "8.0.0"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "1651ae0ebc9e79aac45f79ed5c59a7edaa35990ada96b16f2c424ae20f24d191"
+checksum = "696eccd322ee46c4985761a296fd6df0cbfc7f543cbcc9538b60d1f9b58ad52f"
 dependencies = [
  "log",
  "r-efi",
@@ -428,10 +485,20 @@ dependencies = [
 ]
 
 [[package]]
-name = "patina_mm"
-version = "6.0.0"
+name = "patina_lzma_rs"
+version = "0.3.1"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "9c3df51993df4b6db7ba4d24530c39b4290cac49c3ea2c618ee742587f484bb9"
+checksum = "650cad1fb47baec77d90b77ec249968489c8b9688d3c23dcb4cf0772fc5ac994"
+dependencies = [
+ "byteorder",
+ "crc",
+]
+
+[[package]]
+name = "patina_mm"
+version = "8.0.0"
+source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
+checksum = "881e12aec33252a0f52a649692397c4cb4407d36292aa3056537169c0bc29a92"
 dependencies = [
  "cfg-if",
  "log",
@@ -464,9 +531,9 @@ dependencies = [
 
 [[package]]
 name = "patina_performance"
-version = "6.0.0"
+version = "8.0.0"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "c816969034fed8e682067f63806178cd8e961e64f24f6787cb6164f87d032e32"
+checksum = "b7efe5dddc166de1d105f53de5a3558f950e7aceaff67c825645c4960ee556c7"
 dependencies = [
  "log",
  "mu_pi",
@@ -480,9 +547,9 @@ dependencies = [
 
 [[package]]
 name = "patina_samples"
-version = "6.0.0"
+version = "8.0.0"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "cd1fcd57e6af760cb097afb58c05f1b40bb950b4bf3ca2d1f2e6b8ffa24c28f9"
+checksum = "826a52cf0a83402ceb1a70f5ae7563ba9798c495223cd68dea057a151d1d3916"
 dependencies = [
  "log",
  "patina_sdk",
@@ -490,9 +557,9 @@ dependencies = [
 
 [[package]]
 name = "patina_sdk"
-version = "6.0.0"
+version = "8.0.0"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "45b09b7d253f8153decf2b1dc9a8ccdf9a8dc8fad3187fe5500013ab71afcf90"
+checksum = "2910b1c0bd897cb43020fc2a9b707df9eb49f3f74d9458e2ba7cbf0b56c3495d"
 dependencies = [
  "cfg-if",
  "fallible-streaming-iterator",
@@ -511,9 +578,9 @@ dependencies = [
 
 [[package]]
 name = "patina_sdk_macro"
-version = "6.0.0"
+version = "8.0.0"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "459cf3247495c47e091d3ae86fc3914a727c453cecb4acedb4eccbd00eb45b44"
+checksum = "145198c2516e5b48f60150ccab12b7f75dd73ba27aef525bba636d457ed3ba0b"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -522,26 +589,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "patina_section_extractor"
-version = "6.0.0"
-source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "1e6e5ba59f4124cbbb8a11cc6ba78770cdc8dcabe30a6dc8b4d7cf62480b74c0"
-dependencies = [
- "alloc-no-stdlib",
- "brotli-decompressor",
- "crc32fast",
- "log",
- "mu_pi",
- "mu_rust_helpers",
- "patina_sdk",
- "r-efi",
-]
-
-[[package]]
 name = "patina_stacktrace"
-version = "6.0.0"
+version = "8.0.0"
 source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "1e9e499aa473a91fe52dde4eeb9a95e3dda234eb7d5cc9ef5dd1eb702b3457d3"
+checksum = "63d72d2dc5e409467d3d88d44065ee571cfa2292989ce6d017c9df467dc6d680"
 dependencies = [
  "cfg-if",
  "log",
@@ -576,11 +627,11 @@ dependencies = [
  "patina_adv_logger",
  "patina_debugger",
  "patina_dxe_core",
+ "patina_ffs_extractors",
  "patina_mm",
  "patina_performance",
  "patina_samples",
  "patina_sdk",
- "patina_section_extractor",
  "patina_stacktrace",
  "r-efi",
  "x86_64",
@@ -630,6 +681,15 @@ name = "rustversion"
 version = "1.0.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8a0d197bd2c9dc6e53b84da9556a69ba4cdfab8619eb41a8bd1cc2027a0f6b1d"
+
+[[package]]
+name = "safe-mmio"
+version = "0.2.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "db02a82ad13df46afeba34a4e54065fa912308b9101b060e4422898eac0e06f6"
+dependencies = [
+ "zerocopy",
+]
 
 [[package]]
 name = "scopeguard"
@@ -717,6 +777,26 @@ name = "tap"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "55937e1799185b12863d447f42597ed69d9928686b8d88a1df17376a097d8369"
+
+[[package]]
+name = "thiserror"
+version = "2.0.16"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3467d614147380f2e4e374161426ff399c91084acd2363eaf549172b3d5e60c0"
+dependencies = [
+ "thiserror-impl",
+]
+
+[[package]]
+name = "thiserror-impl"
+version = "2.0.16"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6c5e1be1c48b9172ee610da68fd9cd2770e7a4056cb3fc98710ee6906f0c7960"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
 
 [[package]]
 name = "time"
@@ -825,4 +905,24 @@ dependencies = [
  "bitflags 2.9.1",
  "rustversion",
  "volatile",
+]
+
+[[package]]
+name = "zerocopy"
+version = "0.8.26"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1039dd0d3c310cf05de012d8a39ff557cb0d23087fd44cad61df08fc31907a2f"
+dependencies = [
+ "zerocopy-derive",
+]
+
+[[package]]
+name = "zerocopy-derive"
+version = "0.8.26"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9ecf5b4cc5364572d7f4c329661bcc82724222973f2cab6f050a4e5c22f75181"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
 ]

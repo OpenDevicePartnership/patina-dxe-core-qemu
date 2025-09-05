@@ -63,9 +63,9 @@ pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
     log::info!("DXE Core Platform Binary v{}", env!("CARGO_PKG_VERSION"));
 
     Core::default()
-        .with_section_extractor(patina_section_extractor::CompositeSectionExtractor::default())
         .init_memory(physical_hob_list) // We can make allocations now!
         .with_config(sc::Name("World")) // Config knob for sc::log_hello
+        .with_service(patina_ffs_extractors::CompositeSectionExtractor::default())
         .with_component(adv_logger_component)
         .with_component(sc::log_hello) // Example of a function component
         .with_component(sc::HelloStruct("World")) // Example of a struct component
