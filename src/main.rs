@@ -66,13 +66,12 @@ pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
         .map(|()| log::set_max_level(log::LevelFilter::Trace))
         .unwrap();
 
-
     log::info!("Rust DXE Core entry ...");
 
     // Call the DXE core
     Core::default()
-        .with_section_extractor(patina_section_extractor::CompositeSectionExtractor::default())
         .init_memory(physical_hob_list) // We can make allocations now!
+        .with_service(patina_ffs_extractors::CompositeSectionExtractor::default())
         .with_config(GicBases::new(GIC_DISTRIBUTOR_BASE, GIC_REDISTRIBUTORS_BASE))
         .start()
         .unwrap();
