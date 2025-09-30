@@ -385,8 +385,6 @@ dependencies = [
 [[package]]
 name = "patina_dxe_core"
 version = "8.3.0"
-source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "e9a0e38a72036c80c4f8430a88a7fccb406113e6cf7b5f72ba2e6cbc34c4eadb"
 dependencies = [
  "arm-gic",
  "cfg-if",

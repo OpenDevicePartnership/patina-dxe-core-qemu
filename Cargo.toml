@@ -6,7 +6,7 @@ license = "BSD-2-Clause-Patent"
 
 [dependencies]
   log = { version = "^0.4", default-features = false, features = [ "release_max_level_trace", ] }
-  patina_dxe_core = { version = "8.3.0", registry = "patina-fw" }
+  patina_dxe_core = { path="patina_dxe_core-8.3.0" }                              # { version = "8.3.0", registry = "patina-fw" }
   patina_adv_logger = { version = "8.3.0", registry = "patina-fw" }
   patina_sdk = { version = "8.3.0", registry = "patina-fw" }
   patina_ffs_extractors = { version = "8.3.0", registry = "patina-fw" }
