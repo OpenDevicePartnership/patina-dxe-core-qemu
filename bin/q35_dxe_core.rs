@@ -68,7 +68,7 @@ pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
         .with_component(adv_logger_component)
         .with_component(sc::HelloStruct("World")) // Example of a struct component
         .with_component(sc::GreetingsEnum::Hello("World")) // Example of a struct component (enum)
-        .with_component(sc::GreetingsEnum::Goodbye("World")) // Example of a struct component (enum)
+        .with_component(sc::GreetingsEnum::Goodbye("World")) // Example of a struct component (enum)0
         .with_config(patina_mm::config::MmCommunicationConfiguration {
             acpi_base: patina_mm::config::AcpiBase::Mmio(0x0), // Actual ACPI base address will be set during boot
             cmd_port: patina_mm::config::MmiPort::Smi(0xB2),
@@ -78,8 +78,14 @@ pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
         .with_component(q35_services::mm_config_provider::MmConfigurationProvider)
         .with_component(q35_services::mm_control::QemuQ35PlatformMmControl::new())
         .with_component(patina_mm::component::sw_mmi_manager::SwMmiManager::new())
-        .with_component(patina_mm::component::communicator::MmCommunicator::new())
-        .with_component(q35_services::mm_test::QemuQ35MmTest::new())
+        // The Q35 firmware using the MM Supervisor. Additional support is needeed in the
+        // supervisor to support MM communication outside of code that has direct access
+        // to C internal state.
+        //
+        // Tracked in https://github.com/microsoft/mu_feature_mm_supv/issues/541
+        //
+        // .with_component(patina_mm::component::communicator::MmCommunicator::new())
+        // .with_component(q35_services::mm_test::QemuQ35MmTest::new())
         .with_config(patina_performance::config::PerfConfig {
             enable_component: true,
             enabled_measurements: {
