@@ -43,9 +43,14 @@ static LOGGER: AdvancedLogger<UartPl011> = AdvancedLogger::new(
     UartPl011::new(0x6000_0000),
 );
 
+#[cfg(feature = "initial_breakpoint")]
+const _ENABLE_INITIAL_BREAKPOINT: bool = true;
+#[cfg(not(feature = "initial_breakpoint"))]
+const _ENABLE_INITIAL_BREAKPOINT: bool = false;
+
 #[cfg(feature = "enable_debugger")]
 static DEBUGGER: patina_debugger::PatinaDebugger<UartPl011> =
-    patina_debugger::PatinaDebugger::new(UartPl011::new(0x6000_0000)).with_force_enable(true);
+    patina_debugger::PatinaDebugger::new(UartPl011::new(0x6000_0000)).with_force_enable(_ENABLE_INITIAL_BREAKPOINT);
 
 #[cfg_attr(target_os = "uefi", unsafe(export_name = "efi_main"))]
 pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {

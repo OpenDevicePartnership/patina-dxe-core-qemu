@@ -287,35 +287,25 @@ set_env COMBINED_FEATURES ${combined_features}
 dependencies = ["build-efi-prepare-features"]
 run_task = "build-efi-exec"
 
-[tasks.build-efi-x64]
-private = true
-env = { CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "x64" }
-run_task = "patch"
-
-[tasks.build-efi-aarch64]
-private = true
-env = { CARGO_BIN_TARGET = "aarch64-unknown-uefi", CARGO_BIN_FEATURES = "aarch64" }
-run_task = "patch"
-
 [tasks.q35]
 description = """Builds the DEBUG Q35 UEFI firmware."""
-env = { CARGO_BIN_NAME = "qemu_q35_dxe_core", "RUSTC_PROFILE" = "dev" }
-run_task = "build-efi-x64"
+env = { CARGO_BIN_NAME = "qemu_q35_dxe_core", "RUSTC_PROFILE" = "dev", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "x64,enable_debugger" }
+run_task = "patch"
 
 [tasks.q35-release]
 description = """Builds the RELEASE Q35 UEFI firmware."""
-env = { CARGO_BIN_NAME = "qemu_q35_dxe_core", "RUSTC_PROFILE" = "release" }
-run_task = "build-efi-x64"
+env = { CARGO_BIN_NAME = "qemu_q35_dxe_core", "RUSTC_PROFILE" = "release", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "x64" }
+run_task = "patch"
 
 [tasks.sbsa]
 description = """Builds the DEBUG SBSA UEFI firmware."""
-env = { CARGO_BIN_NAME = "qemu_sbsa_dxe_core", "RUSTC_PROFILE" = "dev" }
-run_task = "build-efi-aarch64"
+env = { CARGO_BIN_NAME = "qemu_sbsa_dxe_core", "RUSTC_PROFILE" = "dev", CARGO_BIN_TARGET = "aarch64-unknown-uefi", CARGO_BIN_FEATURES = "aarch64,enable_debugger" }
+run_task = "patch"
 
 [tasks.sbsa-release]
 description = """Builds the RELEASE SBSA UEFI firmware."""
-env = { CARGO_BIN_NAME = "qemu_sbsa_dxe_core", "RUSTC_PROFILE" = "release" }
-run_task = "build-efi-aarch64"
+env = { CARGO_BIN_NAME = "qemu_sbsa_dxe_core", "RUSTC_PROFILE" = "release", CARGO_BIN_TARGET = "aarch64-unknown-uefi", CARGO_BIN_FEATURES = "aarch64" }
+run_task = "patch"
 
 [tasks.doc]
 description = "Builds all rust documentation in the workspace. Example `cargo make doc`"

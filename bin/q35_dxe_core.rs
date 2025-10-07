@@ -47,10 +47,15 @@ static LOGGER: AdvancedLogger<Uart16550> = AdvancedLogger::new(
     Uart16550::Io { base: 0x402 },
 );
 
+#[cfg(feature = "initial_breakpoint")]
+const _ENABLE_INITIAL_BREAKPOINT: bool = true;
+#[cfg(not(feature = "initial_breakpoint"))]
+const _ENABLE_INITIAL_BREAKPOINT: bool = false;
+
 #[cfg(feature = "enable_debugger")]
 static DEBUGGER: patina_debugger::PatinaDebugger<Uart16550> =
     patina_debugger::PatinaDebugger::new(Uart16550::Io { base: 0x3F8 })
-        .with_force_enable(true)
+        .with_force_enable(_ENABLE_INITIAL_BREAKPOINT)
         .with_log_policy(patina_debugger::DebuggerLoggingPolicy::FullLogging);
 
 #[cfg_attr(target_os = "uefi", unsafe(export_name = "efi_main"))]
