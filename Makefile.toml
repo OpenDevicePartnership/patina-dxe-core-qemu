@@ -291,6 +291,60 @@ clear = true
 command = "cargo"
 args = ["deny", "check"]
 
+[tasks.bloat-q35-exec]
+private = true
+command = "cargo"
+args = ["bloat", "--target", "x86_64-unknown-uefi", "--features", "x64", "--bin", "qemu_q35_dxe_core", "--profile", "${RUSTC_PROFILE}", "-Zbuild-std=core,compiler_builtins,alloc", "-Zbuild-std-features=compiler-builtins-mem", "-Zunstable-options", "@@split(CLEANED_ARGS, )"]
+
+[tasks.bloat-q35]
+description = "Run cargo bloat for q35 (x86_64-unknown-uefi). Examples: `cargo make bloat-q35 -- --crates`, `cargo make bloat-q35 -- --crates -n 40`."
+script_runner = "@duckscript"
+script = '''
+args = get_env CARGO_MAKE_TASK_ARGS
+
+# Clean up the args by replacing semicolons with spaces
+if not is_empty ${args}
+    clean_args = replace ${args} ";;--" " --"
+    clean_args = replace ${clean_args} ";;" " "
+    clean_args = replace ${clean_args} ";" " "
+    # Remove leading/trailing whitespace and -- prefix
+    clean_args = trim ${clean_args}
+    clean_args = replace ${clean_args} "-- " ""
+    set_env CLEANED_ARGS ${clean_args}
+else
+    set_env CLEANED_ARGS ""
+end
+
+cm_run_task bloat-q35-exec
+'''
+
+[tasks.bloat-sbsa-exec]
+private = true
+command = "cargo"
+args = ["bloat", "--target", "aarch64-unknown-uefi", "--features", "aarch64", "--bin", "qemu_sbsa_dxe_core", "--profile", "${RUSTC_PROFILE}", "-Zbuild-std=core,compiler_builtins,alloc", "-Zbuild-std-features=compiler-builtins-mem", "-Zunstable-options", "@@split(CLEANED_ARGS, )"]
+
+[tasks.bloat-sbsa]
+description = "Run cargo bloat for sbsa (aarch64-unknown-uefi). Examples: `cargo make bloat-sbsa -- --crates`, `cargo make bloat-sbsa -- --crates -n 40`."
+script_runner = "@duckscript"
+script = '''
+args = get_env CARGO_MAKE_TASK_ARGS
+
+# Clean up the args by replacing semicolons with spaces
+if not is_empty ${args}
+    clean_args = replace ${args} ";;--" " --"
+    clean_args = replace ${clean_args} ";;" " "
+    clean_args = replace ${clean_args} ";" " "
+    # Remove leading/trailing whitespace and -- prefix
+    clean_args = trim ${clean_args}
+    clean_args = replace ${clean_args} "-- " ""
+    set_env CLEANED_ARGS ${clean_args}
+else
+    set_env CLEANED_ARGS ""
+end
+
+cm_run_task bloat-sbsa-exec
+'''
+
 [tasks.all]
 description = "Run all tasks for PR readiness."
 dependencies = [
