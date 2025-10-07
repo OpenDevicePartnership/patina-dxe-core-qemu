@@ -43,14 +43,14 @@ static LOGGER: AdvancedLogger<UartPl011> = AdvancedLogger::new(
     UartPl011::new(0x6000_0000),
 );
 
-#[cfg(feature = "initial_breakpoint")]
-const _ENABLE_INITIAL_BREAKPOINT: bool = true;
-#[cfg(not(feature = "initial_breakpoint"))]
-const _ENABLE_INITIAL_BREAKPOINT: bool = false;
-
 #[cfg(feature = "enable_debugger")]
+const _ENABLE_DEBUGGER: bool = true;
+#[cfg(not(feature = "enable_debugger"))]
+const _ENABLE_DEBUGGER: bool = false;
+
+#[cfg(feature = "build_debugger")]
 static DEBUGGER: patina_debugger::PatinaDebugger<UartPl011> =
-    patina_debugger::PatinaDebugger::new(UartPl011::new(0x6000_0000)).with_force_enable(_ENABLE_INITIAL_BREAKPOINT);
+    patina_debugger::PatinaDebugger::new(UartPl011::new(0x6000_0000)).with_force_enable(_ENABLE_DEBUGGER);
 
 #[cfg_attr(target_os = "uefi", unsafe(export_name = "efi_main"))]
 pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
@@ -58,7 +58,7 @@ pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
     let adv_logger_component = AdvancedLoggerComponent::<UartPl011>::new(&LOGGER);
     adv_logger_component.init_advanced_logger(physical_hob_list).unwrap();
 
-    #[cfg(feature = "enable_debugger")]
+    #[cfg(feature = "build_debugger")]
     patina_debugger::set_debugger(&DEBUGGER);
 
     log::info!("DXE Core Platform Binary v{}", env!("CARGO_PKG_VERSION"));

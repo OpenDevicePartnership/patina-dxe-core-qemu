@@ -51,9 +51,9 @@ binary in the [patina-qemu](https://github.com/OpenDevicePartnership/patina-qemu
    ```
 
 The [patina_debugger](https://github.com/OpenDevicePartnership/patina/blob/main/docs/src/dxe_core/debugging.md) is
-enabled by default on debug builds, but not release builds. It can be enabled on release builds by passing the
-`enable_debugger` feature to the build, e.g. `cargo make q35-release --features enable_debugger`. The initial breakpoint
-is disabled by default, passing the `initial_breakpoint` feature to the build will enable it.
+built by default on debug builds, but not release builds. It can be built on release builds by passing the
+`build_debugger` feature to the build, e.g. `cargo make q35-release --features build_debugger`. The debugger
+is disabled by default, passing the `enable_debugger` feature to the build will enable it.
 
 ## Size Comparison
 
