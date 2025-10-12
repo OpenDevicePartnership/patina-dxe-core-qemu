@@ -164,9 +164,9 @@ checksum = "e6d5a32815ae3f33302d95fdcb2ce17862f8c65363dcfd29360480ba1001fc9c"
 
 [[package]]
 name = "gdbstub"
-version = "0.7.7"
+version = "0.7.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b686b198dfaa4109ebd0443d2841bc521e4b4b2915f1d84b3bb50332a8cdc1ae"
+checksum = "72742d2b395902caf8a5d520d0dd3334ba6d1138938429200e58d5174e275f3f"
 dependencies = [
  "bitflags 2.9.4",
  "cfg-if",
@@ -178,9 +178,9 @@ dependencies = [
 
 [[package]]
 name = "goblin"
-version = "0.10.1"
+version = "0.10.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d6a80adfd63bd7ffd94fefc3d22167880c440a724303080e5aa686fa36abaa96"
+checksum = "7be320f077239a0361c20d608b4768c62a1b77aa4946dd76395aa4cd502cba7d"
 dependencies = [
  "log",
  "plain",
@@ -239,11 +239,10 @@ dependencies = [
 
 [[package]]
 name = "lock_api"
-version = "0.4.13"
+version = "0.4.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "96936507f153605bddfcda068dd804796c84324ed2510809e5b2a624c81da765"
+checksum = "224399e74b87b5f3557511d98dff8b14089b3dadafcab6bb93eab67d3aace965"
 dependencies = [
- "autocfg",
  "scopeguard",
 ]
 
@@ -329,9 +328,9 @@ checksum = "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a"
 
 [[package]]
 name = "patina"
-version = "11.2.0"
-source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "5cfb6d0db26494468e6a728c3330ca1f872ee375cb515b2bde5071d6eebc2d1f"
+version = "11.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1b5e58246bbff70f4f3161ce77b79aba31cb04bda430c56b5cd5f3fca41a8496"
 dependencies = [
  "cfg-if",
  "fallible-streaming-iterator",
@@ -350,9 +349,9 @@ dependencies = [
 
 [[package]]
 name = "patina_adv_logger"
-version = "11.2.0"
-source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "779bc615c898464f0719d9b6cc58a6cf630f837116c08f24ab10cc40116ad17b"
+version = "11.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5ef74d8a8198a13de0a5481cd73199e7f14646734d142f6657729cec76b8f15b"
 dependencies = [
  "log",
  "mu_rust_helpers",
@@ -366,9 +365,9 @@ dependencies = [
 
 [[package]]
 name = "patina_debugger"
-version = "11.2.0"
-source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "241d3730132533943a2943133edcaa01cfeace195298f644ac35f82d76b1ae8a"
+version = "11.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e7ef9ffbd8d833cbae9d21689eb87db08755b095ae0fbd6f192e36e3a0a5333e"
 dependencies = [
  "bitfield-struct",
  "cfg-if",
@@ -382,9 +381,9 @@ dependencies = [
 
 [[package]]
 name = "patina_dxe_core"
-version = "11.2.0"
-source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "8ee6c0df5d8b1db33566785006653598de7cceacbd039a848fc4a5dff122b6bb"
+version = "11.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "17f287b07acad034c5f1d17273e91d994acb16d28ace48d2b184eaa050f1eee3"
 dependencies = [
  "arm-gic",
  "cfg-if",
@@ -414,9 +413,9 @@ dependencies = [
 
 [[package]]
 name = "patina_ffs"
-version = "11.2.0"
-source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "f2aae2d012e4bc02c3aaebc5814099f209aa7bf0b34ba552341e6f78b5dd825f"
+version = "11.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4817b1f522d396ba41e0902841ef0420589b00c3351a94e161f174e798deaab9"
 dependencies = [
  "log",
  "patina",
@@ -426,9 +425,9 @@ dependencies = [
 
 [[package]]
 name = "patina_ffs_extractors"
-version = "11.2.0"
-source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "3b23250c0f03c6b5d36360570a93d22e496bbf30be66ae118589ef1aaa363648"
+version = "11.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fcbcc03b7a9b19d1b98950914a87ad5dbd4d0804318163fb9cdcb273d608fa1d"
 dependencies = [
  "alloc-no-stdlib",
  "brotli-decompressor",
@@ -443,18 +442,18 @@ dependencies = [
 
 [[package]]
 name = "patina_internal_collections"
-version = "11.2.0"
-source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "2df3b32b6336d1b6a9777d4409a69002f645121fc135c3ced80c07fade1c2e65"
+version = "11.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4c3bc164986a337cb48784e5507da2e594de541b6e3118918a6be4e0507bc9e2"
 dependencies = [
  "log",
 ]
 
 [[package]]
 name = "patina_internal_cpu"
-version = "11.2.0"
-source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "b281758cc905424c07022b15384b45c95c0c54bba2b3a201f2c5f136bb60a920"
+version = "11.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "91e7c3813980fbb2c5c7e73628f3fa754e7b0a289094da017b6579deb94188c0"
 dependencies = [
  "arm-gic",
  "cfg-if",
@@ -473,9 +472,9 @@ dependencies = [
 
 [[package]]
 name = "patina_internal_depex"
-version = "11.2.0"
-source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "84c624004c84b0d3bb88f0621dcb63cc228f9fcccc1195d87d727299d2d07872"
+version = "11.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c2917497b9e87dca3594b6220178d387bb0ead239335829b46684497918695db"
 dependencies = [
  "log",
  "r-efi",
@@ -484,9 +483,9 @@ dependencies = [
 
 [[package]]
 name = "patina_internal_device_path"
-version = "11.2.0"
-source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "94b92a742935eb5a5799dd89ef2403a848be7d4e3a6376bd1096bac5c656dc9a"
+version = "11.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dba760f525e71c906424b82c3939093b85547e4e3d2abafa9f126e623f51b48e"
 dependencies = [
  "log",
  "r-efi",
@@ -495,9 +494,9 @@ dependencies = [
 
 [[package]]
 name = "patina_lzma_rs"
-version = "0.3.1"
-source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "650cad1fb47baec77d90b77ec249968489c8b9688d3c23dcb4cf0772fc5ac994"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0f1c051398f240806259e84da37fe55caae85e784d2f9307c6067e2bb6f4fd95"
 dependencies = [
  "byteorder",
  "crc",
@@ -505,9 +504,9 @@ dependencies = [
 
 [[package]]
 name = "patina_macro"
-version = "11.2.0"
-source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "5ab718dbbf6da23499fe146d0a0255cbb5c67bda3a6db202a810296bfae8eeb7"
+version = "11.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5c5520c055ecccab0cd43438fc0bd490ccdceb9d0b81e01fd17e7002c2c4fcef"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -517,9 +516,9 @@ dependencies = [
 
 [[package]]
 name = "patina_mm"
-version = "11.2.0"
-source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "27d62899591d267ed74bfa1bb586c7f83fa1a214841fc26c9e1cb817fd0a3f03"
+version = "11.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fd16d004f550be323afc1a10bfff832c0a0137bc3c13cdc668ed87e750777e36"
 dependencies = [
  "cfg-if",
  "log",
@@ -530,9 +529,9 @@ dependencies = [
 
 [[package]]
 name = "patina_mtrr"
-version = "1.0.0"
-source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "daf01b801642167ce79216084bed877b31eaf3778d7a4d99f4458a445ffdca43"
+version = "1.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0a3647cb4ccb0f2f87723f0970f62847265ff5f4bd3ac9b8f5df1a12924d9e68"
 dependencies = [
  "bitfield-struct",
  "cfg-if",
@@ -540,9 +539,9 @@ dependencies = [
 
 [[package]]
 name = "patina_paging"
-version = "9.0.0"
-source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "aa5aae7229b56bde996b541d9b40352b2f9024cdcca6c1f1839001daf8b8261a"
+version = "9.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5d2058ab190fd76a621cbd3f3f95c8fd3f63fb85a1102f7dbd41f0030e8650e2"
 dependencies = [
  "bitfield-struct",
  "bitflags 2.9.4",
@@ -552,9 +551,9 @@ dependencies = [
 
 [[package]]
 name = "patina_performance"
-version = "11.2.0"
-source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "f7bc8ea56f36327a26a6c048005a2ff46848a5287fba414bc7cdc493f78d8e75"
+version = "11.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fdaa870f80cba4e9beae3033a5a9697eaf86693f784c47c86e2caeee38207233"
 dependencies = [
  "log",
  "mu_rust_helpers",
@@ -568,9 +567,9 @@ dependencies = [
 
 [[package]]
 name = "patina_pi"
-version = "11.2.0"
-source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "3be55cb7226e1cb110c81d575a9b7efc5496bf8d16d6808e954d3f63bc21e11d"
+version = "11.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4bdba051b80c512428c27fc5201f698fcf5054f866f24c91138004f2cb1f863c"
 dependencies = [
  "indoc",
  "num-traits",
@@ -580,9 +579,9 @@ dependencies = [
 
 [[package]]
 name = "patina_samples"
-version = "11.2.0"
-source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "70d8807665fb44a6863dfcaad3b7f570bbc259c2c3a5462eab2b3094a31a4e19"
+version = "11.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7ae102d277396ac73b647ac34f5aa65acfa12244936b1eb7a63309520e3a520e"
 dependencies = [
  "log",
  "patina",
@@ -590,9 +589,9 @@ dependencies = [
 
 [[package]]
 name = "patina_stacktrace"
-version = "11.2.0"
-source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "d3897fd73d746b2387a3cde695d94caa90b2b95b702f8d58d64b70718528e0fb"
+version = "11.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4144bc153f9e5405b68a1a748a46f37232478b6833a846d74ab58d1f2bc1303b"
 dependencies = [
  "cfg-if",
  "log",
@@ -858,8 +857,8 @@ dependencies = [
 [[package]]
 name = "uefi_corosensei"
 version = "0.1.4"
-source = "sparse+https://pkgs.dev.azure.com/patina-fw/artifacts/_packaging/temporary/Cargo/index/"
-checksum = "92ff761c38196711eafc73b2b01b5a388482791a8a5e85666fd96360041cecdb"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e826eb77ff5d1fb028ad17fe147e777e9e5f221b7faa43175160966a9b182f84"
 dependencies = [
  "autocfg",
  "cfg-if",

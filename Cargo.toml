@@ -22,15 +22,15 @@ path = "src/lib.rs"
 log = { version = "^0.4", default-features = false, features = [
     "release_max_level_warn",
 ] }
-patina_adv_logger = { version = "11", registry = "patina-fw" }
-patina_debugger = { version = "11", registry = "patina-fw" }
-patina_dxe_core = { version = "11", registry = "patina-fw" }
-patina_mm = { version = "11", registry = "patina-fw" }
-patina_performance = { version = "11", registry = "patina-fw"}
-patina_samples = { version = "11", registry = "patina-fw" }
-patina = { version = "11", registry = "patina-fw", features = ["enable_patina_tests"] }
-patina_ffs_extractors = { version = "11", registry = "patina-fw" }
-patina_stacktrace = { version = "11", registry = "patina-fw" }
+patina_adv_logger = { version = "11" }
+patina_debugger = { version = "11" }
+patina_dxe_core = { version = "11" }
+patina_mm = { version = "11" }
+patina_performance = { version = "11"}
+patina_samples = { version = "11" }
+patina = { version = "11", features = ["enable_patina_tests"] }
+patina_ffs_extractors = { version = "11" }
+patina_stacktrace = { version = "11" }
 r-efi = { version = "^5", default-features = false }
 x86_64 = { version = "=0.15.2", default-features = false, features = [
   "instructions"
