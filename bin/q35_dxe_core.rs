@@ -80,10 +80,8 @@ pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
         // Configure SMBIOS for version 3.9
         .with_config(SmbiosConfiguration { major_version: 3, minor_version: 9 })
         .with_component(SmbiosProviderManager::new())
-        // Add example component that creates SMBIOS records
-        .with_component(q35_services::smbios_example::SmbiosExamplePublisher::new())
-        // Publish SMBIOS table to configuration table
-        .with_component(q35_services::smbios_publisher::SmbiosTablePublisher::new())
+        // Platform component that creates SMBIOS records and publishes the table
+        .with_component(q35_services::smbios_platform::Q35SmbiosPlatform::new())
         .with_config(patina_mm::config::MmCommunicationConfiguration {
             acpi_base: patina_mm::config::AcpiBase::Mmio(0x0), // Actual ACPI base address will be set during boot
             cmd_port: patina_mm::config::MmiPort::Smi(0xB2),

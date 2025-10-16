@@ -11,5 +11,4 @@
 pub mod mm_config_provider;
 pub mod mm_control;
 pub mod mm_test;
-pub mod smbios_example;
-pub mod smbios_publisher;
+pub mod smbios_platform;
