@@ -6,7 +6,7 @@ RUSTC_BOOTSTRAP = 1
 NO_STD_FLAGS = "--profile ${RUSTC_PROFILE} -Zbuild-std=core,compiler_builtins,alloc -Zbuild-std-features=compiler-builtins-mem -Zunstable-options --timings=html"
 STD_FLAGS = "--profile ${RUSTC_PROFILE} --features std"
 TEST_FLAGS = { value = "", condition = { env_not_set = ["TEST_FLAGS"] } }
-COV_FLAGS = { value = "--workspace --out html --out xml --exclude-files **/tests/* --exclude-files **/benches/* --exclude patina_test_macro", condition = { env_not_set = ["COV_FLAGS"] } }
+COV_FLAGS = { value = "--workspace --profile test --ignore-filename-regex .*test.*", condition = { env_not_set = ["COV_FLAGS"] } }
 RUSTDOCFLAGS = "-D warnings -D missing_docs"
 
 [env.development]
@@ -82,13 +82,32 @@ command = "cargo"
 args = ["test", "@@split(INDIVIDUAL_PACKAGE_TARGETS, )", "@@split(TEST_FLAGS, )"]
 dependencies = ["individual-package-targets"]
 
-[tasks.coverage]
-description = "Build and run all tests and calculate coverage."
+[tasks.coverage-collect]
+description = "Run tests and collect coverage data without generating reports."
 install_crate = false
 clear = true
 command = "cargo"
-args = ["tarpaulin", "@@split(COV_FLAGS, )", "--output-dir", "${CARGO_MAKE_WORKSPACE_WORKING_DIRECTORY}/target"]
+args = ["llvm-cov", "@@split(COV_FLAGS, )", "--no-report"]
 dependencies = ["individual-package-targets"]
+
+[tasks.coverage-lcov]
+description = "Generate an LCOV coverage report from collected data."
+install_crate = false
+clear = true
+command = "cargo"
+args = ["llvm-cov", "report", "--lcov", "--output-path", "${CARGO_MAKE_WORKSPACE_WORKING_DIRECTORY}/target/lcov.info"]
+
+[tasks.coverage-html]
+description = "Generate an HTML coverage report from collected data."
+install_crate = false
+clear = true
+command = "cargo"
+args = ["llvm-cov", "report", "--html", "--output-dir", "${CARGO_MAKE_WORKSPACE_WORKING_DIRECTORY}/target/coverage"]
+
+[tasks.coverage]
+description = "Build and run all tests and calculate coverage (runs test once and generates LCOV and HTML reports)."
+dependencies = ["coverage-collect", "coverage-lcov", "coverage-html"]
+clear = true
 
 [tasks.coverage-filter]
 description = "Generates the coverage filter to ignore coverage data for other packages."
@@ -96,21 +115,20 @@ private = true
 script_runner = "@duckscript"
 script = '''
 package = get_env PACKAGE
-members =  get_env CARGO_MAKE_CRATE_WORKSPACE_MEMBERS
+members = get_env CARGO_MAKE_CRATE_WORKSPACE_MEMBERS
 
 1 = split ${members} ,
 
 2 = array
 for member in ${1}
-  if not contains ${member} ${package}
-    t = concat "--exclude-files " ${member} /*
-    array_push ${2} ${t}
-    release ${t}
-  end
+    if not contains ${member} ${package}
+        array_push ${2} ${member}
+    end
+
+
 end
 
-joined_args = trim ${2}
-joined = array_join ${joined_args} " "
+joined = array_join ${2} "|"
 
 set_env PACKAGE_COVERAGE_FILTER ${joined}
 release ${1}
@@ -125,7 +143,7 @@ install_crate = false
 description = """Generates Code coverage for $(PACKAGE) and fails the build if coverage is below 80%."""
 dependencies = ["coverage-filter"]
 command = "cargo"
-args = ["tarpaulin", "-p", "${PACKAGE}", "--fail-under", "80", "--exclude-files", "@@split(PACKAGE_COVERAGE_FILTER, )", "@@split(COV_FLAGS, )", "--output-dir", "${CARGO_MAKE_WORKSPACE_WORKING_DIRECTORY}/target"]
+args = ["llvm-cov", "--package", "${PACKAGE}", "--fail-under-lines", "80", "--ignore-filename-regex", "${PACKAGE_COVERAGE_FILTER}"]
 
 [tasks.coverage-fail]
 description = """Runs coverage on one or all packages and fails if coverage is below 80%.
