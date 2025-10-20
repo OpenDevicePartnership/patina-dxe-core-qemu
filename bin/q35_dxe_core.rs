@@ -14,7 +14,7 @@ use core::{ffi::c_void, panic::PanicInfo};
 use patina::{log::Format, serial::uart::Uart16550};
 use patina_adv_logger::{component::AdvancedLoggerComponent, logger::AdvancedLogger};
 use patina_dxe_core::Core;
-use patina_samples as sc;
+use patina_samples::component as sc;
 use patina_stacktrace::StackTrace;
 use qemu_resources::q35::component::service as q35_services;
 extern crate alloc;
@@ -73,9 +73,9 @@ pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
         .init_memory(physical_hob_list) // We can make allocations now!
         .with_service(patina_ffs_extractors::CompositeSectionExtractor::default())
         .with_component(adv_logger_component)
-        .with_component(sc::HelloStruct("World")) // Example of a struct component
-        .with_component(sc::GreetingsEnum::Hello("World")) // Example of a struct component (enum)
-        .with_component(sc::GreetingsEnum::Goodbye("World")) // Example of a struct component (enum)0
+        .with_component(sc::hello_world::HelloStruct("World")) // Example of a struct component
+        .with_component(sc::hello_world::GreetingsEnum::Hello("World")) // Example of a struct component (enum)
+        .with_component(sc::hello_world::GreetingsEnum::Goodbye("World")) // Example of a struct component (enum)0
         .with_config(patina_mm::config::MmCommunicationConfiguration {
             acpi_base: patina_mm::config::AcpiBase::Mmio(0x0), // Actual ACPI base address will be set during boot
             cmd_port: patina_mm::config::MmiPort::Smi(0xB2),
