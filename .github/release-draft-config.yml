@@ -92,3 +92,4 @@ exclude-labels:
 
 exclude-contributors:
   - 'github-actions[bot]'
+  - 'patina-automation[bot]'
