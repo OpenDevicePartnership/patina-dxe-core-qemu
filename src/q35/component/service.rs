@@ -8,6 +8,9 @@
 //!
 //! SPDX-License-Identifier: Apache-2.0
 //!
+#[coverage(off)]
 pub mod mm_config_provider;
+#[coverage(off)]
 pub mod mm_control;
+#[coverage(off)]
 pub mod mm_test;

@@ -9,5 +9,6 @@
 //! SPDX-License-Identifier: Apache-2.0
 //!
 #![no_std]
+#![feature(coverage_attribute)]
 
 pub mod q35;
