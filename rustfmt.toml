@@ -1,5 +1,11 @@
 # rustfmt (and cargo fmt) will automatically pick up this config when run in the workspace.
 
+# NOTE: This file is automatically synchronized from Patina DevOps. Update the original file there
+#       instead of the file in this repo.
+#
+# - Patina DevOps Repo: https://github.com/OpenDevicePartnership/patina-devops
+# - File Sync Settings: https://github.com/OpenDevicePartnership/patina-devops/blob/main/.sync/Files.yml
+
 # Note that some items are included here set to their default values. This is to explicitly
 # reveal settings for more common options.
 
@@ -10,7 +16,7 @@ hard_tabs = false             # Always uses spaces for indentation and alignment
 max_width = 120               # The maximum width of each line
 merge_derives = false         # Do not merge derives into a single line (leave to author discretion).
 imports_granularity = "Crate" # Merge imports from a single crate into separate statements.
-newline_style = "Windows"     # Always use Windows line endings '\r\n'
+newline_style = "Unix"        # Always use Linux line endings '\n'
 reorder_impl_items = false    # Do not force where type and const before macros and methods in impl blocks.
 reorder_imports = true        # Do reorder import and extern crate statements alphabetically for readability.
 reorder_modules = true        # Do reorder mod declarations alphabetically for readability.

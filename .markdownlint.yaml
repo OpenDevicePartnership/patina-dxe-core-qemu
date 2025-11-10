@@ -1,6 +1,6 @@
-# @file markdownlint.yml
+# @file .markdownlint.yml
 #
-# markdownlint configuration file
+# Patina markdownlint configuration file
 #
 ##
 # Copyright (c) Microsoft Corporation
@@ -8,5 +8,6 @@
 ##
 {
     "default": true,
-    "MD013": {"line_length": 120, "code_blocks": false }
+    "MD013": {"line_length": 120, "code_blocks": false, "tables": false},
+    "MD033": {"allowed_elements": ["br", "center", "div", "iframe"]}
 }
