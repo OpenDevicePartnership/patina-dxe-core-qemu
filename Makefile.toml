@@ -184,6 +184,7 @@ script = '''
 
 # Find all arguments after --crate-patch and collect them
 patch_repos = array
+leave_patch = set false
 if not is_empty ${1}
     args = split ${1} ";"
     found_patch_flag = set false
@@ -191,6 +192,8 @@ if not is_empty ${1}
         arg = trim ${arg}
         if eq ${arg} "--crate-patch"
             found_patch_flag = set true
+        elseif eq ${arg} "--leave-patch"
+            leave_patch = set true
         elseif ${found_patch_flag}
             array_push ${patch_repos} ${arg}
             found_patch_flag = set false
@@ -286,8 +289,13 @@ end
 cm_run_task build-efi
 
 if ${needs_patch}
-    # Revert the Cargo.toml file to the original state
-    mv Cargo.toml.bak Cargo.toml
+    if not ${leave_patch}
+        # Revert the Cargo.toml file to the original state
+        mv Cargo.toml.bak Cargo.toml
+    else
+        # Remove the backup since we're leaving the patch
+        rm Cargo.toml.bak
+    end
 end
 
 exit 0

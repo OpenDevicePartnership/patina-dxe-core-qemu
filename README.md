@@ -55,6 +55,20 @@ built by default on debug builds, but not release builds. It can be built on rel
 `build_debugger` feature to the build, e.g. `cargo make q35-release --features build_debugger`. The debugger
 is disabled by default, passing the `enable_debugger` feature to the build will enable it.
 
+## Patching Local Dependencies
+
+During development, you may need to build against local versions of Patina crates. This repo's build supports patching
+dependencies using the `--crate-patch` argument. By default, patches are automatically removed after building, but you
+can keep them using the `--leave-patch` flag.
+
+| Use Case | Command | Result |
+|----------|---------|--------|
+| Build with local Patina crates | `cargo make q35 -- --crate-patch c:\src\patina\` | Patches, builds, & reverts patch |
+| Build and keep patch | `cargo make q35 -- --crate-patch c:\src\patina\ --leave-patch` | Patches, builds, keeps patch |
+| Multiple repositories | `cargo make q35 -- --crate-patch c:\path1\ --crate-patch c:\path2\` | Patches multiple repos |
+
+The `--crate-patch` argument works with any build target (`q35`, `q35-release`, `sbsa`, `sbsa-release`).
+
 ## Size Comparison
 
 The code in both the C and Rust modules is always changing and depending on the compression algorithm used, size comparisons
