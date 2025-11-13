@@ -1,6 +1,19 @@
-
-
-
+//! QEMU Q35 Timer Calibration
+//!
+//! This module provides functionality to calibrate the tick frequency on
+//! QEMU Q35 platforms using the ACPI Power Management Timer (PM Timer).
+//!
+//! ## References
+//!
+//! - [ACPI PM Timer](https://uefi.org/specs/ACPI/6.5/04_ACPI_Hardware_Specification.html)
+//! - [FADT Table Definition](https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/05_ACPI_Software_Programming_Model/ACPI_Software_Programming_Model.html#fixed-acpi-description-table-fadt)
+//!
+//! ## License
+//!
+//! Copyright (C) Microsoft Corporation.
+//!
+//! SPDX-License-Identifier: Apache-2.0
+//!
 
 use core::arch::x86_64;
 
