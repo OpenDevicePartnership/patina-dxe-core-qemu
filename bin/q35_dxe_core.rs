@@ -19,6 +19,7 @@ use patina_stacktrace::StackTrace;
 use qemu_resources::q35::component::service as q35_services;
 extern crate alloc;
 use alloc::vec;
+use qemu_resources::q35::timer;
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
@@ -74,6 +75,7 @@ pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
     log::info!("DXE Core Platform Binary v{}", env!("CARGO_PKG_VERSION"));
 
     Core::default()
+        .init_timer_frequency(Some(timer::calibrate_tsc_frequency()))
         .init_memory(physical_hob_list) // We can make allocations now!
         .with_service(patina_ffs_extractors::CompositeSectionExtractor::default())
         .with_component(adv_logger_component)
