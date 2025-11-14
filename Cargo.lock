@@ -331,9 +331,9 @@ checksum = "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a"
 
 [[package]]
 name = "patina"
-version = "14.3.2"
+version = "14.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d2b61a1f3faf9f6891326d8221df9d89e125a370b219549abe6ae2b0d3a8c3cd"
+checksum = "21f0e70aac0830f24e3b0cd4dc697fcff53aa625336ee07ad419e9c36cb9d335"
 dependencies = [
  "cfg-if",
  "fallible-streaming-iterator",
@@ -370,9 +370,9 @@ dependencies = [
 
 [[package]]
 name = "patina_debugger"
-version = "14.3.2"
+version = "14.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5e819b676aba2387d92918dff8e5a8973e649cf6e95e62ad1cd7e66837ae4d5e"
+checksum = "b7ca1f2e3ea601f158df3a10753dccfb48df5c74638455f6fce91d77b2e8ee5e"
 dependencies = [
  "bitfield-struct",
  "cfg-if",
@@ -380,6 +380,7 @@ dependencies = [
  "log",
  "patina",
  "patina_internal_cpu",
+ "patina_mtrr",
  "patina_paging",
  "spin",
 ]
@@ -453,9 +454,9 @@ dependencies = [
 
 [[package]]
 name = "patina_internal_cpu"
-version = "14.3.2"
+version = "14.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1284493d70284b99856717744d37e704675dff05b02640e5ca3450a57b8c3300"
+checksum = "81a834ba1789fc553bbf0b3dcac9c0f76a50edc253c91d40742bef704b20d098"
 dependencies = [
  "arm-gic",
  "cfg-if",
@@ -505,9 +506,9 @@ dependencies = [
 
 [[package]]
 name = "patina_macro"
-version = "14.3.2"
+version = "14.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bf1a92cdc2283e31ba038871c6141f09c19b53620509257a21b22523a2491a80"
+checksum = "aa7527737605af7494e14ca114e8be71cb5483e3a0dae4551a8edf6aa01b40f2"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -532,9 +533,9 @@ dependencies = [
 
 [[package]]
 name = "patina_mtrr"
-version = "1.1.3"
+version = "1.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "29117ee0cbc965c73f13761f0ebbcbefbaf500923f8e8af4d0d3926dd6be30b8"
+checksum = "b1798c2b80b7d43aecc6ca85cd18be519ca2b13444faa38314a4d530cbc93c05"
 dependencies = [
  "bitfield-struct",
  "cfg-if",
@@ -598,9 +599,9 @@ dependencies = [
 
 [[package]]
 name = "patina_stacktrace"
-version = "14.3.2"
+version = "14.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dc7367d91d160bf15a6714afdb77527d81ed3536c63893a0f46023772029cf7f"
+checksum = "839efa87dd31b55cf5cb5419d2f06be457462cf29b19986ea7b75055ddb92fb8"
 dependencies = [
  "cfg-if",
  "log",
