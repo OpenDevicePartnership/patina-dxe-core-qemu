@@ -66,6 +66,8 @@ impl ComponentInfo for Q35 {
         add.component(q35_services::mm_config_provider::MmConfigurationProvider);
         add.component(q35_services::mm_control::QemuQ35PlatformMmControl::new());
         add.component(patina_mm::component::sw_mmi_manager::SwMmiManager::new());
+        add.component(patina_performance::component::performance_config_provider::PerformanceConfigurationProvider);
+        add.component(patina_performance::component::performance::Performance);
     }
 
     fn configs(mut add: Add<Config>) {
@@ -74,6 +76,16 @@ impl ComponentInfo for Q35 {
             cmd_port: patina_mm::config::MmiPort::Smi(0xB2),
             data_port: patina_mm::config::MmiPort::Smi(0xB3),
             comm_buffers: vec![],
+        });
+        add.config(patina_performance::config::PerfConfig {
+            enable_component: true,
+            enabled_measurements: {
+                patina::performance::Measurement::DriverBindingStart         // Adds driver binding start measurements.
+               | patina::performance::Measurement::DriverBindingStop        // Adds driver binding stop measurements.
+               | patina::performance::Measurement::DriverBindingSupport     // Adds driver binding support measurements.
+               | patina::performance::Measurement::LoadImage                // Adds load image measurements.
+               | patina::performance::Measurement::StartImage // Adds start image measurements.
+            },
         });
     }
 }
