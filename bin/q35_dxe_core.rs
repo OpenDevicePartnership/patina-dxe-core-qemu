@@ -43,6 +43,9 @@ static LOGGER: AdvancedLogger<Uart16550> = AdvancedLogger::new(
         ("gcd_measure", log::LevelFilter::Off),
         ("allocations", log::LevelFilter::Off),
         ("efi_memory_map", log::LevelFilter::Off),
+        ("mm_comm", log::LevelFilter::Off),
+        ("sw_mmi", log::LevelFilter::Off),
+        ("patina_performance", log::LevelFilter::Off),
     ],
     log::LevelFilter::Info,
     Uart16550::Io { base: 0x402 },
@@ -86,6 +89,8 @@ pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
             acpi_base: patina_mm::config::AcpiBase::Mmio(0x0), // Actual ACPI base address will be set during boot
             cmd_port: patina_mm::config::MmiPort::Smi(0xB2),
             data_port: patina_mm::config::MmiPort::Smi(0xB3),
+            enable_comm_buffer_updates: false,
+            updatable_buffer_id: None,
             comm_buffers: vec![],
         })
         .with_component(q35_services::mm_config_provider::MmConfigurationProvider)
@@ -97,8 +102,8 @@ pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
         //
         // Tracked in https://github.com/microsoft/mu_feature_mm_supv/issues/541
         //
-        // .with_component(patina_mm::component::communicator::MmCommunicator::new())
-        // .with_component(q35_services::mm_test::QemuQ35MmTest::new())
+        .with_component(patina_mm::component::communicator::MmCommunicator::new())
+        .with_component(q35_services::mm_test::QemuQ35MmTest::new())
         .with_config(patina_performance::config::PerfConfig {
             enable_component: true,
             enabled_measurements: {
