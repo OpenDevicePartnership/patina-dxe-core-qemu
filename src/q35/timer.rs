@@ -19,13 +19,25 @@ use core::arch::x86_64;
 
 const DEFAULT_ACPI_TIMER_FREQUENCY: u64 = 3_579_545; // 3.579545 MHz
 
-pub fn calibrate_tsc_frequency() -> u64 {
+pub fn calibrate_tsc_frequency(pm_timer_port: u16) -> u64 {
+    // If there is an issue with the timer calibration loop, avoid hanging forever.
+    const MAX_WAIT_CYCLES: usize = 1_000_000;
+
     // Wait for a PM timer edge to avoid partial intervals.
-    let mut start_pm = read_pm_timer();
+    let mut start_pm = read_pm_timer(pm_timer_port);
     let mut next_pm;
+    let mut calibration_cycles_left = MAX_WAIT_CYCLES;
     loop {
-        next_pm = read_pm_timer();
+        next_pm = read_pm_timer(pm_timer_port);
         if next_pm != start_pm {
+            break;
+        }
+
+        calibration_cycles_left -= 1;
+        // Avoid an infinite hang by breaking after too many cycles.
+        // This means timer calibration may not be fully accurate, but can still safely proceed.
+        if calibration_cycles_left == 0 {
+            log::warn!("PM timer calibration timeout waiting for edge");
             break;
         }
     }
@@ -39,11 +51,20 @@ pub fn calibrate_tsc_frequency() -> u64 {
     let target_ticks = (DEFAULT_ACPI_TIMER_FREQUENCY / TARGET_INTERVAL_SIZE) as u32;
 
     let mut end_pm;
+    calibration_cycles_left = MAX_WAIT_CYCLES;
     loop {
-        end_pm = read_pm_timer();
+        end_pm = read_pm_timer(pm_timer_port);
         let delta = end_pm.wrapping_sub(start_pm);
         if delta >= target_ticks {
             break;
+        }
+        calibration_cycles_left -= 1;
+        // If the PM timer is malfunctioning or not supported, avoid an infinite hang by breaking after too many cycles.
+        // In this case we cannot safely proceed as will cause a zero division error, so we return a default value.
+        // This default value is not accurate, but allows the system to proceed and gather relative timings still.
+        if calibration_cycles_left == 0 {
+            log::warn!("PM timer calibration timeout waiting for target ticks");
+            return DEFAULT_ACPI_TIMER_FREQUENCY;
         }
     }
 
@@ -63,13 +84,12 @@ pub fn calibrate_tsc_frequency() -> u64 {
     freq_hz
 }
 
-fn read_pm_timer() -> u32 {
-    const PM_TIMER_PORT: u16 = 0x608; // Obtained from ACPI FADT X_PM_TIMER_BLOCK.
+fn read_pm_timer(pm_timer_port: u16) -> u32 {
     let value: u32;
     unsafe {
         core::arch::asm!(
             "in eax, dx",
-            in("dx") PM_TIMER_PORT,
+            in("dx") pm_timer_port,
             out("eax") value,
             options(nomem, nostack, preserves_flags),
         );

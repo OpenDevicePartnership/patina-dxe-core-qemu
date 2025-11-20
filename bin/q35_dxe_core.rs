@@ -36,6 +36,10 @@ fn panic(info: &PanicInfo) -> ! {
     loop {}
 }
 
+/// Port address of the ACPI PM Timer.
+/// Obtained from ACPI FADT `X_PM_TIMER_BLOCK`. It is always at 0x608 on Q35.
+const PM_TIMER_PORT: u16 = 0x608;
+
 static LOGGER: AdvancedLogger<Uart16550> = AdvancedLogger::new(
     Format::Standard,
     &[
@@ -78,7 +82,7 @@ pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
     log::info!("DXE Core Platform Binary v{}", env!("CARGO_PKG_VERSION"));
 
     Core::default()
-        .init_timer_frequency(Some(timer::calibrate_tsc_frequency()))
+        .init_timer_frequency(Some(timer::calibrate_tsc_frequency(PM_TIMER_PORT)))
         .init_memory(physical_hob_list) // We can make allocations now!
         .with_service(patina_ffs_extractors::CompositeSectionExtractor::default())
         .with_component(adv_logger_component)

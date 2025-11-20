@@ -22,15 +22,15 @@ path = "src/lib.rs"
 log = { version = "^0.4", default-features = false, features = [
     "release_max_level_warn",
 ] }
-patina_adv_logger = { version = "15" }
-patina_debugger = { version = "15" }
-patina_dxe_core = { version = "15" }
-patina_mm = { version = "15" }
-patina_performance = { version = "15"}
-patina_samples = { version = "15" }
-patina = { version = "15", features = ["enable_patina_tests"] }
-patina_ffs_extractors = { version = "15" }
-patina_stacktrace = { version = "15" }
+patina_adv_logger = { path="C:/Users/sherryfan/patina/components/patina_adv_logger" }
+patina_debugger = { path = "C:/Users/sherryfan/patina/core/patina_debugger" }
+patina_dxe_core = { path="C:/Users/sherryfan/patina/patina_dxe_core" }
+patina_mm = { path="C:/Users/sherryfan/patina/components/patina_mm" }
+patina_performance = { path="C:/Users/sherryfan/patina/components/patina_performance" }
+patina_samples = { path="C:/Users/sherryfan/patina/components/patina_samples" }
+patina = { path="C:/Users/sherryfan/patina/sdk/patina" }
+patina_ffs_extractors = { path="C:/Users/sherryfan/patina/sdk/patina_ffs_extractors" }
+patina_stacktrace = { path="C:/Users/sherryfan/patina/core/patina_stacktrace" }
 r-efi = { version = "^5", default-features = false }
 x86_64 = { version = "=0.15.2", default-features = false, features = [
   "instructions"
