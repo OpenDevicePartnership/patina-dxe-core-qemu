@@ -82,7 +82,7 @@ pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
     log::info!("DXE Core Platform Binary v{}", env!("CARGO_PKG_VERSION"));
 
     Core::default()
-        .init_timer_frequency(Some(timer::calibrate_tsc_frequency(PM_TIMER_PORT)))
+        .init_timer_frequency(Some(unsafe { timer::calibrate_tsc_frequency(PM_TIMER_PORT) })) // SAFETY: This port is always valid for the ACPI PM timer on Q35.
         .init_memory(physical_hob_list) // We can make allocations now!
         .with_service(patina_ffs_extractors::CompositeSectionExtractor::default())
         .with_component(adv_logger_component)

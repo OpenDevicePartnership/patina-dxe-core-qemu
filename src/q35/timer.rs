@@ -20,7 +20,12 @@ use core::arch::x86_64;
 
 const DEFAULT_ACPI_TIMER_FREQUENCY: u64 = 3_579_545; // 3.579545 MHz
 
-pub fn calibrate_tsc_frequency(pm_timer_port: u16) -> u64 {
+/// Calibrates the TSC frequency using the ACPI PM Timer.
+///
+/// # Safety
+/// This function performs raw I/O port access, which is inherently unsafe. The caller must ensure
+/// that the provided `pm_timer_port` is valid and that reading from this port does not violate any system constraints.
+pub unsafe fn calibrate_tsc_frequency(pm_timer_port: u16) -> u64 {
     // If there is an issue with the timer calibration loop, avoid hanging forever.
     const MAX_WAIT_CYCLES: usize = 1_000_000;
 
@@ -45,6 +50,10 @@ pub fn calibrate_tsc_frequency(pm_timer_port: u16) -> u64 {
     start_pm = next_pm;
 
     // Record starting TSC.
+    // SAFETY: `_rdtsc` is a leaf intrinsic that reads the processor's timestamp counter.
+    // It has no memory or pointer safety implications. The only requirement is that the
+    // caller accepts that `RDTSC` is not serializing and may be affected by out-of-order
+    // execution, but this does not impact Rust's safety guarantees.
     let start_tsc = unsafe { x86_64::_rdtsc() };
 
     // Hz = ticks/second. Divided by 20 ~ ticks / 50 ms.
@@ -70,6 +79,10 @@ pub fn calibrate_tsc_frequency(pm_timer_port: u16) -> u64 {
     }
 
     // Record ending TSC.
+    // SAFETY: `_rdtsc` is a leaf intrinsic that reads the processor's timestamp counter.
+    // It has no memory or pointer safety implications. The only requirement is that the
+    // caller accepts that `RDTSC` is not serializing and may be affected by out-of-order
+    // execution, but this does not impact Rust's safety guarantees.
     let end_tsc = unsafe { x86_64::_rdtsc() };
 
     // Time elapsed based on PM timer ticks.
@@ -83,8 +96,14 @@ pub fn calibrate_tsc_frequency(pm_timer_port: u16) -> u64 {
     (delta_tsc * 1_000_000_000) / delta_time_ns
 }
 
-fn read_pm_timer(pm_timer_port: u16) -> u32 {
+/// Reads the current value of the ACPI PM Timer from the specified I/O port.
+///
+/// # Safety
+/// This function performs raw I/O port access, which is inherently unsafe. The caller must ensure that
+/// the provided `pm_timer_port` is valid and that reading from this port does not violate any system constraints.
+unsafe fn read_pm_timer(pm_timer_port: u16) -> u32 {
     let value: u32;
+    // SAFETY:
     unsafe {
         core::arch::asm!(
             "in eax, dx",
