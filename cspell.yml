@@ -26,6 +26,8 @@ words:
   - dxecore
   - efiapi
   - gdbstub
+  - gicd
+  - gicr
   - keccak
   - lzma
   - mdbook
