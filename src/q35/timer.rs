@@ -14,6 +14,7 @@
 //!
 //! SPDX-License-Identifier: Apache-2.0
 //!
+#![cfg(all(target_os = "uefi", target_arch = "x86_64", feature = "x64"))]
 
 use core::arch::x86_64;
 
@@ -78,10 +79,8 @@ pub fn calibrate_tsc_frequency(pm_timer_port: u16) -> u64 {
     // Rdtsc ticks.
     let delta_tsc = end_tsc - start_tsc;
 
-    // Frequency = Rdstc ticks / elapsed time.
-    let freq_hz = (delta_tsc * 1_000_000_000) / delta_time_ns;
-
-    freq_hz
+    // Frequency = Rdtsc ticks / elapsed time.
+    (delta_tsc * 1_000_000_000) / delta_time_ns
 }
 
 fn read_pm_timer(pm_timer_port: u16) -> u32 {

@@ -24,6 +24,7 @@ words:
   - apmc
   - depex
   - dxecore
+  - fadt
   - efiapi
   - gdbstub
   - keccak
@@ -38,6 +39,7 @@ words:
   - pmbase
   - pmcon
   - pytool
+  - rdtsc
   - repr
   - rustc
   - rustls
@@ -49,4 +51,3 @@ words:
   - webpki
   - zbuild
   - zunstable
-
