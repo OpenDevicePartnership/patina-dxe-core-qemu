@@ -10,3 +10,4 @@
 //!
 pub mod component;
 pub mod registers;
+pub mod timer;
