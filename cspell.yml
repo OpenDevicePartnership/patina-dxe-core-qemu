@@ -27,6 +27,8 @@ words:
   - fadt
   - efiapi
   - gdbstub
+  - gicd
+  - gicr
   - keccak
   - lzma
   - mdbook
