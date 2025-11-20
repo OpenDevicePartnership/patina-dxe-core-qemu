@@ -61,13 +61,21 @@ impl ComponentInfo for Sbsa {
     }
 }
 
-impl Platform for Sbsa {
-    type ComponentInfo = Self;
-    type Extractor = CompositeSectionExtractor;
+impl MemoryInfo for Sbsa { }
 
+impl CpuInfo for Sbsa {
     fn gic_bases() -> GicBases {
-        GicBases::new(0x40060000, 0x40080000)
+        /// SAFETY: gicd and gicr bases correctly point to the register spaces.
+        /// SAFETY: Access to these registers is exclusive to this struct instance.
+        unsafe { GicBases::new(0x40060000, 0x40080000) }
     }
+}
+
+impl PlatformInfo for Sbsa {
+    type ComponentInfo = Self;
+    type MemoryInfo = Self;
+    type CpuInfo = Self;
+    type Extractor = CompositeSectionExtractor;
 }
 
 static CORE: Core<Sbsa> = Core::new(CompositeSectionExtractor::new());
@@ -77,7 +85,7 @@ pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
     // SAFETY: The physical_hob_list pointer is considered valid at this point as it's provided by the core
     // to the entry point.
     unsafe {
-        LOGGER.init_advanced_logger(physical_hob_list).unwrap();
+        LOGGER.init(physical_hob_list).unwrap();
     }
     log::set_logger(&LOGGER).map(|()| log::set_max_level(log::LevelFilter::Trace)).unwrap();
 

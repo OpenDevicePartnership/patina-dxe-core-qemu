@@ -60,6 +60,10 @@ static DEBUGGER: patina_debugger::PatinaDebugger<Uart16550> =
 
 struct Q35;
 
+impl MemoryInfo for Q35 { }
+
+impl CpuInfo for Q35 { }
+
 impl ComponentInfo for Q35 {
     fn components(mut add: Add<Component>) {
         add.component(AdvancedLoggerComponent::<Uart16550>::new(&LOGGER));
@@ -75,6 +79,8 @@ impl ComponentInfo for Q35 {
             acpi_base: patina_mm::config::AcpiBase::Mmio(0x0), // Actual ACPI base address will be set during boot
             cmd_port: patina_mm::config::MmiPort::Smi(0xB2),
             data_port: patina_mm::config::MmiPort::Smi(0xB3),
+            enable_comm_buffer_updates: false,
+            updatable_buffer_id: None,
             comm_buffers: vec![],
         });
         add.config(patina_performance::config::PerfConfig {
@@ -90,8 +96,10 @@ impl ComponentInfo for Q35 {
     }
 }
 
-impl Platform for Q35 {
+impl PlatformInfo for Q35 {
+    type MemoryInfo = Self;
     type ComponentInfo = Self;
+    type CpuInfo = Self;
     type Extractor = CompositeSectionExtractor;
 }
 
@@ -102,7 +110,7 @@ pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
     // SAFETY: The physical_hob_list pointer is considered valid at this point as it's provided by the core
     // to the entry point.
     unsafe {
-        LOGGER.init_advanced_logger(physical_hob_list).unwrap();
+        LOGGER.init(physical_hob_list).unwrap();
     }
     log::set_logger(&LOGGER).map(|()| log::set_max_level(log::LevelFilter::Trace)).unwrap();
 
