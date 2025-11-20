@@ -58,7 +58,6 @@ struct Sbsa;
 // Default `MemoryInfo` implementation is sufficient for SBSA.
 impl MemoryInfo for Sbsa {}
 
-// Default `ComponentInfo` implementation is sufficient for SBSA.
 impl CpuInfo for Sbsa {
     fn gic_bases() -> GicBases {
         // SAFETY: gicd and gicr bases correctly point to the register spaces.
