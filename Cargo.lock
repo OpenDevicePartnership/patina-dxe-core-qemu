@@ -349,7 +349,7 @@ checksum = "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a"
 
 [[package]]
 name = "patina"
-version = "16.0.0"
+version = "16.0.1"
 dependencies = [
  "cfg-if",
  "fallible-streaming-iterator",
@@ -372,7 +372,7 @@ dependencies = [
 
 [[package]]
 name = "patina_acpi"
-version = "16.0.0"
+version = "16.0.1"
 dependencies = [
  "log",
  "memoffset",
@@ -386,7 +386,7 @@ dependencies = [
 
 [[package]]
 name = "patina_adv_logger"
-version = "16.0.0"
+version = "16.0.1"
 dependencies = [
  "log",
  "mu_rust_helpers",
@@ -399,7 +399,7 @@ dependencies = [
 
 [[package]]
 name = "patina_debugger"
-version = "16.0.0"
+version = "16.0.1"
 dependencies = [
  "bitfield-struct",
  "cfg-if",
@@ -414,7 +414,7 @@ dependencies = [
 
 [[package]]
 name = "patina_dxe_core"
-version = "16.0.0"
+version = "16.0.1"
 dependencies = [
  "aarch64-cpu 11.1.0",
  "arm-gic",
@@ -444,7 +444,7 @@ dependencies = [
 
 [[package]]
 name = "patina_ffs"
-version = "16.0.0"
+version = "16.0.1"
 dependencies = [
  "log",
  "patina",
@@ -453,7 +453,7 @@ dependencies = [
 
 [[package]]
 name = "patina_ffs_extractors"
-version = "16.0.0"
+version = "16.0.1"
 dependencies = [
  "alloc-no-stdlib",
  "brotli-decompressor",
@@ -467,14 +467,14 @@ dependencies = [
 
 [[package]]
 name = "patina_internal_collections"
-version = "16.0.0"
+version = "16.0.1"
 dependencies = [
  "log",
 ]
 
 [[package]]
 name = "patina_internal_cpu"
-version = "16.0.0"
+version = "16.0.1"
 dependencies = [
  "arm-gic",
  "cfg-if",
@@ -492,7 +492,7 @@ dependencies = [
 
 [[package]]
 name = "patina_internal_depex"
-version = "16.0.0"
+version = "16.0.1"
 dependencies = [
  "log",
  "r-efi",
@@ -501,7 +501,7 @@ dependencies = [
 
 [[package]]
 name = "patina_internal_device_path"
-version = "16.0.0"
+version = "16.0.1"
 dependencies = [
  "log",
  "r-efi",
@@ -520,7 +520,7 @@ dependencies = [
 
 [[package]]
 name = "patina_macro"
-version = "16.0.0"
+version = "16.0.1"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -530,7 +530,7 @@ dependencies = [
 
 [[package]]
 name = "patina_mm"
-version = "16.0.0"
+version = "16.0.1"
 dependencies = [
  "cfg-if",
  "log",
@@ -565,7 +565,7 @@ dependencies = [
 
 [[package]]
 name = "patina_performance"
-version = "16.0.0"
+version = "16.0.1"
 dependencies = [
  "log",
  "mu_rust_helpers",
@@ -580,7 +580,7 @@ dependencies = [
 
 [[package]]
 name = "patina_samples"
-version = "16.0.0"
+version = "16.0.1"
 dependencies = [
  "log",
  "patina",
@@ -590,7 +590,7 @@ dependencies = [
 
 [[package]]
 name = "patina_smbios"
-version = "16.0.0"
+version = "16.0.1"
 dependencies = [
  "log",
  "patina",
@@ -603,7 +603,7 @@ dependencies = [
 
 [[package]]
 name = "patina_stacktrace"
-version = "16.0.0"
+version = "16.0.1"
 dependencies = [
  "cfg-if",
  "log",
@@ -632,7 +632,7 @@ dependencies = [
 
 [[package]]
 name = "qemu_dxe_core"
-version = "2.1.0"
+version = "2.1.1"
 dependencies = [
  "log",
  "patina",
