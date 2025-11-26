@@ -42,20 +42,6 @@ set_env INDIVIDUAL_PACKAGE_TARGETS ${joined_args}
 release ${joined_args}
 '''
 
-[tasks.build-bin]
-description = """Builds the standard library DXE core.
-
-Customizations:
-    -p [development|release]: Builds in debug or release. Default: development
-
-Example:
-    `cargo make build-bin`
-    `cargo make -p release build-bin`
-"""
-clear = true
-command = "cargo"
-args = ["build", "@@split(STD_FLAGS, )", "--example", "dxe_core_std"]
-
 [tasks.check_no_std]
 description = "Checks rust code for no_std build errors with results."
 private = true
