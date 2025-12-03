@@ -30,11 +30,13 @@ pub unsafe fn calibrate_tsc_frequency(pm_timer_port: u16) -> u64 {
     const MAX_WAIT_CYCLES: usize = 1_000_000;
 
     // Wait for a PM timer edge to avoid partial intervals.
-    let mut start_pm = read_pm_timer(pm_timer_port);
+    // Safety: The provided PM timer port must be valid per the function's safety contract.
+    let mut start_pm = unsafe { read_pm_timer(pm_timer_port) };
     let mut next_pm;
     let mut calibration_cycles_left = MAX_WAIT_CYCLES;
     loop {
-        next_pm = read_pm_timer(pm_timer_port);
+        // Safety: The provided PM timer port must be valid per the function's safety contract.
+        next_pm = unsafe { read_pm_timer(pm_timer_port) };
         if next_pm != start_pm {
             break;
         }
@@ -63,7 +65,8 @@ pub unsafe fn calibrate_tsc_frequency(pm_timer_port: u16) -> u64 {
     let mut end_pm;
     calibration_cycles_left = MAX_WAIT_CYCLES;
     loop {
-        end_pm = read_pm_timer(pm_timer_port);
+        // Safety: The provided PM timer port must be valid per the function's safety contract.
+        end_pm = unsafe { read_pm_timer(pm_timer_port) };
         let delta = end_pm.wrapping_sub(start_pm);
         if delta >= target_ticks {
             break;

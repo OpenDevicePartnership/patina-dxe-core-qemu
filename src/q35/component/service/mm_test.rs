@@ -10,7 +10,7 @@
 //! SPDX-License-Identifier: Apache-2.0
 //!
 
-use patina::component::{IntoComponent, service::Service};
+use patina::component::{component, service::Service};
 use patina_mm::service::MmCommunication;
 
 /// MM Supervisor Request Header
@@ -46,9 +46,10 @@ struct MmSupervisorVersionInfo {
 /// QEMU Q35 MM Test Component
 ///
 /// Responsible for testing the MM communication interface on the QEMU Q35 platform.
-#[derive(Default, IntoComponent)]
+#[derive(Default)]
 pub struct QemuQ35MmTest;
 
+#[component]
 impl QemuQ35MmTest {
     /// Creates a new instance of the QEMU Q35 MM Test component.
     pub fn new() -> Self {
