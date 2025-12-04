@@ -10,7 +10,7 @@
 //!
 
 use patina::component::{
-    IntoComponent,
+    component,
     hob::{FromHob, Hob},
     params::ConfigMut,
 };
@@ -22,7 +22,6 @@ extern crate alloc;
 
 /// Responsible for providing MM configuration information to other components. All other MM related components
 /// should be abstracted from MM details by the configuration produced by this component.
-#[derive(IntoComponent)]
 pub struct MmConfigurationProvider;
 
 /// Represents a MM Communication Region.
@@ -42,6 +41,7 @@ pub struct MmCommRegionHob {
     pages: u64,
 }
 
+#[component]
 impl MmConfigurationProvider {
     /// Entry point for the MM Configuration Provider.
     ///

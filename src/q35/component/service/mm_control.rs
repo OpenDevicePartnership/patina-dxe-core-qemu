@@ -13,7 +13,7 @@
 use patina_mm::{config::MmCommunicationConfiguration, service::platform_mm_control::PlatformMmControl};
 
 use crate::q35::registers as register;
-use patina::component::{IntoComponent, Storage, service::IntoService};
+use patina::component::{Storage, component, service::IntoService};
 
 use x86_64::instructions::port::Port;
 
@@ -21,12 +21,13 @@ use x86_64::instructions::port::Port;
 ///
 /// This component is responsible for initializing and controlling the MM environment on the QEMU Q35 platform. All
 /// QEMU Q35-specific logic for initializing the hardware environment for MM should be contained within this component.
-#[derive(IntoComponent, IntoService, Default)]
+#[derive(IntoService, Default)]
 #[service(dyn PlatformMmControl)]
 pub struct QemuQ35PlatformMmControl {
     inner_config: MmCommunicationConfiguration,
 }
 
+#[component]
 impl QemuQ35PlatformMmControl {
     /// Creates a new instance of the QEMU Q35 platform MM control component.
     ///

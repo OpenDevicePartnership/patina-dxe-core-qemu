@@ -51,7 +51,7 @@ static LOGGER: AdvancedLogger<Uart16550> = AdvancedLogger::new(
         ("sw_mmi", log::LevelFilter::Off),
         ("patina_performance", log::LevelFilter::Off),
     ],
-    log::LevelFilter::Info,
+    log::LevelFilter::Warn,
     Uart16550::Io { base: 0x402 },
 );
 
