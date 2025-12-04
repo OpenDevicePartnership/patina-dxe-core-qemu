@@ -28,6 +28,7 @@ patina_dxe_core = { version = "17" }
 patina_mm = { version = "17" }
 patina_performance = { version = "17"}
 patina_samples = { version = "17" }
+patina_smbios = { version = "17"}
 patina = { version = "17", features = ["enable_patina_tests"] }
 patina_ffs_extractors = { version = "17" }
 patina_stacktrace = { version = "17" }

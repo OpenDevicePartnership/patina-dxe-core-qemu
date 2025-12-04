@@ -14,3 +14,5 @@ pub mod mm_config_provider;
 pub mod mm_control;
 #[coverage(off)]
 pub mod mm_test;
+#[coverage(off)]
+pub mod smbios_platform;

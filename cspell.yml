@@ -25,6 +25,7 @@ words:
   - depex
   - dxecore
   - fadt
+  - edk2
   - efiapi
   - gdbstub
   - gicd
@@ -46,6 +47,7 @@ words:
   - rustc
   - rustls
   - sbsa
+  - smbiosview
   - supv
   - tiano
   - uart
