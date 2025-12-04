@@ -69,6 +69,9 @@ impl CpuInfo for Sbsa {
 impl ComponentInfo for Sbsa {
     fn components(mut add: Add<Component>) {
         add.component(AdvancedLoggerComponent::<UartPl011>::new(&LOGGER));
+        add.component(patina::test::TestRunner::default().with_callback(|test_name, err_msg| {
+            log::error!("Test {} failed: {}", test_name, err_msg);
+        }));
     }
 }
 
