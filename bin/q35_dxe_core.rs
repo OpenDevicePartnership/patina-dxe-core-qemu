@@ -111,6 +111,9 @@ impl ComponentInfo for Q35 {
         add.component(q35_services::mm_test::QemuQ35MmTest::new());
         add.component(patina_performance::component::performance_config_provider::PerformanceConfigurationProvider);
         add.component(patina_performance::component::performance::Performance);
+        add.component(patina::test::TestRunner::default().with_callback(|test_name, err_msg| {
+            log::error!("Test {} failed: {}", test_name, err_msg);
+        }));
     }
 }
 
