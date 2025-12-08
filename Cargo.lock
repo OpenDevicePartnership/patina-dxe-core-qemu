@@ -349,7 +349,7 @@ checksum = "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a"
 
 [[package]]
 name = "patina"
-version = "17.0.0"
+version = "17.1.0"
 dependencies = [
  "cfg-if",
  "fallible-streaming-iterator",
@@ -373,7 +373,7 @@ dependencies = [
 
 [[package]]
 name = "patina_acpi"
-version = "17.0.0"
+version = "17.1.0"
 dependencies = [
  "log",
  "memoffset",
@@ -387,7 +387,7 @@ dependencies = [
 
 [[package]]
 name = "patina_adv_logger"
-version = "17.0.0"
+version = "17.1.0"
 dependencies = [
  "log",
  "mu_rust_helpers",
@@ -400,7 +400,7 @@ dependencies = [
 
 [[package]]
 name = "patina_debugger"
-version = "17.0.0"
+version = "17.1.0"
 dependencies = [
  "bitfield-struct",
  "cfg-if",
@@ -415,10 +415,11 @@ dependencies = [
 
 [[package]]
 name = "patina_dxe_core"
-version = "17.0.0"
+version = "17.1.0"
 dependencies = [
  "aarch64-cpu 11.2.0",
  "arm-gic",
+ "bitfield-struct",
  "cfg-if",
  "compile-time",
  "crc32fast",
@@ -445,7 +446,7 @@ dependencies = [
 
 [[package]]
 name = "patina_ffs"
-version = "17.0.0"
+version = "17.1.0"
 dependencies = [
  "log",
  "patina",
@@ -454,7 +455,7 @@ dependencies = [
 
 [[package]]
 name = "patina_ffs_extractors"
-version = "17.0.0"
+version = "17.1.0"
 dependencies = [
  "alloc-no-stdlib",
  "brotli-decompressor",
@@ -468,14 +469,14 @@ dependencies = [
 
 [[package]]
 name = "patina_internal_collections"
-version = "17.0.0"
+version = "17.1.0"
 dependencies = [
  "log",
 ]
 
 [[package]]
 name = "patina_internal_cpu"
-version = "17.0.0"
+version = "17.1.0"
 dependencies = [
  "arm-gic",
  "cfg-if",
@@ -493,7 +494,7 @@ dependencies = [
 
 [[package]]
 name = "patina_internal_depex"
-version = "17.0.0"
+version = "17.1.0"
 dependencies = [
  "log",
  "r-efi",
@@ -502,7 +503,7 @@ dependencies = [
 
 [[package]]
 name = "patina_internal_device_path"
-version = "17.0.0"
+version = "17.1.0"
 dependencies = [
  "log",
  "r-efi",
@@ -521,7 +522,7 @@ dependencies = [
 
 [[package]]
 name = "patina_macro"
-version = "17.0.0"
+version = "17.1.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -531,7 +532,7 @@ dependencies = [
 
 [[package]]
 name = "patina_mm"
-version = "17.0.0"
+version = "17.1.0"
 dependencies = [
  "cfg-if",
  "log",
@@ -566,7 +567,7 @@ dependencies = [
 
 [[package]]
 name = "patina_performance"
-version = "17.0.0"
+version = "17.1.0"
 dependencies = [
  "log",
  "mu_rust_helpers",
@@ -581,7 +582,7 @@ dependencies = [
 
 [[package]]
 name = "patina_samples"
-version = "17.0.0"
+version = "17.1.0"
 dependencies = [
  "log",
  "patina",
@@ -591,7 +592,7 @@ dependencies = [
 
 [[package]]
 name = "patina_smbios"
-version = "17.0.0"
+version = "17.1.0"
 dependencies = [
  "log",
  "patina",
@@ -604,7 +605,7 @@ dependencies = [
 
 [[package]]
 name = "patina_stacktrace"
-version = "17.0.0"
+version = "17.1.0"
 dependencies = [
  "cfg-if",
  "log",

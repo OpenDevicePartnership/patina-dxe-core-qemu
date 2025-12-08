@@ -51,7 +51,7 @@ static LOGGER: AdvancedLogger<Uart16550> = AdvancedLogger::new(
         ("sw_mmi", log::LevelFilter::Off),
         ("patina_performance", log::LevelFilter::Off),
     ],
-    log::LevelFilter::Warn,
+    log::LevelFilter::Info,
     Uart16550::Io { base: 0x402 },
 );
 
@@ -111,9 +111,9 @@ impl ComponentInfo for Q35 {
         add.component(q35_services::mm_test::QemuQ35MmTest::new());
         add.component(patina_performance::component::performance_config_provider::PerformanceConfigurationProvider);
         add.component(patina_performance::component::performance::Performance);
-        // add.component(patina_acpi::component::AcpiProviderManager::default());
-        // add.component(patina_acpi::component::AcpiSystemProtocolManager::default());
-        // add.component(patina_acpi::component::GenericAcpiManager::default());
+        add.component(patina_acpi::component::AcpiProviderManager::default());
+        add.component(patina_acpi::component::AcpiSystemProtocolManager::default());
+        add.component(patina_acpi::component::GenericAcpiManager::default());
     }
 }
 
