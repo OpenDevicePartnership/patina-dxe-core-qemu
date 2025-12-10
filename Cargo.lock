@@ -643,7 +643,7 @@ dependencies = [
 
 [[package]]
 name = "qemu_dxe_core"
-version = "2.2.1"
+version = "2.2.2"
 dependencies = [
  "log",
  "patina",
