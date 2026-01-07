@@ -1,6 +1,6 @@
 [package]
 name = "qemu_dxe_core"
-version = "2.1.2"
+version = "2.2.3"
 edition = "2024"
 license = "Apache-2.0"
 
@@ -22,16 +22,17 @@ path = "src/lib.rs"
 log = { version = "^0.4", default-features = false, features = [
     "release_max_level_warn",
 ] }
-patina_acpi = { path="C:/Users/sherryfan/patina/components/patina_acpi" }
-patina_adv_logger = { path="C:/Users/sherryfan/patina/components/patina_adv_logger" }
-patina_debugger = { path = "C:/Users/sherryfan/patina/core/patina_debugger" }
-patina_dxe_core = { path="C:/Users/sherryfan/patina/patina_dxe_core" }
-patina_mm = { path="C:/Users/sherryfan/patina/components/patina_mm" }
-patina_performance = { path="C:/Users/sherryfan/patina/components/patina_performance" }
-patina_samples = { path="C:/Users/sherryfan/patina/components/patina_samples" }
-patina = { path="C:/Users/sherryfan/patina/sdk/patina" }
-patina_ffs_extractors = { path="C:/Users/sherryfan/patina/sdk/patina_ffs_extractors" }
-patina_stacktrace = { path="C:/Users/sherryfan/patina/core/patina_stacktrace" }
+patina_acpi = { version = "19" } # not yet published
+patina_adv_logger = { version = "19" }
+patina_debugger = { version = "19" }
+patina_dxe_core = { version = "19" }
+patina_mm = { version = "19" }
+patina_performance = { version = "19"}
+patina_samples = { version = "19" }
+patina_smbios = { version = "19"}
+patina = { version = "19", features = ["enable_patina_tests"] }
+patina_ffs_extractors = { version = "19" }
+patina_stacktrace = { version = "19" }
 r-efi = { version = "^5", default-features = false }
 x86_64 = { version = "=0.15.2", default-features = false, features = [
   "instructions"
@@ -61,5 +62,5 @@ x64 = ["x86_64"]
 aarch64 = []
 doc = []
 std = []
-build_debugger = []
+build_debugger = ["patina_dxe_core/debugger_reload"]
 enable_debugger = ["build_debugger"]
