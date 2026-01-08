@@ -135,7 +135,7 @@ impl Q35SmbiosPlatform {
         };
 
         match smbios.add_record(None, &baseboard_info) {
-            Ok(handle) => log::trace!("  Type 2 (System Info) - Handle 0x{:04X}", handle),
+            Ok(handle) => log::trace!("  Type 2 (Base Board Info) - Handle 0x{:04X}", handle),
             Err(e) => log::warn!("  Failed to add Type 2: {:?}", e),
         }
 
@@ -164,7 +164,7 @@ impl Q35SmbiosPlatform {
         };
 
         match smbios.add_record(None, &enclosure_info) {
-            Ok(handle) => log::trace!("  Type 3 (System Info) - Handle 0x{:04X}", handle),
+            Ok(handle) => log::trace!("  Type 3 (System Enclosure) - Handle 0x{:04X}", handle),
             Err(e) => log::warn!("  Failed to add Type 3: {:?}", e),
         }
 
