@@ -143,3 +143,35 @@ pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
     log::info!("DXE Core Platform Binary v{}", env!("CARGO_PKG_VERSION"));
     CORE.entry_point(physical_hob_list)
 }
+
+/// Stack canary value generated at build time with entropy from compile-time constants.
+/// This value is checked by __security_check_cookie to detect stack buffer overflows.
+#[unsafe(no_mangle)]
+static __security_cookie: usize = {
+    const SEED1: u128 = include_bytes!("q35_dxe_core.rs").len() as u128;
+    const SEED2: u128 = line!() as u128;
+    const SEED3: u128 = column!() as u128;
+    
+    // Combine compile-time constants to create pseudo-random value
+    const COOKIE: u128 = SEED1
+        .wrapping_mul(0x517cc1b727220a95)
+        .wrapping_add(SEED2.wrapping_mul(0x6c5895682394bad5))
+        .wrapping_add(SEED3.wrapping_mul(0x9e3779b97f4a7c15))
+        ^ 0xDEADBEEFCAFEBABE;
+    
+    COOKIE as usize
+};
+
+/// Security check function called by the compiler when stack protection is enabled.
+/// This function validates that the stack canary has not been corrupted.
+/// If corruption is detected, it will panic to prevent potential exploits.
+///
+/// # Safety
+/// This function is called automatically by compiler-generated code.
+/// It should never be called directly.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn __security_check_cookie(cookie: usize) {
+    if cookie != __security_cookie {
+        panic!("Stack corruption detected! Cookie: {:#x}, Expected: {:#x}", cookie, __security_cookie);
+    }
+}
