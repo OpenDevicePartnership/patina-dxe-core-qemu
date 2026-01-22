@@ -72,6 +72,7 @@ impl ComponentInfo for Sbsa {
         add.component(patina::test::TestRunner::default().with_callback(|test_name, err_msg| {
             log::error!("Test {} failed: {}", test_name, err_msg);
         }));
+        add.component(patina_acpi::component::AcpiProviderManager::default());
     }
 }
 

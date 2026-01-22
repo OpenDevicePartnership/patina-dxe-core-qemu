@@ -112,8 +112,6 @@ impl ComponentInfo for Q35 {
         add.component(patina_performance::component::performance_config_provider::PerformanceConfigurationProvider);
         add.component(patina_performance::component::performance::Performance);
         add.component(patina_acpi::component::AcpiProviderManager::default());
-        add.component(patina_acpi::component::AcpiSystemProtocolManager::default());
-        add.component(patina_acpi::component::GenericAcpiManager::default());
         add.component(patina_smbios::component::SmbiosProvider::new(3, 9));
         add.component(q35_services::smbios_platform::Q35SmbiosPlatform::new());
         add.component(patina::test::TestRunner::default().with_callback(|test_name, err_msg| {
