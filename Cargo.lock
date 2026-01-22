@@ -271,15 +271,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0ca88d725a0a943b096803bd34e73a4437208b6077654cc4ecb2947a5f91618d"
 
 [[package]]
-name = "memoffset"
-version = "0.9.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "488016bfae457b036d996092f6cb448677611ce4449e970ceaf42695203f218a"
-dependencies = [
- "autocfg",
-]
-
-[[package]]
 name = "mu_rust_helpers"
 version = "3.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -349,7 +340,9 @@ checksum = "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a"
 
 [[package]]
 name = "patina"
-version = "19.0.1"
+version = "19.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cf9a5818428a3c28bba6cf8736e35057992a33d2c50c1ccca3e3ab9e80d0fd52"
 dependencies = [
  "cfg-if",
  "fallible-streaming-iterator",
@@ -372,22 +365,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "patina_acpi"
-version = "19.0.1"
-dependencies = [
- "log",
- "memoffset",
- "patina",
- "r-efi",
- "scroll",
- "spin",
- "zerocopy",
- "zerocopy-derive",
-]
-
-[[package]]
 name = "patina_adv_logger"
-version = "19.0.1"
+version = "19.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "549eaa6916732d4c79cde834e3fa8aea03facf3fc4da5ccb3004b769d4c6b09e"
 dependencies = [
  "log",
  "mu_rust_helpers",
@@ -400,7 +381,9 @@ dependencies = [
 
 [[package]]
 name = "patina_debugger"
-version = "19.0.1"
+version = "19.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dfec07d8d3bb4e272a51f986376d291a2f2d202b8ad9101327d6d0a0e1398957"
 dependencies = [
  "bitfield-struct",
  "cfg-if",
@@ -415,7 +398,9 @@ dependencies = [
 
 [[package]]
 name = "patina_dxe_core"
-version = "19.0.1"
+version = "19.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "75e97b3d12d2b1840cebde4f14182b7a357519097f24906c3b79e4492e80e192"
 dependencies = [
  "aarch64-cpu 11.2.0",
  "arm-gic",
@@ -446,7 +431,9 @@ dependencies = [
 
 [[package]]
 name = "patina_ffs"
-version = "19.0.1"
+version = "19.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5e3a7634d87eaef54527de53053a41acc76bc16da376f3d2b08b6de76153c6f5"
 dependencies = [
  "log",
  "patina",
@@ -455,7 +442,9 @@ dependencies = [
 
 [[package]]
 name = "patina_ffs_extractors"
-version = "19.0.1"
+version = "19.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6c8f9bf5da4760272f91c3c96b5c0865ea5a9ab403643a24b568d3349f40952a"
 dependencies = [
  "alloc-no-stdlib",
  "brotli-decompressor",
@@ -469,14 +458,18 @@ dependencies = [
 
 [[package]]
 name = "patina_internal_collections"
-version = "19.0.1"
+version = "19.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "85853c16dfdcc9601632b5862bd3c0f3178ed0646dd989cf1f5aad8f3aab588a"
 dependencies = [
  "log",
 ]
 
 [[package]]
 name = "patina_internal_cpu"
-version = "19.0.1"
+version = "19.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9686629eaa66dd50af6f722f46743389ac003ca730169e2be56ca080ca743043"
 dependencies = [
  "arm-gic",
  "cfg-if",
@@ -494,7 +487,9 @@ dependencies = [
 
 [[package]]
 name = "patina_internal_depex"
-version = "19.0.1"
+version = "19.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "22253d6a1b401498c17bd5e47f90de76195afe86331deef2612a7da2eba4eeb7"
 dependencies = [
  "log",
  "r-efi",
@@ -503,7 +498,9 @@ dependencies = [
 
 [[package]]
 name = "patina_internal_device_path"
-version = "19.0.1"
+version = "19.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bf1ad74549f31b2ce216e8269a3f91ac953c62dc97cb261c5c5246f1a5a6120a"
 dependencies = [
  "log",
  "r-efi",
@@ -522,7 +519,9 @@ dependencies = [
 
 [[package]]
 name = "patina_macro"
-version = "19.0.1"
+version = "19.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "876ab34db4babff3dca6f69f03d7997976537eda63f915cccae3c77757f8415c"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -532,7 +531,9 @@ dependencies = [
 
 [[package]]
 name = "patina_mm"
-version = "19.0.1"
+version = "19.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ed5690d2ef303ca1a7b01ad7d766c73654925c4c80b91c9a07f7c033a7ccf9ed"
 dependencies = [
  "cfg-if",
  "log",
@@ -567,7 +568,9 @@ dependencies = [
 
 [[package]]
 name = "patina_performance"
-version = "19.0.1"
+version = "19.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b43a8267bb30bfb9340e068a749bd3f29300fbd18d50b38d0cb3ff30e8340abc"
 dependencies = [
  "log",
  "mu_rust_helpers",
@@ -582,7 +585,9 @@ dependencies = [
 
 [[package]]
 name = "patina_samples"
-version = "19.0.1"
+version = "19.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "35f0dc0373fd571eef6341da8968b8be3ab75a7f27a4bfa663d5ea6219c8a45e"
 dependencies = [
  "log",
  "patina",
@@ -592,7 +597,9 @@ dependencies = [
 
 [[package]]
 name = "patina_smbios"
-version = "19.0.1"
+version = "19.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ae0a6ccaf09eb0e98220088255825ae94eea439f2ddc91082e48529508796eac"
 dependencies = [
  "log",
  "patina",
@@ -605,7 +612,9 @@ dependencies = [
 
 [[package]]
 name = "patina_stacktrace"
-version = "19.0.1"
+version = "19.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "def47ac51844252dd904ed3ffbea6a1f7cefa26fb7efdcc3b00d21a5a689d1db"
 dependencies = [
  "cfg-if",
  "log",
@@ -638,7 +647,6 @@ version = "2.2.3"
 dependencies = [
  "log",
  "patina",
- "patina_acpi",
  "patina_adv_logger",
  "patina_debugger",
  "patina_dxe_core",
