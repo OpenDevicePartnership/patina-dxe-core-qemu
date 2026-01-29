@@ -1,0 +1,144 @@
+# @file binary-size-check.yml
+#
+# GitHub Actions workflow to compare QEMU Patina DXE Core binary sizes for PRs.
+#
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: Apache-2.0
+
+name: Binary Size Report
+
+on:
+  pull_request:
+
+jobs:
+  run:
+    name: Binary Size Report
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+
+    steps:
+      - name: ✅ Checkout Base Branch (${{ github.base_ref }}) ✅
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.base_ref }}
+          fetch-depth: 0
+
+      - name: 🛠️ Download Rust Tools Base Branch (${{ github.base_ref }}) 🛠️
+        uses: OpenDevicePartnership/patina-devops/.github/actions/rust-tool-cache@main
+
+      - name: Build Base Branch (${{ github.base_ref }})
+        run: |
+          cargo make q35
+          cargo make sbsa
+          cargo make q35-release
+          cargo make sbsa-release
+
+      - name: Get Base Branch (${{ github.base_ref }}) Sizes
+        id: size-base
+        shell: bash
+        run: |
+          get_size() { python3 -c "import os; print(os.path.getsize('$1'))"; }
+          echo "x64_debug=$(get_size target/x86_64-unknown-uefi/debug/qemu_q35_dxe_core.efi)" >> $GITHUB_OUTPUT
+          echo "x64_release=$(get_size target/x86_64-unknown-uefi/release/qemu_q35_dxe_core.efi)" >> $GITHUB_OUTPUT
+          echo "aarch64_debug=$(get_size target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.efi)" >> $GITHUB_OUTPUT
+          echo "aarch64_release=$(get_size target/aarch64-unknown-uefi/release/qemu_sbsa_dxe_core.efi)" >> $GITHUB_OUTPUT
+
+      - name: ✅ Checkout PR Branch (${{ github.head_ref }}) ✅
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: 🛠️ Download Rust Tools PR Branch (${{ github.head_ref }}) 🛠️
+        uses: OpenDevicePartnership/patina-devops/.github/actions/rust-tool-cache@main
+
+      - name: Build PR Branch (${{ github.head_ref }})
+        run: |
+          cargo make q35
+          cargo make sbsa
+          cargo make q35-release
+          cargo make sbsa-release
+
+      - name: Get PR Branch (${{ github.head_ref }}) Sizes
+        id: size-pr
+        shell: bash
+        run: |
+          get_size() { python3 -c "import os; print(os.path.getsize('$1'))"; }
+          echo "x64_debug=$(get_size target/x86_64-unknown-uefi/debug/qemu_q35_dxe_core.efi)" >> $GITHUB_OUTPUT
+          echo "x64_release=$(get_size target/x86_64-unknown-uefi/release/qemu_q35_dxe_core.efi)" >> $GITHUB_OUTPUT
+          echo "aarch64_debug=$(get_size target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.efi)" >> $GITHUB_OUTPUT
+          echo "aarch64_release=$(get_size target/aarch64-unknown-uefi/release/qemu_sbsa_dxe_core.efi)" >> $GITHUB_OUTPUT
+
+      - name: 📊 Binary Size Report - ${{ matrix.os }}
+        shell: bash
+        run: |
+          REPORT_FILE="$GITHUB_WORKSPACE/binary_size_report.md"
+
+          pretty_size() {
+            local bytes=$1
+            local sign=""
+            if (( bytes < 0 )); then sign="-"; bytes=$(( -bytes )); fi
+            awk -v b="$bytes" -v s="$sign" 'BEGIN {
+              if (b < 1024) { printf "%s%.2f B ", s, b }
+              else if (b < 1024*1024) { printf "%s%.2f KB", s, b/1024 }
+              else { printf "%s%.2f MB", s, b/(1024*1024) }
+            }'
+          }
+
+          SHA1="${{ github.base_ref }}"
+          SHA2="${{ github.head_ref }}"
+
+          X64_SHA1_DEBUG_SIZE=${{ steps.size-base.outputs.x64_debug }}
+          X64_SHA2_DEBUG_SIZE=${{ steps.size-pr.outputs.x64_debug }}
+          X64_DEBUG_DIFF=$((X64_SHA2_DEBUG_SIZE - X64_SHA1_DEBUG_SIZE))
+          X64_DEBUG_DIFF_COLUMN="$(printf '`%11s`<br>`%11s`<br>**`Δ %9s`**' \
+            "$(pretty_size "$X64_SHA1_DEBUG_SIZE")" \
+            "$(pretty_size "$X64_SHA2_DEBUG_SIZE")" \
+            "$(pretty_size "$X64_DEBUG_DIFF")")"
+
+          X64_SHA1_RELEASE_SIZE=${{ steps.size-base.outputs.x64_release }}
+          X64_SHA2_RELEASE_SIZE=${{ steps.size-pr.outputs.x64_release }}
+          X64_RELEASE_DIFF=$((X64_SHA2_RELEASE_SIZE - X64_SHA1_RELEASE_SIZE))
+          X64_RELEASE_DIFF_COLUMN="$(printf '`%11s`<br>`%11s`<br>**`Δ %9s`**' \
+            "$(pretty_size "$X64_SHA1_RELEASE_SIZE")" \
+            "$(pretty_size "$X64_SHA2_RELEASE_SIZE")" \
+            "$(pretty_size "$X64_RELEASE_DIFF")")"
+
+          AARCH64_SHA1_DEBUG_SIZE=${{ steps.size-base.outputs.aarch64_debug }}
+          AARCH64_SHA2_DEBUG_SIZE=${{ steps.size-pr.outputs.aarch64_debug }}
+          AARCH64_DEBUG_DIFF=$((AARCH64_SHA2_DEBUG_SIZE - AARCH64_SHA1_DEBUG_SIZE))
+          AARCH64_DEBUG_DIFF_COLUMN="$(printf '`%11s`<br>`%11s`<br>**`Δ %9s`**' \
+            "$(pretty_size "$AARCH64_SHA1_DEBUG_SIZE")" \
+            "$(pretty_size "$AARCH64_SHA2_DEBUG_SIZE")" \
+            "$(pretty_size "$AARCH64_DEBUG_DIFF")")"
+
+          AARCH64_SHA1_RELEASE_SIZE=${{ steps.size-base.outputs.aarch64_release }}
+          AARCH64_SHA2_RELEASE_SIZE=${{ steps.size-pr.outputs.aarch64_release }}
+          AARCH64_RELEASE_DIFF=$((AARCH64_SHA2_RELEASE_SIZE - AARCH64_SHA1_RELEASE_SIZE))
+          AARCH64_RELEASE_DIFF_COLUMN="$(printf '`%11s`<br>`%11s`<br>**`Δ %9s`**' \
+            "$(pretty_size "$AARCH64_SHA1_RELEASE_SIZE")" \
+            "$(pretty_size "$AARCH64_SHA2_RELEASE_SIZE")" \
+            "$(pretty_size "$AARCH64_RELEASE_DIFF")")"
+
+          echo "### Binary Size Report - ${{ matrix.os }}" > "$REPORT_FILE"
+          echo "" >> "$REPORT_FILE"
+          echo "| Architecture | Commit                                       | Δ Debug Size               | Δ Release Size               |" >> "$REPORT_FILE"
+          echo "|--------------|----------------------------------------------|----------------------------|------------------------------|" >> "$REPORT_FILE"
+          echo "| x86_64       | Base:\`${SHA1}\`<br>PR:\`${SHA2}\`<br>&nbsp; | $X64_DEBUG_DIFF_COLUMN     | $X64_RELEASE_DIFF_COLUMN     |" >> "$REPORT_FILE"
+          echo "| aarch64      | Base:\`${SHA1}\`<br>PR:\`${SHA2}\`<br>&nbsp; | $AARCH64_DEBUG_DIFF_COLUMN | $AARCH64_RELEASE_DIFF_COLUMN |" >> "$REPORT_FILE"
+          echo "" >> "$REPORT_FILE"
+
+          cat "$REPORT_FILE" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 📊 Post Binary Size Report as PR Comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.PATINA_AUTOMATION_APPLICATION_ID }}
+        run: |
+          REPORT_FILE="$GITHUB_WORKSPACE/binary_size_report.md"
+          COMMENT_BODY=$(cat "$REPORT_FILE")
+
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --body "$COMMENT_BODY"
+
