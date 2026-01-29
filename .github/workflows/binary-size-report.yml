@@ -13,11 +13,7 @@ on:
 jobs:
   run:
     name: Binary Size Report
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ ubuntu-latest ]
-
+    runs-on: ubuntu-latest
     steps:
       - name: Generate Token
         id: app-token
