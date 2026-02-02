@@ -2,6 +2,10 @@
 #
 # GitHub Actions workflow to compare QEMU Patina DXE Core binary sizes for PRs.
 #
+# This workflow runs in an untrusted PR context to build the code on a fork and upload
+# the size data as an artifact. When it is complete, a separate workflow (binary-size-comment.yml)
+# operates exclusively on the size data artifact and posts the comment.
+#
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: Apache-2.0
 
@@ -15,13 +19,6 @@ jobs:
     name: Binary Size Report
     runs-on: ubuntu-latest
     steps:
-      - name: Generate Token
-        id: app-token
-        uses: actions/create-github-app-token@v2
-        with:
-          app-id: ${{ secrets.PATINA_AUTOMATION_APPLICATION_ID }}
-          private-key: ${{ secrets.PATINA_AUTOMATION_APPLICATION_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
 
       - name: ✅ Checkout Base Branch (${{ github.base_ref }}) ✅
         uses: actions/checkout@v6
@@ -136,13 +133,18 @@ jobs:
 
           cat "$REPORT_FILE" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: 📊 Post Binary Size Report as PR Comment
-        env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+      - name: 📁 Save PR Metadata and Report
+        shell: bash
         run: |
-          REPORT_FILE="$GITHUB_WORKSPACE/binary_size_report.md"
-          COMMENT_BODY=$(cat "$REPORT_FILE")
+          mkdir -p pr-data
+          echo "${{ github.event.pull_request.number }}" > pr-data/pr_number.txt
+          echo "${{ github.base_ref }}" > pr-data/base_ref.txt
+          echo "${{ github.head_ref }}" > pr-data/head_ref.txt
+          cp "$GITHUB_WORKSPACE/binary_size_report.md" pr-data/
 
-          gh pr comment ${{ github.event.pull_request.number }} \
-            --body "$COMMENT_BODY"
-
+      - name: 📤 Upload PR Data and Report
+        uses: actions/upload-artifact@v6
+        with:
+          name: binary-size-report-data
+          path: pr-data/
+          retention-days: 1
