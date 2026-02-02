@@ -20,6 +20,7 @@ use qemu_resources::q35::component::service as q35_services;
 extern crate alloc;
 use alloc::vec;
 use qemu_resources::q35::timer;
+use qemu_exit::QEMUExit;
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
@@ -115,6 +116,7 @@ impl ComponentInfo for Q35 {
         add.component(q35_services::smbios_platform::Q35SmbiosPlatform::new());
         add.component(patina::test::TestRunner::default().with_callback(|test_name, err_msg| {
             log::error!("Test {} failed: {}", test_name, err_msg);
+            qemu_exit::X86::new(0xf4, 0x1).exit_failure();
         }));
     }
 }

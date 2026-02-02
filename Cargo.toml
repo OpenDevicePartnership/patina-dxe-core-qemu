@@ -37,6 +37,7 @@ x86_64 = { version = "=0.15.2", default-features = false, features = [
   "instructions"
 ], optional = true }
 zerocopy = { version = "0.8", features = ["derive"] }
+qemu-exit = "3"
 
 # These release settings reduce the qemu binary size significantly(~35%).
 [profile.release]

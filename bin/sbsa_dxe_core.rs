@@ -16,6 +16,7 @@ use patina_adv_logger::{component::AdvancedLoggerComponent, logger::AdvancedLogg
 use patina_dxe_core::*;
 use patina_ffs_extractors::CompositeSectionExtractor;
 use patina_stacktrace::StackTrace;
+use qemu_exit::QEMUExit;
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
@@ -71,6 +72,7 @@ impl ComponentInfo for Sbsa {
         add.component(AdvancedLoggerComponent::<UartPl011>::new(&LOGGER));
         add.component(patina::test::TestRunner::default().with_callback(|test_name, err_msg| {
             log::error!("Test {} failed: {}", test_name, err_msg);
+            qemu_exit::AArch64::new().exit_failure();
         }));
     }
 }

@@ -653,6 +653,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "qemu-exit"
+version = "3.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8bb0fd6580eeed0103c054e3fba2c2618ff476943762f28a645b63b8692b21c9"
+
+[[package]]
 name = "qemu_dxe_core"
 version = "2.2.7"
 dependencies = [
@@ -667,6 +673,7 @@ dependencies = [
  "patina_samples",
  "patina_smbios",
  "patina_stacktrace",
+ "qemu-exit",
  "r-efi",
  "x86_64",
  "zerocopy",
