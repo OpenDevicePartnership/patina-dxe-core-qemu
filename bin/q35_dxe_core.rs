@@ -19,8 +19,8 @@ use patina_stacktrace::StackTrace;
 use qemu_resources::q35::component::service as q35_services;
 extern crate alloc;
 use alloc::vec;
-use qemu_resources::q35::timer;
 use qemu_exit::QEMUExit;
+use qemu_resources::q35::timer;
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
