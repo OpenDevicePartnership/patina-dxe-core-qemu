@@ -22,6 +22,7 @@ path = "src/lib.rs"
 log = { version = "^0.4", default-features = false, features = [
     "release_max_level_warn",
 ] }
+patina_acpi = { version = "19" } # not yet published
 patina_adv_logger = { version = "19" }
 patina_debugger = { version = "19" }
 patina_dxe_core = { version = "19" }

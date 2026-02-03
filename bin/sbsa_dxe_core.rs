@@ -74,6 +74,7 @@ impl ComponentInfo for Sbsa {
             log::error!("Test {} failed: {}", test_name, err_msg);
             qemu_exit::AArch64::new().exit_failure();
         }));
+        add.component(patina_acpi::component::AcpiProviderManager::default());
     }
 }
 
