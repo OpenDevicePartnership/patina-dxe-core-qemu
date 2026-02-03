@@ -1,0 +1,60 @@
+# @file binary-size-comment.yml
+#
+# GitHub Actions workflow to post binary size report comments on PRs.
+#
+# This workflow runs access to secrets.
+# It waits for the binary-size-report.yml workflow to complete and posts the comment.
+#
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: Apache-2.0
+
+name: Binary Size Comment
+
+on:
+  workflow_run:
+    workflows: ["Binary Size Report"]
+    types:
+      - completed
+
+jobs:
+  comment:
+    name: Post Binary Size Comment
+    runs-on: ubuntu-latest
+    if: >
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: 📥 Download Binary Size Report Data
+        uses: actions/download-artifact@v7
+        with:
+          name: binary-size-report-data
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: 📖 Read PR Metadata
+        id: pr-data
+        shell: bash
+        run: |
+          echo "pr_number=$(cat pr_number.txt)" >> $GITHUB_OUTPUT
+          echo "base_ref=$(cat base_ref.txt)" >> $GITHUB_OUTPUT
+          echo "head_ref=$(cat head_ref.txt)" >> $GITHUB_OUTPUT
+
+      - name: Generate Token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.PATINA_AUTOMATION_APPLICATION_ID }}
+          private-key: ${{ secrets.PATINA_AUTOMATION_APPLICATION_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+
+      - name: 📊 Post Binary Size Report as PR Comment
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          PR_NUMBER: ${{ steps.pr-data.outputs.pr_number }}
+        shell: bash
+        run: |
+          COMMENT_BODY=$(cat binary_size_report.md)
+
+          gh pr comment "$PR_NUMBER" \
+            --repo ${{ github.repository }} \
+            --body "$COMMENT_BODY"
