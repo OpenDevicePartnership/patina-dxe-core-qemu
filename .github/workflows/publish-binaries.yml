@@ -30,33 +30,47 @@ jobs:
       - name: 🛠️ Download Rust Tools 🛠️
         uses: OpenDevicePartnership/patina-devops/.github/actions/rust-tool-cache@main
 
-      - name: Build Q35 Debug
-        run: cargo make q35
-
-      - name: Build SBSA Debug
-        run: cargo make sbsa
-
-      - name: Build Q35 Release
-        run: cargo make q35-release
-
-      - name: Build SBSA Release
-        run: cargo make sbsa-release
-
-      - name: Collect Binaries
+      - name: Setup artifacts directories
         run: |
-          # Create a directory for the release artifacts
-          mkdir -p "artifacts/debug"
-          mkdir -p "artifacts/release"
+          mkdir -p artifacts/debug
+          mkdir -p artifacts/release
+          mkdir -p artifacts/debug/debugger
 
-          # Copy the binaries to the artifacts directory
+      - name: Build Q35 Debug
+        run: |
+          cargo make q35
           cp target/x86_64-unknown-uefi/debug/qemu_q35_dxe_core.efi artifacts/debug/qemu_q35_dxe_core.efi
           cp target/x86_64-unknown-uefi/debug/qemu_q35_dxe_core.pdb artifacts/debug/qemu_q35_dxe_core.pdb
-          cp target/x86_64-unknown-uefi/release/qemu_q35_dxe_core.efi artifacts/release/qemu_q35_dxe_core.efi
-          cp target/x86_64-unknown-uefi/release/qemu_q35_dxe_core.pdb artifacts/release/qemu_q35_dxe_core.pdb
+
+      - name: Build SBSA Debug
+        run: |
+          cargo make sbsa
           cp target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.efi artifacts/debug/qemu_sbsa_dxe_core.efi
           cp target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.pdb artifacts/debug/qemu_sbsa_dxe_core.pdb
+
+      - name: Build Q35 Release
+        run: |
+          cargo make q35-release
+          cp target/x86_64-unknown-uefi/release/qemu_q35_dxe_core.efi artifacts/release/qemu_q35_dxe_core.efi
+          cp target/x86_64-unknown-uefi/release/qemu_q35_dxe_core.pdb artifacts/release/qemu_q35_dxe_core.pdb
+
+      - name: Build SBSA Release
+        run: |
+          cargo make sbsa-release
           cp target/aarch64-unknown-uefi/release/qemu_sbsa_dxe_core.efi artifacts/release/qemu_sbsa_dxe_core.efi
           cp target/aarch64-unknown-uefi/release/qemu_sbsa_dxe_core.pdb artifacts/release/qemu_sbsa_dxe_core.pdb
+
+      - name: Build Q35 Debug (Debugger)
+        run: |
+          cargo make q35 --features enable_debugger
+          cp target/x86_64-unknown-uefi/debug/qemu_q35_dxe_core.efi artifacts/debug/debugger/qemu_q35_dxe_core.efi
+          cp target/x86_64-unknown-uefi/debug/qemu_q35_dxe_core.pdb artifacts/debug/debugger/qemu_q35_dxe_core.pdb
+
+      - name: Build SBSA Debug (Debugger)
+        run: |
+          cargo make sbsa --features enable_debugger
+          cp target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.efi artifacts/debug/debugger/qemu_sbsa_dxe_core.efi
+          cp target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.pdb artifacts/debug/debugger/qemu_sbsa_dxe_core.pdb
 
       - name: Upload Binaries
         if: ${{ github.event_name != 'release' }}
