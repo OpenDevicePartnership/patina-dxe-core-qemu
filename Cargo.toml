@@ -1,6 +1,6 @@
 [package]
 name = "qemu_dxe_core"
-version = "2.2.7"
+version = "2.2.8"
 edition = "2024"
 license = "Apache-2.0"
 
@@ -22,16 +22,16 @@ path = "src/lib.rs"
 log = { version = "^0.4", default-features = false, features = [
     "release_max_level_warn",
 ] }
-patina_adv_logger = { version = "19" }
-patina_debugger = { version = "19" }
-patina_dxe_core = { version = "19" }
-patina_mm = { version = "19" }
-patina_performance = { version = "19"}
-patina_samples = { version = "19" }
-patina_smbios = { version = "19"}
-patina = { version = "19", features = ["enable_patina_tests"] }
-patina_ffs_extractors = { version = "19" }
-patina_stacktrace = { version = "19" }
+patina_adv_logger = { version = "20" }
+patina_debugger = { version = "20" }
+patina_dxe_core = { version = "20" }
+patina_mm = { version = "20" }
+patina_performance = { version = "20"}
+patina_samples = { version = "20" }
+patina_smbios = { version = "20"}
+patina = { version = "20", features = ["enable_patina_tests"] }
+patina_ffs_extractors = { version = "20" }
+patina_stacktrace = { version = "20" }
 r-efi = { version = "^5", default-features = false }
 x86_64 = { version = "=0.15.2", default-features = false, features = [
   "instructions"
