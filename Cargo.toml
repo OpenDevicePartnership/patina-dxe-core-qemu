@@ -1,6 +1,6 @@
 [package]
 name = "qemu_dxe_core"
-version = "2.2.9"
+version = "2.2.10"
 edition = "2024"
 license = "Apache-2.0"
 
@@ -20,7 +20,7 @@ path = "src/lib.rs"
 
 [dependencies]
 log = { version = "^0.4", default-features = false, features = [
-    "release_max_level_warn",
+    "release_max_level_info",
 ] }
 patina_adv_logger = { version = "20" }
 patina_debugger = { version = "20" }
