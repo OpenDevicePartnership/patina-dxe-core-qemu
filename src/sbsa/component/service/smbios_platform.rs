@@ -1,9 +1,4 @@
-//! Q35 SMBIOS Platform Component
-//!
-//! Platform component that populates and publishes SMBIOS tables:
-//! 1. Uses the type-safe `add_record<T>()` API for adding SMBIOS records
-//! 2. Publishes the table after all records are added
-//! 3. Uses structured record types (Type0, Type1)
+//! SBSA SMBIOS Platform Component
 //!
 //! ## License
 //!
@@ -26,48 +21,32 @@ use patina_smbios::{
     },
 };
 
-/// Q35 platform SMBIOS component that populates and publishes SMBIOS tables.
-///
-/// This component adds platform-specific SMBIOS records (Type 0 BIOS Information,
-/// Type 1 System Information) and publishes the complete SMBIOS table to the
-/// UEFI Configuration Table for OS consumption.
+/// SBSA platform SMBIOS record provider.
 #[derive(Default)]
-pub struct Q35SmbiosPlatform;
+pub struct SbsaSmbiosPlatform;
 
 #[component]
-impl Q35SmbiosPlatform {
-    /// Creates a new Q35 SMBIOS platform component instance.
+impl SbsaSmbiosPlatform {
+    /// Creates a new instance.
     pub fn new() -> Self {
         Self
     }
 
     fn entry_point(self, smbios: Service<dyn Smbios>) -> Result<()> {
-        log::debug!("=== Q35 SMBIOS Platform Component ===");
+        log::debug!("=== SBSA SMBIOS Platform Component ===");
 
-        // Verify SMBIOS version
         let (major, minor) = smbios.version();
         log::trace!("SMBIOS Version: {}.{}", major, minor);
 
-        // Add platform SMBIOS records using the type-safe API
-        log::trace!("Creating platform SMBIOS records...");
-
-        // Type 0: BIOS/Firmware Information
-        // Uses add_record<T>() - the recommended type-safe API
         let bios_info = Type0PlatformFirmwareInformation {
             header: SmbiosTableHeader::new(0, 0, SMBIOS_HANDLE_PI_RESERVED),
             vendor: 1,
             firmware_version: 2,
             bios_starting_address_segment: 0xE800,
             firmware_release_date: 3,
-            firmware_rom_size: 0xFF, // 16MB
-            // BIOS Characteristics (SMBIOS spec 7.1.1)
-            // Bit 3: BIOS Characteristics are supported
+            firmware_rom_size: 0xFF,
             characteristics: 0x08,
-            // BIOS Characteristics Extension Byte 1 (SMBIOS spec 7.1.2.1)
-            // Bit 0: ACPI supported, Bit 1: USB Legacy supported
             characteristics_ext1: 0x03,
-            // BIOS Characteristics Extension Byte 2 (SMBIOS spec 7.1.2.2)
-            // Bit 0: BIOS Boot Specification supported, Bit 1: Function key-initiated network boot supported
             characteristics_ext2: 0x03,
             system_bios_major_release: 1,
             system_bios_minor_release: 0,
@@ -81,12 +60,14 @@ impl Q35SmbiosPlatform {
             ],
         };
 
-        match smbios.add_record(None, &bios_info) {
-            Ok(handle) => log::trace!("  Type 0 (BIOS Info) - Handle 0x{:04X}", handle),
-            Err(e) => log::warn!("  Failed to add Type 0: {:?}", e),
-        }
+        // Type 0 and Type 1 are required per SMBIOS spec Section 6.2. Propagate errors
+        // to avoid publishing an incompliant table.
+        let type0_handle = smbios.add_record(None, &bios_info).map_err(|e| {
+            log::error!("Failed to add required Type 0 (BIOS Info): {:?}", e);
+            e
+        })?;
+        log::trace!("  Type 0 (BIOS Info) - Handle 0x{:04X}", type0_handle);
 
-        // Type 1: System Information
         let system_info = Type1SystemInformation {
             header: SmbiosTableHeader::new(1, 0, SMBIOS_HANDLE_PI_RESERVED),
             manufacturer: 1,
@@ -94,28 +75,29 @@ impl Q35SmbiosPlatform {
             version: 3,
             serial_number: 4,
             uuid: [0; 16],
-            wake_up_type: 0x06, // Power Switch
+            wake_up_type: 0x06,
             sku_number: 5,
             family: 6,
             string_pool: vec![
                 String::from("QEMU"),
-                String::from("Q35 Virtual Machine"),
+                String::from("SBSA Virtual Machine"),
                 String::from("1.0"),
                 String::from("VM-001"),
-                String::from("Q35-STANDARD"),
+                String::from("SBSA-STANDARD"),
                 String::from("Virtual Machine Family"),
             ],
         };
 
-        match smbios.add_record(None, &system_info) {
-            Ok(handle) => log::trace!("  Type 1 (System Info) - Handle 0x{:04X}", handle),
-            Err(e) => log::warn!("  Failed to add Type 1: {:?}", e),
-        }
+        let type1_handle = smbios.add_record(None, &system_info).map_err(|e| {
+            log::error!("Failed to add required Type 1 (System Info): {:?}", e);
+            e
+        })?;
+        log::trace!("  Type 1 (System Info) - Handle 0x{:04X}", type1_handle);
 
         let enclosure_info = Type3SystemEnclosure {
             header: SmbiosTableHeader::new(3, 0, SMBIOS_HANDLE_PI_RESERVED),
             manufacturer: 1,
-            enclosure_type: 0x03, // Desktop
+            enclosure_type: 0x03,
             version: 2,
             serial_number: 3,
             asset_tag_number: 4,
@@ -152,10 +134,10 @@ impl Q35SmbiosPlatform {
             version: 3,
             serial_number: 4,
             asset_tag: 5,
-            feature_flags: 0x01, // Board is a hosting board
+            feature_flags: 0x01,
             location_in_chassis: 6,
             chassis_handle: type3_handle,
-            board_type: 0x0A, // Motherboard
+            board_type: 0x0A,
             contained_object_handles: 0,
             string_pool: vec![
                 String::from("Example Corporation"),
@@ -172,26 +154,15 @@ impl Q35SmbiosPlatform {
             Err(e) => log::warn!("  Failed to add Type 2: {:?}", e),
         }
 
-        // Type 127 End-of-Table marker is automatically added by the manager during initialization
-        log::trace!("Platform SMBIOS records created successfully");
+        log::debug!("Publishing SMBIOS table...");
+        let (table_addr, entry_point_addr) = smbios.publish_table().map_err(|e| {
+            log::error!("Failed to publish SMBIOS table: {:?}", e);
+            e
+        })?;
+        log::debug!("SMBIOS table published successfully");
+        log::debug!("  Entry Point: 0x{:X}", entry_point_addr);
+        log::debug!("  Table Data: 0x{:X}", table_addr);
 
-        // Publish the SMBIOS table
-        // This makes the table available to the OS via UEFI Configuration Table
-        log::debug!("Publishing SMBIOS table to Configuration Table...");
-        match smbios.publish_table() {
-            Ok((table_addr, entry_point_addr)) => {
-                log::debug!("SMBIOS table published successfully");
-                log::debug!("  Entry Point: 0x{:X}", entry_point_addr);
-                log::debug!("  Table Data: 0x{:X}", table_addr);
-                log::debug!("Use 'smbiosview' in UEFI Shell to view records");
-            }
-            Err(e) => {
-                log::error!("Failed to publish SMBIOS table: {:?}", e);
-                // Continue even if publication fails - this is not critical
-            }
-        }
-
-        log::debug!("SMBIOS platform component initialized successfully");
         Ok(())
     }
 }
