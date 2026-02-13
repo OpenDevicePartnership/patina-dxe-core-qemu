@@ -64,3 +64,4 @@ doc = []
 std = []
 build_debugger = ["patina_dxe_core/debugger_reload"]
 enable_debugger = ["build_debugger"]
+

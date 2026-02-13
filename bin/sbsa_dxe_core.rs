@@ -15,8 +15,11 @@ use patina::{log::Format, serial::uart::UartPl011};
 use patina_adv_logger::{component::AdvancedLoggerComponent, logger::AdvancedLogger};
 use patina_dxe_core::*;
 use patina_ffs_extractors::CompositeSectionExtractor;
+use patina_smbios;
 use patina_stacktrace::StackTrace;
 use qemu_exit::QEMUExit;
+use qemu_resources::sbsa::component::service as sbsa_services;
+extern crate alloc;
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
@@ -70,6 +73,8 @@ impl CpuInfo for Sbsa {
 impl ComponentInfo for Sbsa {
     fn components(mut add: Add<Component>) {
         add.component(AdvancedLoggerComponent::<UartPl011>::new(&LOGGER));
+        add.component(patina_smbios::component::SmbiosProvider::new(3, 9));
+        add.component(sbsa_services::smbios_platform::SbsaSmbiosPlatform::new());
         add.component(patina::test::TestRunner::default().with_callback(|test_name, err_msg| {
             log::error!("Test {} failed: {}", test_name, err_msg);
             qemu_exit::AArch64::new().exit_failure();
