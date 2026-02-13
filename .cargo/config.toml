@@ -13,6 +13,7 @@ rustflags = [
     "-C", "link-arg=/subsystem:efi_boot_service_driver",
     "-C", "force-unwind-tables", # Generates .pdata section for stack tracing
     "-C", "link-arg=/PDBALTPATH:qemu_q35_dxe_core.pdb",
+    "-Z", "stack-protector=all",
 ]
 
 [target.aarch64-unknown-uefi]
@@ -21,4 +22,5 @@ rustflags = [
     "-C", "link-arg=/subsystem:efi_boot_service_driver",
     "-C", "force-unwind-tables", # Generates .pdata section for stack tracing
     "-C", "link-arg=/PDBALTPATH:qemu_sbsa_dxe_core.pdb",
+    "-Z", "stack-protector=all",
 ]
