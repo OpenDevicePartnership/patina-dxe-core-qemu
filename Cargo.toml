@@ -64,3 +64,8 @@ doc = []
 std = []
 build_debugger = ["patina_dxe_core/debugger_reload"]
 enable_debugger = ["build_debugger"]
+
+[patch.crates-io]
+patina_smbios={path="../patina/components/patina_smbios"}
+patina={path="../patina/sdk/patina"}
+patina_macro={path="../patina/sdk/patina_macro"}

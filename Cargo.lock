@@ -352,8 +352,6 @@ checksum = "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a"
 [[package]]
 name = "patina"
 version = "20.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b569ed913e1a28274d5de5b6d28e9cdfcfbe7566b89cfbf0779b24dd5286d511"
 dependencies = [
  "cfg-if",
  "fallible-streaming-iterator",
@@ -531,8 +529,6 @@ dependencies = [
 [[package]]
 name = "patina_macro"
 version = "20.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "aadc676e9b4f29373addbeab1e2eca4593dea2019a20ee96a54493700c12547a"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -609,8 +605,6 @@ dependencies = [
 [[package]]
 name = "patina_smbios"
 version = "20.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bafe86b4c019a4a728244892c598f3622e67e0d9ce1de0f41e3d11fcbbcd05de"
 dependencies = [
  "log",
  "patina",
