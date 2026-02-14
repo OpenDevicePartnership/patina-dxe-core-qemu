@@ -13,6 +13,8 @@ STD_FLAGS = "--profile ${RUSTC_PROFILE} --features std"
 TEST_FLAGS = { value = "", condition = { env_not_set = ["TEST_FLAGS"] } }
 COV_FLAGS = { value = "--workspace --profile test --ignore-filename-regex .*test.*", condition = { env_not_set = ["COV_FLAGS"] } }
 RUSTDOCFLAGS = "-D warnings -D missing_docs"
+# Common rustflags used in all targets
+COMMON_RUSTFLAGS = "-C link-arg=/base:0x0 -C link-arg=/subsystem:efi_boot_service_driver -C force-unwind-tables"
 
 [env.development]
 RUSTC_PROFILE = "dev"
@@ -338,22 +340,32 @@ run_task = "build-efi-exec"
 
 [tasks.q35]
 description = """Builds the DEBUG Q35 UEFI firmware."""
-env = { CARGO_BIN_NAME = "qemu_q35_dxe_core", "RUSTC_PROFILE" = "dev", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "x64,build_debugger" }
+env = { CARGO_BIN_NAME = "qemu_q35_dxe_core", "RUSTC_PROFILE" = "dev", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "x64,build_debugger", CARGO_TARGET_X86_64_UNKNOWN_UEFI_RUSTFLAGS = "${COMMON_RUSTFLAGS} -C link-arg=/PDBALTPATH:qemu_q35_dxe_core.pdb" }
 run_task = "patch"
 
 [tasks.q35-release]
 description = """Builds the RELEASE Q35 UEFI firmware."""
-env = { CARGO_BIN_NAME = "qemu_q35_dxe_core", "RUSTC_PROFILE" = "release", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "x64" }
+env = { CARGO_BIN_NAME = "qemu_q35_dxe_core", "RUSTC_PROFILE" = "release", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "x64", CARGO_TARGET_X86_64_UNKNOWN_UEFI_RUSTFLAGS = "${COMMON_RUSTFLAGS} -C link-arg=/PDBALTPATH:qemu_q35_dxe_core.pdb" }
 run_task = "patch"
 
 [tasks.sbsa]
 description = """Builds the DEBUG SBSA UEFI firmware."""
-env = { CARGO_BIN_NAME = "qemu_sbsa_dxe_core", "RUSTC_PROFILE" = "dev", CARGO_BIN_TARGET = "aarch64-unknown-uefi", CARGO_BIN_FEATURES = "aarch64,build_debugger" }
+env = { CARGO_BIN_NAME = "qemu_sbsa_dxe_core", "RUSTC_PROFILE" = "dev", CARGO_BIN_TARGET = "aarch64-unknown-uefi", CARGO_BIN_FEATURES = "aarch64,build_debugger", CARGO_TARGET_AARCH64_UNKNOWN_UEFI_RUSTFLAGS = "${COMMON_RUSTFLAGS} -C link-arg=/PDBALTPATH:qemu_sbsa_dxe_core.pdb" }
 run_task = "patch"
 
 [tasks.sbsa-release]
 description = """Builds the RELEASE SBSA UEFI firmware."""
-env = { CARGO_BIN_NAME = "qemu_sbsa_dxe_core", "RUSTC_PROFILE" = "release", CARGO_BIN_TARGET = "aarch64-unknown-uefi", CARGO_BIN_FEATURES = "aarch64" }
+env = { CARGO_BIN_NAME = "qemu_sbsa_dxe_core", "RUSTC_PROFILE" = "release", CARGO_BIN_TARGET = "aarch64-unknown-uefi", CARGO_BIN_FEATURES = "aarch64", CARGO_TARGET_AARCH64_UNKNOWN_UEFI_RUSTFLAGS = "${COMMON_RUSTFLAGS} -C link-arg=/PDBALTPATH:qemu_sbsa_dxe_core.pdb" }
+run_task = "patch"
+
+[tasks.ovmf]
+description = """Builds the DEBUG OVMF UEFI firmware."""
+env = { CARGO_BIN_NAME = "qemu_ovmf_dxe_core", "RUSTC_PROFILE" = "dev", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "x64,build_debugger,v1_resource_descriptor_support", CARGO_TARGET_X86_64_UNKNOWN_UEFI_RUSTFLAGS = "${COMMON_RUSTFLAGS} -C link-arg=/PDBALTPATH:qemu_ovmf_dxe_core.pdb" }
+run_task = "patch"
+
+[tasks.ovmf-release]
+description = """Builds the RELEASE OVMF UEFI firmware."""
+env = { CARGO_BIN_NAME = "qemu_ovmf_dxe_core", "RUSTC_PROFILE" = "release", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "x64,v1_resource_descriptor_support", CARGO_TARGET_X86_64_UNKNOWN_UEFI_RUSTFLAGS = "${COMMON_RUSTFLAGS} -C link-arg=/PDBALTPATH:qemu_ovmf_dxe_core.pdb" }
 run_task = "patch"
 
 [tasks.doc]
@@ -450,8 +462,10 @@ dependencies = [
     "clippy",
     "cspell",
     "q35",
+    "ovmf",
     "sbsa",
     "q35-release",
+    "ovmf-release",
     "sbsa-release",
     "test",
     "coverage",
