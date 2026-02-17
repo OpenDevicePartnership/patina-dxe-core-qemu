@@ -80,7 +80,7 @@ jobs:
           echo "aarch64_debug=$(get_size target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.efi)" >> $GITHUB_OUTPUT
           echo "aarch64_release=$(get_size target/aarch64-unknown-uefi/release/qemu_sbsa_dxe_core.efi)" >> $GITHUB_OUTPUT
 
-      - name: 📊 Binary Size Report - ${{ matrix.os }}
+      - name: 📊 Binary Size Report
         shell: bash
         run: |
           REPORT_FILE="$GITHUB_WORKSPACE/binary_size_report.md"
@@ -147,7 +147,7 @@ jobs:
             "$(pretty_size "$AARCH64_SHA2_RELEASE_SIZE")" \
             "$(pretty_size "$AARCH64_RELEASE_DIFF")")"
 
-          echo "### Binary Size Report - ${{ matrix.os }}" > "$REPORT_FILE"
+          echo "### Binary Size Report" > "$REPORT_FILE"
           echo "" >> "$REPORT_FILE"
           echo "| Platform       | Commit                                       | Δ Debug Size               | Δ Release Size               |" >> "$REPORT_FILE"
           echo "|----------------|----------------------------------------------|----------------------------|------------------------------|" >> "$REPORT_FILE"
