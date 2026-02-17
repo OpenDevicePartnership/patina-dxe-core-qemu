@@ -14,6 +14,11 @@ name = "qemu_sbsa_dxe_core"
 path = "bin/sbsa_dxe_core.rs"
 required-features = ["aarch64"]
 
+[[bin]]
+name = "qemu_ovmf_dxe_core"
+path = "bin/ovmf_dxe_core.rs"
+required-features = ["x64"]
+
 [lib]
 name = "qemu_resources"
 path = "src/lib.rs"
@@ -58,6 +63,7 @@ opt-level = 0
 [features]
 default = ["compatibility_mode_allowed"]
 compatibility_mode_allowed = ["patina_dxe_core/compatibility_mode_allowed"]
+v1_resource_descriptor_support = ["patina_dxe_core/v1_resource_descriptor_support"]
 x64 = ["x86_64"]
 aarch64 = []
 doc = []

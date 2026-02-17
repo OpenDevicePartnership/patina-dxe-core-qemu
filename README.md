@@ -36,6 +36,20 @@ binary in the [patina-qemu](https://github.com/OpenDevicePartnership/patina-qemu
    Output File:      'target/x86_64-unknown-uefi/release/qemu_q35_dxe_core.efi'
    ```
 
+- OVMF (x64) debug
+
+   ```shell
+   Compile Command:  'cargo make ovmf'
+   Output File:      'target/x86_64-unknown-uefi/debug/qemu_ovmf_dxe_core.efi'
+   ```
+
+- OVMF (x64) release
+
+   ```shell
+   Compile Command:  'cargo make ovmf-release'
+   Output File:      'target/x86_64-unknown-uefi/release/qemu_ovmf_dxe_core.efi'
+   ```
+
 - SBSA (aarch64) debug
 
    ```shell

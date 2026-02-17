@@ -36,6 +36,7 @@ words:
   - mmio
   - mmram
   - msuefi
+  - ovmf
   - pdata
   - pdbaltpath
   - pemfile
