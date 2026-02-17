@@ -42,6 +42,12 @@ jobs:
           cp target/x86_64-unknown-uefi/debug/qemu_q35_dxe_core.efi artifacts/debug/qemu_q35_dxe_core.efi
           cp target/x86_64-unknown-uefi/debug/qemu_q35_dxe_core.pdb artifacts/debug/qemu_q35_dxe_core.pdb
 
+      - name: Build OVMF Debug
+        run: |
+          cargo make ovmf
+          cp target/x86_64-unknown-uefi/debug/qemu_ovmf_dxe_core.efi artifacts/debug/qemu_ovmf_dxe_core.efi
+          cp target/x86_64-unknown-uefi/debug/qemu_ovmf_dxe_core.pdb artifacts/debug/qemu_ovmf_dxe_core.pdb
+
       - name: Build SBSA Debug
         run: |
           cargo make sbsa
@@ -54,6 +60,12 @@ jobs:
           cp target/x86_64-unknown-uefi/release/qemu_q35_dxe_core.efi artifacts/release/qemu_q35_dxe_core.efi
           cp target/x86_64-unknown-uefi/release/qemu_q35_dxe_core.pdb artifacts/release/qemu_q35_dxe_core.pdb
 
+      - name: Build OVMF Release
+        run: |
+          cargo make ovmf-release
+          cp target/x86_64-unknown-uefi/release/qemu_ovmf_dxe_core.efi artifacts/release/qemu_ovmf_dxe_core.efi
+          cp target/x86_64-unknown-uefi/release/qemu_ovmf_dxe_core.pdb artifacts/release/qemu_ovmf_dxe_core.pdb
+
       - name: Build SBSA Release
         run: |
           cargo make sbsa-release
@@ -65,6 +77,12 @@ jobs:
           cargo make q35 --features enable_debugger
           cp target/x86_64-unknown-uefi/debug/qemu_q35_dxe_core.efi artifacts/debug/debugger/qemu_q35_dxe_core.efi
           cp target/x86_64-unknown-uefi/debug/qemu_q35_dxe_core.pdb artifacts/debug/debugger/qemu_q35_dxe_core.pdb
+
+      - name: Build OVMF Debug (Debugger)
+        run: |
+          cargo make ovmf --features enable_debugger
+          cp target/x86_64-unknown-uefi/debug/qemu_ovmf_dxe_core.efi artifacts/debug/debugger/qemu_ovmf_dxe_core.efi
+          cp target/x86_64-unknown-uefi/debug/qemu_ovmf_dxe_core.pdb artifacts/debug/debugger/qemu_ovmf_dxe_core.pdb
 
       - name: Build SBSA Debug (Debugger)
         run: |
