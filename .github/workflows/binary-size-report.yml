@@ -32,8 +32,10 @@ jobs:
       - name: Build Base Branch (${{ github.base_ref }})
         run: |
           cargo make q35
+          cargo make ovmf
           cargo make sbsa
           cargo make q35-release
+          cargo make ovmf-release
           cargo make sbsa-release
 
       - name: Get Base Branch (${{ github.base_ref }}) Sizes
@@ -41,8 +43,10 @@ jobs:
         shell: bash
         run: |
           get_size() { python3 -c "import os; print(os.path.getsize('$1'))"; }
-          echo "x64_debug=$(get_size target/x86_64-unknown-uefi/debug/qemu_q35_dxe_core.efi)" >> $GITHUB_OUTPUT
-          echo "x64_release=$(get_size target/x86_64-unknown-uefi/release/qemu_q35_dxe_core.efi)" >> $GITHUB_OUTPUT
+          echo "q35_debug=$(get_size target/x86_64-unknown-uefi/debug/qemu_q35_dxe_core.efi)" >> $GITHUB_OUTPUT
+          echo "q35_release=$(get_size target/x86_64-unknown-uefi/release/qemu_q35_dxe_core.efi)" >> $GITHUB_OUTPUT
+          echo "ovmf_debug=$(get_size target/x86_64-unknown-uefi/debug/qemu_ovmf_dxe_core.efi)" >> $GITHUB_OUTPUT
+          echo "ovmf_release=$(get_size target/x86_64-unknown-uefi/release/qemu_ovmf_dxe_core.efi)" >> $GITHUB_OUTPUT
           echo "aarch64_debug=$(get_size target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.efi)" >> $GITHUB_OUTPUT
           echo "aarch64_release=$(get_size target/aarch64-unknown-uefi/release/qemu_sbsa_dxe_core.efi)" >> $GITHUB_OUTPUT
 
@@ -58,8 +62,10 @@ jobs:
       - name: Build PR Branch (${{ github.head_ref }})
         run: |
           cargo make q35
+          cargo make ovmf
           cargo make sbsa
           cargo make q35-release
+          cargo make ovmf-release
           cargo make sbsa-release
 
       - name: Get PR Branch (${{ github.head_ref }}) Sizes
@@ -67,8 +73,10 @@ jobs:
         shell: bash
         run: |
           get_size() { python3 -c "import os; print(os.path.getsize('$1'))"; }
-          echo "x64_debug=$(get_size target/x86_64-unknown-uefi/debug/qemu_q35_dxe_core.efi)" >> $GITHUB_OUTPUT
-          echo "x64_release=$(get_size target/x86_64-unknown-uefi/release/qemu_q35_dxe_core.efi)" >> $GITHUB_OUTPUT
+          echo "q35_debug=$(get_size target/x86_64-unknown-uefi/debug/qemu_q35_dxe_core.efi)" >> $GITHUB_OUTPUT
+          echo "q35_release=$(get_size target/x86_64-unknown-uefi/release/qemu_q35_dxe_core.efi)" >> $GITHUB_OUTPUT
+          echo "ovmf_debug=$(get_size target/x86_64-unknown-uefi/debug/qemu_ovmf_dxe_core.efi)" >> $GITHUB_OUTPUT
+          echo "ovmf_release=$(get_size target/x86_64-unknown-uefi/release/qemu_ovmf_dxe_core.efi)" >> $GITHUB_OUTPUT
           echo "aarch64_debug=$(get_size target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.efi)" >> $GITHUB_OUTPUT
           echo "aarch64_release=$(get_size target/aarch64-unknown-uefi/release/qemu_sbsa_dxe_core.efi)" >> $GITHUB_OUTPUT
 
@@ -91,21 +99,37 @@ jobs:
           SHA1="${{ github.base_ref }}"
           SHA2="${{ github.head_ref }}"
 
-          X64_SHA1_DEBUG_SIZE=${{ steps.size-base.outputs.x64_debug }}
-          X64_SHA2_DEBUG_SIZE=${{ steps.size-pr.outputs.x64_debug }}
-          X64_DEBUG_DIFF=$((X64_SHA2_DEBUG_SIZE - X64_SHA1_DEBUG_SIZE))
-          X64_DEBUG_DIFF_COLUMN="$(printf '`%11s`<br>`%11s`<br>**`Δ %9s`**' \
-            "$(pretty_size "$X64_SHA1_DEBUG_SIZE")" \
-            "$(pretty_size "$X64_SHA2_DEBUG_SIZE")" \
-            "$(pretty_size "$X64_DEBUG_DIFF")")"
+          Q35_SHA1_DEBUG_SIZE=${{ steps.size-base.outputs.q35_debug }}
+          Q35_SHA2_DEBUG_SIZE=${{ steps.size-pr.outputs.q35_debug }}
+          Q35_DEBUG_DIFF=$((Q35_SHA2_DEBUG_SIZE - Q35_SHA1_DEBUG_SIZE))
+          Q35_DEBUG_DIFF_COLUMN="$(printf '`%11s`<br>`%11s`<br>**`Δ %9s`**' \
+            "$(pretty_size "$Q35_SHA1_DEBUG_SIZE")" \
+            "$(pretty_size "$Q35_SHA2_DEBUG_SIZE")" \
+            "$(pretty_size "$Q35_DEBUG_DIFF")")"
 
-          X64_SHA1_RELEASE_SIZE=${{ steps.size-base.outputs.x64_release }}
-          X64_SHA2_RELEASE_SIZE=${{ steps.size-pr.outputs.x64_release }}
-          X64_RELEASE_DIFF=$((X64_SHA2_RELEASE_SIZE - X64_SHA1_RELEASE_SIZE))
-          X64_RELEASE_DIFF_COLUMN="$(printf '`%11s`<br>`%11s`<br>**`Δ %9s`**' \
-            "$(pretty_size "$X64_SHA1_RELEASE_SIZE")" \
-            "$(pretty_size "$X64_SHA2_RELEASE_SIZE")" \
-            "$(pretty_size "$X64_RELEASE_DIFF")")"
+          Q35_SHA1_RELEASE_SIZE=${{ steps.size-base.outputs.q35_release }}
+          Q35_SHA2_RELEASE_SIZE=${{ steps.size-pr.outputs.q35_release }}
+          Q35_RELEASE_DIFF=$((Q35_SHA2_RELEASE_SIZE - Q35_SHA1_RELEASE_SIZE))
+          Q35_RELEASE_DIFF_COLUMN="$(printf '`%11s`<br>`%11s`<br>**`Δ %9s`**' \
+            "$(pretty_size "$Q35_SHA1_RELEASE_SIZE")" \
+            "$(pretty_size "$Q35_SHA2_RELEASE_SIZE")" \
+            "$(pretty_size "$Q35_RELEASE_DIFF")")"
+
+          OVMF_SHA1_DEBUG_SIZE=${{ steps.size-base.outputs.ovmf_debug }}
+          OVMF_SHA2_DEBUG_SIZE=${{ steps.size-pr.outputs.ovmf_debug }}
+          OVMF_DEBUG_DIFF=$((OVMF_SHA2_DEBUG_SIZE - OVMF_SHA1_DEBUG_SIZE))
+          OVMF_DEBUG_DIFF_COLUMN="$(printf '`%11s`<br>`%11s`<br>**`Δ %9s`**' \
+            "$(pretty_size "$OVMF_SHA1_DEBUG_SIZE")" \
+            "$(pretty_size "$OVMF_SHA2_DEBUG_SIZE")" \
+            "$(pretty_size "$OVMF_DEBUG_DIFF")")"
+
+          OVMF_SHA1_RELEASE_SIZE=${{ steps.size-base.outputs.ovmf_release }}
+          OVMF_SHA2_RELEASE_SIZE=${{ steps.size-pr.outputs.ovmf_release }}
+          OVMF_RELEASE_DIFF=$((OVMF_SHA2_RELEASE_SIZE - OVMF_SHA1_RELEASE_SIZE))
+          OVMF_RELEASE_DIFF_COLUMN="$(printf '`%11s`<br>`%11s`<br>**`Δ %9s`**' \
+            "$(pretty_size "$OVMF_SHA1_RELEASE_SIZE")" \
+            "$(pretty_size "$OVMF_SHA2_RELEASE_SIZE")" \
+            "$(pretty_size "$OVMF_RELEASE_DIFF")")"
 
           AARCH64_SHA1_DEBUG_SIZE=${{ steps.size-base.outputs.aarch64_debug }}
           AARCH64_SHA2_DEBUG_SIZE=${{ steps.size-pr.outputs.aarch64_debug }}
@@ -125,10 +149,11 @@ jobs:
 
           echo "### Binary Size Report - ${{ matrix.os }}" > "$REPORT_FILE"
           echo "" >> "$REPORT_FILE"
-          echo "| Architecture | Commit                                       | Δ Debug Size               | Δ Release Size               |" >> "$REPORT_FILE"
-          echo "|--------------|----------------------------------------------|----------------------------|------------------------------|" >> "$REPORT_FILE"
-          echo "| x86_64       | Base:\`${SHA1}\`<br>PR:\`${SHA2}\`<br>&nbsp; | $X64_DEBUG_DIFF_COLUMN     | $X64_RELEASE_DIFF_COLUMN     |" >> "$REPORT_FILE"
-          echo "| aarch64      | Base:\`${SHA1}\`<br>PR:\`${SHA2}\`<br>&nbsp; | $AARCH64_DEBUG_DIFF_COLUMN | $AARCH64_RELEASE_DIFF_COLUMN |" >> "$REPORT_FILE"
+          echo "| Platform       | Commit                                       | Δ Debug Size               | Δ Release Size               |" >> "$REPORT_FILE"
+          echo "|----------------|----------------------------------------------|----------------------------|------------------------------|" >> "$REPORT_FILE"
+          echo "| Q35 (x86_64)   | Base:\`${SHA1}\`<br>PR:\`${SHA2}\`<br>&nbsp; | $Q35_DEBUG_DIFF_COLUMN     | $Q35_RELEASE_DIFF_COLUMN     |" >> "$REPORT_FILE"
+          echo "| OVMF (x86_64)  | Base:\`${SHA1}\`<br>PR:\`${SHA2}\`<br>&nbsp; | $OVMF_DEBUG_DIFF_COLUMN    | $OVMF_RELEASE_DIFF_COLUMN    |" >> "$REPORT_FILE"
+          echo "| SBSA (aarch64) | Base:\`${SHA1}\`<br>PR:\`${SHA2}\`<br>&nbsp; | $AARCH64_DEBUG_DIFF_COLUMN | $AARCH64_RELEASE_DIFF_COLUMN |" >> "$REPORT_FILE"
           echo "" >> "$REPORT_FILE"
 
           cat "$REPORT_FILE" >> "$GITHUB_STEP_SUMMARY"

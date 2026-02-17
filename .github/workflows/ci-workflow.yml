@@ -29,6 +29,6 @@ jobs:
     name: Run
     uses: OpenDevicePartnership/patina-devops/.github/workflows/CiWorkflow.yml@v0.3.8
     with:
-      build-tasks: q35,sbsa,q35-release,sbsa-release
+      build-tasks: q35,sbsa,q35-release,sbsa-release,ovmf,ovmf-release
       run-cargo-vet: false
     secrets: inherit
