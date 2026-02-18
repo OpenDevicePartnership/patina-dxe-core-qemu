@@ -12,3 +12,4 @@
 #![feature(coverage_attribute)]
 
 pub mod q35;
+pub mod sbsa;
