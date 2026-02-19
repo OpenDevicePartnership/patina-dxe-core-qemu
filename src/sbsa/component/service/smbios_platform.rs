@@ -8,7 +8,7 @@
 //!
 
 extern crate alloc;
-use alloc::{string::String, vec};
+use alloc::{format, string::String, vec};
 
 use patina::{
     component::{component, service::Service},
@@ -18,8 +18,128 @@ use patina_smbios::{
     service::{SMBIOS_HANDLE_PI_RESERVED, Smbios, SmbiosExt, SmbiosTableHeader},
     smbios_record::{
         Type0PlatformFirmwareInformation, Type1SystemInformation, Type2BaseboardInformation, Type3SystemEnclosure,
+        Type4ProcessorInformation, Type7CacheInformation,
     },
 };
+
+/// Add processor and cache SMBIOS records (Type 4 + Type 7).
+fn add_processor_records(smbios: &Service<dyn Smbios>) {
+    // Cache Configuration bits: [2:0] = level - 1, [7] = enabled, [9:8] = operation mode
+    const CACHE_ENABLED: u16 = 1 << 7;
+
+    let l1i = Type7CacheInformation {
+        header: SmbiosTableHeader::new(7, 0, SMBIOS_HANDLE_PI_RESERVED),
+        socket_designation: 1,
+        cache_configuration: (3 << 8) | CACHE_ENABLED | 0, // L1, unknown mode
+        maximum_cache_size: 64,
+        installed_size: 64,
+        supported_sram_type: 0x0002,
+        current_sram_type: 0x0002,
+        cache_speed: 0,
+        error_correction_type: 0x02,
+        system_cache_type: 0x03, // Instruction
+        associativity: 0x05,     // 4-way
+        maximum_cache_size2: 64,
+        installed_cache_size2: 64,
+        string_pool: vec![String::from("L1 Instruction Cache")],
+    };
+    match smbios.add_record(None, &l1i) {
+        Ok(h) => log::trace!("  Type 7 (L1I Cache) - Handle 0x{:04X}", h),
+        Err(e) => {
+            log::warn!("  Failed to add Type 7 (L1I Cache): {:?}", e);
+            return;
+        }
+    };
+
+    let l1d = Type7CacheInformation {
+        header: SmbiosTableHeader::new(7, 0, SMBIOS_HANDLE_PI_RESERVED),
+        socket_designation: 1,
+        cache_configuration: (1 << 8) | CACHE_ENABLED | 0, // L1, write-back
+        maximum_cache_size: 64,
+        installed_size: 64,
+        supported_sram_type: 0x0002,
+        current_sram_type: 0x0002,
+        cache_speed: 0,
+        error_correction_type: 0x02,
+        system_cache_type: 0x04, // Data
+        associativity: 0x05,     // 4-way
+        maximum_cache_size2: 64,
+        installed_cache_size2: 64,
+        string_pool: vec![String::from("L1 Data Cache")],
+    };
+    let l1d_handle = match smbios.add_record(None, &l1d) {
+        Ok(h) => {
+            log::trace!("  Type 7 (L1D Cache) - Handle 0x{:04X}", h);
+            h
+        }
+        Err(e) => {
+            log::warn!("  Failed to add Type 7 (L1D Cache): {:?}", e);
+            return;
+        }
+    };
+
+    let l2 = Type7CacheInformation {
+        header: SmbiosTableHeader::new(7, 0, SMBIOS_HANDLE_PI_RESERVED),
+        socket_designation: 1,
+        cache_configuration: (1 << 8) | CACHE_ENABLED | 1, // L2, write-back
+        maximum_cache_size: 1024,
+        installed_size: 1024,
+        supported_sram_type: 0x0002,
+        current_sram_type: 0x0002,
+        cache_speed: 0,
+        error_correction_type: 0x02,
+        system_cache_type: 0x05, // Unified
+        associativity: 0x08,     // 16-way
+        maximum_cache_size2: 1024,
+        installed_cache_size2: 1024,
+        string_pool: vec![String::from("L2 Cache")],
+    };
+    let l2_handle = match smbios.add_record(None, &l2) {
+        Ok(h) => {
+            log::trace!("  Type 7 (L2 Cache) - Handle 0x{:04X}", h);
+            h
+        }
+        Err(e) => {
+            log::warn!("  Failed to add Type 7 (L2 Cache): {:?}", e);
+            return;
+        }
+    };
+
+    let processor = Type4ProcessorInformation {
+        header: SmbiosTableHeader::new(4, 0, SMBIOS_HANDLE_PI_RESERVED),
+        socket_designation: 1,
+        processor_type: 0x03,   // Central Processor
+        processor_family: 0xFE, // Use Family2
+        processor_manufacturer: 2,
+        processor_id: [0u8; 8],
+        processor_version: 3,
+        voltage: 0,
+        external_clock: 62,      // MHz
+        max_speed: 2000,         // MHz
+        current_speed: 2000,     // MHz
+        status: 0x41,            // CPU Enabled + Socket Populated
+        processor_upgrade: 0x02, // Unknown
+        l1_cache_handle: l1d_handle,
+        l2_cache_handle: l2_handle,
+        l3_cache_handle: 0xFFFF, // Not provided
+        serial_number: 0,
+        asset_tag: 0,
+        part_number: 0,
+        core_count: 1,
+        core_enabled: 1,
+        thread_count: 1,
+        processor_characteristics: (1 << 2) | (1 << 5) | (1 << 9), // 64-bit, XN, ARM64 SoC ID
+        processor_family2: 0x0101,                                 // ARMv8
+        core_count2: 1,
+        core_enabled2: 1,
+        thread_count2: 1,
+        string_pool: vec![format!("CPU{:02}", 1), String::from("QEMU"), String::from("ARMv8")],
+    };
+    match smbios.add_record(None, &processor) {
+        Ok(h) => log::trace!("  Type 4 (Processor Info) - Handle 0x{:04X}", h),
+        Err(e) => log::warn!("  Failed to add Type 4 (Processor Info): {:?}", e),
+    }
+}
 
 /// SBSA platform SMBIOS record provider.
 #[derive(Default)]
@@ -153,6 +273,9 @@ impl SbsaSmbiosPlatform {
             Ok(handle) => log::trace!("  Type 2 (Base Board Info) - Handle 0x{:04X}", handle),
             Err(e) => log::warn!("  Failed to add Type 2: {:?}", e),
         }
+
+        // Type 4 (Processor) + Type 7 (Cache) - replaces the C ProcessorSubClassDxe driver.
+        add_processor_records(&smbios);
 
         log::debug!("Publishing SMBIOS table...");
         let (table_addr, entry_point_addr) = smbios.publish_table().map_err(|e| {
