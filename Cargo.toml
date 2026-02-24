@@ -44,22 +44,6 @@ x86_64 = { version = "=0.15.2", default-features = false, features = [
 zerocopy = { version = "0.8", features = ["derive"] }
 qemu-exit = "3"
 
-# These release settings reduce the qemu binary size significantly(~35%).
-[profile.release]
-codegen-units = 1
-debug = "full"
-lto = true
-opt-level = "s"
-split-debuginfo = "packed"
-strip = "symbols"
-incremental = true
-
-[profile.dev]
-opt-level = "s"
-
-[profile.test]
-opt-level = 0
-
 [features]
 default = ["compatibility_mode_allowed"]
 compatibility_mode_allowed = ["patina_dxe_core/compatibility_mode_allowed"]
