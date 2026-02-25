@@ -23,6 +23,7 @@ words:
   - acpi
   - apmc
   - depex
+  - dimm
   - dxecore
   - fadt
   - edk2
@@ -40,6 +41,7 @@ words:
   - pdata
   - pdbaltpath
   - pemfile
+  - pmic
   - pmbase
   - pmcon
   - pytool

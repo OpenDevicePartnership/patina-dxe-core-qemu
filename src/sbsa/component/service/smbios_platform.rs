@@ -18,6 +18,8 @@ use patina_smbios::{
     service::{SMBIOS_HANDLE_PI_RESERVED, Smbios, SmbiosExt, SmbiosTableHeader},
     smbios_record::{
         Type0PlatformFirmwareInformation, Type1SystemInformation, Type2BaseboardInformation, Type3SystemEnclosure,
+        Type4ProcessorInformation, Type7CacheInformation, Type16PhysicalMemoryArray, Type17MemoryDevice,
+        Type19MemoryArrayMappedAddress,
     },
 };
 
@@ -152,6 +154,200 @@ impl SbsaSmbiosPlatform {
         match smbios.add_record(None, &baseboard_info) {
             Ok(handle) => log::trace!("  Type 2 (Base Board Info) - Handle 0x{:04X}", handle),
             Err(e) => log::warn!("  Failed to add Type 2: {:?}", e),
+        }
+
+        // Type 7: Cache Information - L1 and L2 caches for the virtual processor
+        let l1_cache = Type7CacheInformation {
+            header: SmbiosTableHeader::new(7, 0, SMBIOS_HANDLE_PI_RESERVED),
+            socket_designation: 1,
+            cache_configuration: 0x0180, // L1, enabled, write-back
+            maximum_cache_size: 64,      // 64 KB
+            installed_size: 64,
+            supported_sram_type: 0x0002, // Unknown
+            current_sram_type: 0x0002,
+            cache_speed: 0,
+            error_correction_type: 0x05, // Single-bit ECC
+            system_cache_type: 0x05,     // Unified
+            associativity: 0x06,         // 8-way
+            maximum_cache_size2: 64,
+            installed_cache_size2: 64,
+            string_pool: vec![String::from("L1 Cache")],
+        };
+
+        let mut l1_cache_handle = 0xFFFF;
+        match smbios.add_record(None, &l1_cache) {
+            Ok(handle) => {
+                log::trace!("  Type 7 (L1 Cache) - Handle 0x{:04X}", handle);
+                l1_cache_handle = handle;
+            }
+            Err(e) => log::warn!("  Failed to add Type 7 (L1 Cache): {:?}", e),
+        }
+
+        let l2_cache = Type7CacheInformation {
+            header: SmbiosTableHeader::new(7, 0, SMBIOS_HANDLE_PI_RESERVED),
+            socket_designation: 1,
+            cache_configuration: 0x0181, // L2, enabled, write-back
+            maximum_cache_size: 256,     // 256 KB
+            installed_size: 256,
+            supported_sram_type: 0x0002,
+            current_sram_type: 0x0002,
+            cache_speed: 0,
+            error_correction_type: 0x05, // Single-bit ECC
+            system_cache_type: 0x05,     // Unified
+            associativity: 0x06,         // 8-way
+            maximum_cache_size2: 256,
+            installed_cache_size2: 256,
+            string_pool: vec![String::from("L2 Cache")],
+        };
+
+        let mut l2_cache_handle = 0xFFFF;
+        match smbios.add_record(None, &l2_cache) {
+            Ok(handle) => {
+                log::trace!("  Type 7 (L2 Cache) - Handle 0x{:04X}", handle);
+                l2_cache_handle = handle;
+            }
+            Err(e) => log::warn!("  Failed to add Type 7 (L2 Cache): {:?}", e),
+        }
+
+        // Type 4: Processor Information
+        let processor_info = Type4ProcessorInformation {
+            header: SmbiosTableHeader::new(4, 0, SMBIOS_HANDLE_PI_RESERVED),
+            socket_designation: 1,
+            processor_type: 0x03,   // Central Processor
+            processor_family: 0xFE, // Use processor_family2
+            processor_manufacturer: 2,
+            processor_id: [0u8; 8],
+            processor_version: 3,
+            voltage: 0x80,     // Legacy mode, voltage unknown
+            external_clock: 0, // Unknown
+            max_speed: 2000,
+            current_speed: 2000,
+            status: 0x41,            // CPU Enabled, Populated
+            processor_upgrade: 0x06, // None
+            l1_cache_handle,
+            l2_cache_handle,
+            l3_cache_handle: 0xFFFF, // Not provided
+            serial_number: 4,
+            asset_tag: 5,
+            part_number: 6,
+            core_count: 1,
+            core_enabled: 1,
+            thread_count: 1,
+            processor_characteristics: 0x04, // 64-bit capable
+            processor_family2: 0x0100,       // ARMv8
+            core_count2: 1,
+            core_enabled2: 1,
+            thread_count2: 1,
+            string_pool: vec![
+                String::from("CPU0"),
+                String::from("QEMU"),
+                String::from("ARMv8 Virtual Processor"),
+                String::from("SN-CPU-001"),
+                String::from("ASSET-CPU-001"),
+                String::from("PN-CPU-001"),
+            ],
+        };
+
+        match smbios.add_record(None, &processor_info) {
+            Ok(handle) => log::trace!("  Type 4 (Processor Info) - Handle 0x{:04X}", handle),
+            Err(e) => log::warn!("  Failed to add Type 4: {:?}", e),
+        }
+
+        // Type 16: Physical Memory Array
+        let memory_array = Type16PhysicalMemoryArray {
+            header: SmbiosTableHeader::new(16, 0, SMBIOS_HANDLE_PI_RESERVED),
+            location: 0x03,                          // System board
+            use_field: 0x03,                         // System memory
+            memory_error_correction: 0x03,           // None
+            maximum_capacity: 0x00100000,            // 1 GB in KB
+            memory_error_information_handle: 0xFFFE, // Not provided
+            number_of_memory_devices: 1,
+            extended_maximum_capacity: 0,
+            string_pool: vec![],
+        };
+
+        let mut type16_handle = 0xFFFF;
+        match smbios.add_record(None, &memory_array) {
+            Ok(handle) => {
+                log::trace!("  Type 16 (Physical Memory Array) - Handle 0x{:04X}", handle);
+                type16_handle = handle;
+            }
+            Err(e) => log::warn!("  Failed to add Type 16: {:?}", e),
+        }
+
+        // Type 17: Memory Device
+        let memory_device = Type17MemoryDevice {
+            header: SmbiosTableHeader::new(17, 0, SMBIOS_HANDLE_PI_RESERVED),
+            physical_memory_array_handle: type16_handle,
+            memory_error_information_handle: 0xFFFE, // Not provided
+            total_width: 64,
+            data_width: 64,
+            size: 0x0400,      // 1024 MB
+            form_factor: 0x09, // DIMM
+            device_set: 0,
+            device_locator: 1,
+            bank_locator: 2,
+            memory_type: 0x1A,   // DDR4
+            type_detail: 0x0080, // Synchronous
+            speed: 3200,
+            manufacturer: 3,
+            serial_number: 4,
+            asset_tag: 5,
+            part_number: 6,
+            attributes: 0x01, // Single rank
+            extended_size: 0,
+            configured_memory_clock_speed: 3200,
+            minimum_voltage: 1200,
+            maximum_voltage: 1200,
+            configured_voltage: 1200,
+            memory_technology: 0x02,                  // DRAM
+            memory_operating_mode_capability: 0x0004, // Volatile
+            firmware_version: 7,
+            module_manufacturer_id: 0,
+            module_product_id: 0,
+            memory_subsystem_controller_manufacturer_id: 0,
+            memory_subsystem_controller_product_id: 0,
+            non_volatile_size: 0,
+            volatile_size: 0x40000000, // 1 GB
+            cache_size: 0,
+            logical_size: 0,
+            extended_speed: 0,
+            extended_configured_memory_speed: 0,
+            pmic0_manufacturer_id: 0,
+            pmic0_revision_number: 0,
+            rcd_manufacturer_id: 0,
+            rcd_revision_number: 0,
+            string_pool: vec![
+                String::from("DIMM 0"),
+                String::from("BANK 0"),
+                String::from("QEMU"),
+                String::from("SN-DIMM-001"),
+                String::from("ASSET-DIMM-001"),
+                String::from("QEMU-DIMM"),
+                String::from("v1.0"),
+            ],
+        };
+
+        match smbios.add_record(None, &memory_device) {
+            Ok(handle) => log::trace!("  Type 17 (Memory Device) - Handle 0x{:04X}", handle),
+            Err(e) => log::warn!("  Failed to add Type 17: {:?}", e),
+        }
+
+        // Type 19: Memory Array Mapped Address
+        let memory_mapped = Type19MemoryArrayMappedAddress {
+            header: SmbiosTableHeader::new(19, 0, SMBIOS_HANDLE_PI_RESERVED),
+            starting_address: 0,
+            ending_address: 0x000FFFFF, // 1 GB - 1 in KB
+            memory_array_handle: type16_handle,
+            partition_width: 1,
+            extended_starting_address: 0,
+            extended_ending_address: 0,
+            string_pool: vec![],
+        };
+
+        match smbios.add_record(None, &memory_mapped) {
+            Ok(handle) => log::trace!("  Type 19 (Memory Array Mapped Address) - Handle 0x{:04X}", handle),
+            Err(e) => log::warn!("  Failed to add Type 19: {:?}", e),
         }
 
         log::debug!("Publishing SMBIOS table...");
