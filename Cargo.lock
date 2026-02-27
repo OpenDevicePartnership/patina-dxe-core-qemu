@@ -647,7 +647,7 @@ checksum = "8bb0fd6580eeed0103c054e3fba2c2618ff476943762f28a645b63b8692b21c9"
 
 [[package]]
 name = "qemu_dxe_core"
-version = "2.2.11"
+version = "2.2.12"
 dependencies = [
  "log",
  "patina",
