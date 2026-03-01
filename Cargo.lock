@@ -308,7 +308,7 @@ version = "3.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "091e08bf3b952c68a5d3915d53b4221dc41fad3e00d3eb2020d2dd46f83ae5e2"
 dependencies = [
- "r-efi",
+ "r-efi 5.3.0",
  "uuid",
 ]
 
@@ -365,7 +365,7 @@ dependencies = [
  "mu_rust_helpers",
  "num-traits",
  "patina_macro",
- "r-efi",
+ "r-efi 5.3.0",
  "scroll",
  "spin",
  "uart_16550",
@@ -384,7 +384,7 @@ dependencies = [
  "log",
  "mu_rust_helpers",
  "patina",
- "r-efi",
+ "r-efi 5.3.0",
  "spin",
  "zerocopy",
  "zerocopy-derive",
@@ -432,7 +432,7 @@ dependencies = [
  "patina_internal_depex",
  "patina_paging",
  "patina_performance",
- "r-efi",
+ "r-efi 5.3.0",
  "scroll",
  "spin",
  "uefi_corosensei",
@@ -447,7 +447,7 @@ checksum = "8b351bcad006287fb9f1a5ffa952265c4db344b5b1f5db3f7c6ab2fb65a60b44"
 dependencies = [
  "log",
  "patina",
- "r-efi",
+ "r-efi 5.3.0",
 ]
 
 [[package]]
@@ -463,7 +463,7 @@ dependencies = [
  "patina",
  "patina_ffs",
  "patina_lzma_rs",
- "r-efi",
+ "r-efi 5.3.0",
 ]
 
 [[package]]
@@ -489,7 +489,7 @@ dependencies = [
  "patina_mtrr",
  "patina_paging",
  "patina_stacktrace",
- "r-efi",
+ "r-efi 5.3.0",
  "safe-mmio",
  "spin",
  "x86_64",
@@ -502,7 +502,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e58eef131032fbeeccd06e7b065bfa6da6b603557bf3c088434750c88bdd2980"
 dependencies = [
  "log",
- "r-efi",
+ "r-efi 5.3.0",
  "uuid",
 ]
 
@@ -537,7 +537,7 @@ dependencies = [
  "cfg-if",
  "log",
  "patina",
- "r-efi",
+ "r-efi 5.3.0",
  "x86_64",
  "zerocopy",
  "zerocopy-derive",
@@ -575,7 +575,7 @@ dependencies = [
  "mu_rust_helpers",
  "patina",
  "patina_mm",
- "r-efi",
+ "r-efi 5.3.0",
  "uuid",
  "zerocopy",
  "zerocopy-derive",
@@ -602,7 +602,7 @@ dependencies = [
  "log",
  "patina",
  "patina_macro",
- "r-efi",
+ "r-efi 5.3.0",
  "spin",
  "zerocopy",
  "zerocopy-derive",
@@ -661,7 +661,7 @@ dependencies = [
  "patina_smbios",
  "patina_stacktrace",
  "qemu-exit",
- "r-efi",
+ "r-efi 6.0.0",
  "x86_64",
  "zerocopy",
 ]
@@ -680,6 +680,12 @@ name = "r-efi"
 version = "5.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "69cdb34c158ceb288df11e18b4bd39de994f6657d83847bdffdbd7f346754b0f"
+
+[[package]]
+name = "r-efi"
+version = "6.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f8dcc9c7d52a811697d2151c701e0d08956f92b0e24136cf4cf27b57a6a0d9bf"
 
 [[package]]
 name = "radium"

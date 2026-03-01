@@ -37,7 +37,7 @@ patina_smbios = { version = "20"}
 patina = { version = "20", features = ["enable_patina_tests"] }
 patina_ffs_extractors = { version = "20" }
 patina_stacktrace = { version = "20" }
-r-efi = { version = "^5", default-features = false }
+r-efi = { version = "^6", default-features = false }
 x86_64 = { version = "=0.15.2", default-features = false, features = [
   "instructions"
 ], optional = true }
