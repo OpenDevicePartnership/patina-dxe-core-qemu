@@ -168,7 +168,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/binary_size_report.md" pr-data/
 
       - name: 📤 Upload PR Data and Report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: binary-size-report-data
           path: pr-data/
