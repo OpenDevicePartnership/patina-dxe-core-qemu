@@ -25,7 +25,7 @@ jobs:
       github.event.workflow_run.conclusion == 'success'
     steps:
       - name: 📥 Download Binary Size Report Data
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: binary-size-report-data
           github-token: ${{ secrets.GITHUB_TOKEN }}
