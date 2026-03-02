@@ -94,7 +94,6 @@ impl ComponentInfo for Q35 {
             enabled_measurements: {
                 patina::performance::Measurement::DriverBindingStart         // Adds driver binding start measurements.
                | patina::performance::Measurement::DriverBindingStop        // Adds driver binding stop measurements.
-               | patina::performance::Measurement::DriverBindingSupport     // Adds driver binding support measurements.
                | patina::performance::Measurement::LoadImage                // Adds load image measurements.
                | patina::performance::Measurement::StartImage // Adds start image measurements.
             },
