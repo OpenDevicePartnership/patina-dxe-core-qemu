@@ -282,6 +282,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0ca88d725a0a943b096803bd34e73a4437208b6077654cc4ecb2947a5f91618d"
 
 [[package]]
+name = "memoffset"
+version = "0.9.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "488016bfae457b036d996092f6cb448677611ce4449e970ceaf42695203f218a"
+dependencies = [
+ "autocfg",
+]
+
+[[package]]
 name = "mu_rust_helpers"
 version = "3.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -351,9 +360,9 @@ checksum = "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a"
 
 [[package]]
 name = "patina"
-version = "20.0.3"
+version = "20.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7e020ae8edf2946687199058930d264e823f27156abf55da2e43ad75647780b2"
+checksum = "8b22e6f05f2806a6705f481d120587b1d99be044c1fbbef6108f1d18b7a46c09"
 dependencies = [
  "cfg-if",
  "fallible-streaming-iterator",
@@ -371,6 +380,22 @@ dependencies = [
  "uart_16550",
  "uuid",
  "x86_64",
+ "zerocopy",
+ "zerocopy-derive",
+]
+
+[[package]]
+name = "patina_acpi"
+version = "20.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4b8cc2a69c29cd0abc7c62a6f653e36f094dc767f17417401973c850e128454a"
+dependencies = [
+ "log",
+ "memoffset",
+ "patina",
+ "r-efi",
+ "scroll",
+ "spin",
  "zerocopy",
  "zerocopy-derive",
 ]
@@ -518,9 +543,9 @@ dependencies = [
 
 [[package]]
 name = "patina_macro"
-version = "20.0.3"
+version = "20.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a708ee406163ef8e3db9512c050e8df42760e281919cd584a5cfc219b158c7a9"
+checksum = "c87b8874f14ad5c8223a001122400b95a7e0b7b68cbf2b82fb30adcdfe1b2b21"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -651,6 +676,7 @@ version = "2.2.12"
 dependencies = [
  "log",
  "patina",
+ "patina_acpi",
  "patina_adv_logger",
  "patina_debugger",
  "patina_dxe_core",
