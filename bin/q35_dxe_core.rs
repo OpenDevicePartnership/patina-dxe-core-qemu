@@ -112,7 +112,7 @@ impl ComponentInfo for Q35 {
         add.component(patina_smbios::component::SmbiosProvider::new(3, 9));
         add.component(q35_services::smbios_platform::Q35SmbiosPlatform::new());
         add.component(patina_acpi::component::AcpiComponent::default());
-        add.component(patina::test::TestRunner::default().debug_mode(true).with_callback(|test_name, err_msg| {
+        add.component(patina::test::TestRunner::default().with_callback(|test_name, err_msg| {
             log::error!("Test {} failed: {}", test_name, err_msg);
             qemu_exit::X86::new(0xf4, 0x1).exit_failure();
         }));
