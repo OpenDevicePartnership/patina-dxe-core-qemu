@@ -282,6 +282,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0ca88d725a0a943b096803bd34e73a4437208b6077654cc4ecb2947a5f91618d"
 
 [[package]]
+name = "memoffset"
+version = "0.9.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "488016bfae457b036d996092f6cb448677611ce4449e970ceaf42695203f218a"
+dependencies = [
+ "autocfg",
+]
+
+[[package]]
 name = "mu_rust_helpers"
 version = "3.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -372,6 +381,22 @@ dependencies = [
  "uart_16550",
  "uuid",
  "x86_64",
+ "zerocopy",
+ "zerocopy-derive",
+]
+
+[[package]]
+name = "patina_acpi"
+version = "20.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4b8cc2a69c29cd0abc7c62a6f653e36f094dc767f17417401973c850e128454a"
+dependencies = [
+ "log",
+ "memoffset",
+ "patina",
+ "r-efi",
+ "scroll",
+ "spin",
  "zerocopy",
  "zerocopy-derive",
 ]
@@ -651,6 +676,7 @@ version = "2.2.14"
 dependencies = [
  "log",
  "patina",
+ "patina_acpi",
  "patina_adv_logger",
  "patina_debugger",
  "patina_dxe_core",

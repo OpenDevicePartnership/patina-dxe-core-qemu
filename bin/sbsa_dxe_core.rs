@@ -79,6 +79,7 @@ impl ComponentInfo for Sbsa {
         }));
         add.component(patina_performance::component::performance_config_provider::PerformanceConfigurationProvider);
         add.component(patina_performance::component::performance::Performance);
+        add.component(patina_acpi::component::AcpiComponent::default());
     }
 
     fn configs(mut add: Add<Config>) {
