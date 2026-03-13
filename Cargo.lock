@@ -387,9 +387,9 @@ dependencies = [
 
 [[package]]
 name = "patina_acpi"
-version = "20.1.0"
+version = "20.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4b8cc2a69c29cd0abc7c62a6f653e36f094dc767f17417401973c850e128454a"
+checksum = "75bc2c35f62f5c4ed477a45485be8af65bd8374ce9dc079c9563c2e029fc5a03"
 dependencies = [
  "log",
  "memoffset",
