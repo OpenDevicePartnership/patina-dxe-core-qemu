@@ -442,6 +442,18 @@ clear = true
 command = "cargo"
 args = ["fmt", "--all"]
 
+[tasks.fmt-check]
+description = "Check cargo format without modifying files."
+clear = true
+command = "cargo"
+args = ["fmt", "--all", "--check"]
+
+[tasks.doc-test]
+description = "Run documentation tests."
+clear = true
+command = "cargo"
+args = ["test", "--doc"]
+
 [tasks.cspell]
 description = "Run cspell for spell checking." # npm install -g cspell@latest
 script = "cspell --quiet  --no-progress --no-summary  --dot --gitignore -e \"{.git/**,.github/**,.vscode/**}\" ."
@@ -510,6 +522,7 @@ cm_run_task bloat-sbsa-exec
 [tasks.all]
 description = "Run all tasks for PR readiness."
 dependencies = [
+    "fmt-check",
     "deny",
     "clippy",
     "cspell",
@@ -521,6 +534,6 @@ dependencies = [
     "sbsa-release",
     "test",
     "coverage",
-    "fmt",
+    "doc-test",
     "doc",
 ]
