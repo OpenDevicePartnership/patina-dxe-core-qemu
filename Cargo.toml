@@ -43,10 +43,11 @@ x86_64 = { version = "=0.15.2", default-features = false, features = [
   "instructions"
 ], optional = true }
 zerocopy = { version = "0.8", features = ["derive"] }
-qemu-exit = "3"
+qemu-exit = { version = "3", optional = true }
 
 [features]
-default = ["compatibility_mode_allowed"]
+# Keep the default features here in sync with the features listed in BASE_FEATURES in Makefile.toml
+default = ["compatibility_mode_allowed", "exit_on_patina_test_failure"]
 compatibility_mode_allowed = ["patina_dxe_core/compatibility_mode_allowed"]
 v1_resource_descriptor_support = ["patina_dxe_core/v1_resource_descriptor_support"]
 x64 = ["x86_64"]
@@ -55,3 +56,4 @@ doc = []
 std = []
 build_debugger = ["patina_dxe_core/debugger_reload"]
 enable_debugger = ["build_debugger"]
+exit_on_patina_test_failure = ["qemu-exit"]

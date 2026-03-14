@@ -17,6 +17,7 @@ use patina_dxe_core::*;
 use patina_ffs_extractors::CompositeSectionExtractor;
 use patina_smbios;
 use patina_stacktrace::StackTrace;
+#[cfg(feature = "exit_on_patina_test_failure")]
 use qemu_exit::QEMUExit;
 use qemu_resources::sbsa::component::service as sbsa_services;
 extern crate alloc;
@@ -75,6 +76,7 @@ impl ComponentInfo for Sbsa {
         add.component(sbsa_services::smbios_platform::SbsaSmbiosPlatform::new());
         add.component(patina::test::TestRunner::default().with_callback(|test_name, err_msg| {
             log::error!("Test {} failed: {}", test_name, err_msg);
+            #[cfg(feature = "exit_on_patina_test_failure")]
             qemu_exit::AArch64::new().exit_failure();
         }));
         add.component(patina_performance::component::performance_config_provider::PerformanceConfigurationProvider);
