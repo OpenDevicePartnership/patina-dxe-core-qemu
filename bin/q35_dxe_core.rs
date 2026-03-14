@@ -19,6 +19,7 @@ use patina_stacktrace::StackTrace;
 use qemu_resources::q35::component::service as q35_services;
 extern crate alloc;
 use alloc::vec;
+#[cfg(feature = "exit_on_patina_test_failure")]
 use qemu_exit::QEMUExit;
 use qemu_resources::q35::timer;
 
@@ -114,6 +115,7 @@ impl ComponentInfo for Q35 {
         add.component(patina_acpi::component::AcpiComponent::default());
         add.component(patina::test::TestRunner::default().with_callback(|test_name, err_msg| {
             log::error!("Test {} failed: {}", test_name, err_msg);
+            #[cfg(feature = "exit_on_patina_test_failure")]
             qemu_exit::X86::new(0xf4, 0x1).exit_failure();
         }));
     }
