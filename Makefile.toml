@@ -378,6 +378,8 @@ end
 
 if is_empty ${base_features}
     combined_features = set ${features}
+elseif is_empty ${features}
+    combined_features = set ${base_features}
 else
     combined_features = concat ${base_features} "," ${features}
 end
