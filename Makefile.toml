@@ -71,6 +71,23 @@ description = "Checks rust code for errors. Example `cargo make check`"
 clear = true
 run_task = [{ name = ["check_no_std", "check_std", "check_tests"], parallel = true }]
 
+[tasks.check-no-default-features-code]
+description = "Checks rust code compiles without default features."
+private = true
+command = "cargo"
+args = ["check", "--no-default-features", "@@split(CARGO_MAKE_TASK_ARGS, )"]
+
+[tasks.check-no-default-features-tests]
+description = "Checks rust test code compiles without default features."
+private = true
+command = "cargo"
+args = ["test", "--no-run", "--no-default-features", "@@split(CARGO_MAKE_TASK_ARGS, )"]
+
+[tasks.check-no-default-features]
+description = "Checks rust code and tests compile without default features to catch feature-gate regressions."
+clear = true
+run_task = [{ name = ["check-no-default-features-code", "check-no-default-features-tests"], parallel = true }]
+
 [tasks.test]
 description = "Builds all rust tests in the workspace. Example `cargo make test`"
 clear = true
@@ -558,6 +575,7 @@ dependencies = [
     "deny",
     "clippy",
     "cspell",
+    "check-no-default-features",
     "q35",
     "ovmf",
     "sbsa",
