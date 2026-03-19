@@ -53,8 +53,27 @@ jobs:
           PR_NUMBER: ${{ steps.pr-data.outputs.pr_number }}
         shell: bash
         run: |
+          MARKER="<!-- binary-size-report -->"
           COMMENT_BODY=$(cat binary_size_report.md)
 
-          gh pr comment "$PR_NUMBER" \
-            --repo ${{ github.repository }} \
-            --body "$COMMENT_BODY"
+          # Find an existing comment with the hidden marker
+          COMMENT_ID=$(
+            gh api \
+              "repos/${{ github.repository }}/issues/${PR_NUMBER}/comments" \
+              --paginate \
+              --jq ".[] | select(.body | contains(\"${MARKER}\")) | .id" \
+            | head -n 1
+          )
+
+          if [ -n "$COMMENT_ID" ]; then
+            # Update the existing comment
+            gh api \
+              --method PATCH \
+              "repos/${{ github.repository }}/issues/comments/${COMMENT_ID}" \
+              -f body="${COMMENT_BODY}"
+          else
+            # Create a new comment
+            gh pr comment "$PR_NUMBER" \
+              --repo ${{ github.repository }} \
+              --body "$COMMENT_BODY"
+          fi

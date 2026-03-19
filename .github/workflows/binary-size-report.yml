@@ -147,7 +147,8 @@ jobs:
             "$(pretty_size "$AARCH64_SHA2_RELEASE_SIZE")" \
             "$(pretty_size "$AARCH64_RELEASE_DIFF")")"
 
-          echo "### Binary Size Report" > "$REPORT_FILE"
+          echo "<!-- binary-size-report -->" > "$REPORT_FILE"
+          echo "### Binary Size Report" >> "$REPORT_FILE"
           echo "" >> "$REPORT_FILE"
           echo "| Platform       | Commit                                       | Δ Debug Size               | Δ Release Size               |" >> "$REPORT_FILE"
           echo "|----------------|----------------------------------------------|----------------------------|------------------------------|" >> "$REPORT_FILE"
