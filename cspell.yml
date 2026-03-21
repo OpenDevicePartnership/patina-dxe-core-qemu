@@ -20,7 +20,9 @@ minWordLength: 4
 caseSensitive: false
 allowCompoundWords: true
 words:
+  - ahci
   - acpi
+  - bootx
   - apmc
   - asan
   - depex
@@ -57,6 +59,7 @@ words:
   - tiano
   - uart
   - uefi
+  - virtio
   - vswhere
   - webpki
   - zbuild

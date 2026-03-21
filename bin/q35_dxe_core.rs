@@ -11,8 +11,16 @@
 #![no_main]
 
 use core::{ffi::c_void, panic::PanicInfo};
-use patina::{log::Format, serial::uart::Uart16550};
+use patina::{
+    device_path::{
+        node_defs::{Acpi, FilePath, HardDrive, Pci},
+        paths::DevicePathBuf,
+    },
+    log::Format,
+    serial::uart::Uart16550,
+};
 use patina_adv_logger::{component::AdvancedLoggerComponent, logger::AdvancedLogger};
+use patina_boot::{BootDispatcher, SimpleBootManager, config::BootConfig};
 use patina_dxe_core::*;
 use patina_ffs_extractors::CompositeSectionExtractor;
 use patina_stacktrace::StackTrace;
@@ -80,6 +88,43 @@ impl CpuInfo for Q35 {
     }
 }
 
+/// Create a device path for primary boot target (NVMe).
+///
+/// Uses a short-form (partial) device path with just the GPT partition and file path.
+/// The `boot_from_device_path` helper expands this to the full path at runtime via
+/// `LocateDevicePath`, which is the standard UEFI Boot#### variable approach.
+///
+/// Partition GUID: 1BBEE91E-5177-4248-A08F-2F6000BFE3B6
+fn create_primary_boot_path() -> DevicePathBuf {
+    // GPT partition 1: start LBA 2048, size 122880 sectors
+    let partition_guid: [u8; 16] =
+        [0x1E, 0xE9, 0xBE, 0x1B, 0x77, 0x51, 0x48, 0x42, 0xA0, 0x8F, 0x2F, 0x60, 0x00, 0xBF, 0xE3, 0xB6];
+    let mut path = DevicePathBuf::from_device_path_node_iter(core::iter::once(HardDrive::new_gpt(
+        1,
+        2048,
+        122880,
+        partition_guid,
+    )));
+
+    let file_path =
+        DevicePathBuf::from_device_path_node_iter(core::iter::once(FilePath::new("\\EFI\\Boot\\BOOTX64.efi")));
+    path.append_device_path(&file_path);
+
+    log::info!("Primary boot path (partial): HD(1,GPT,1BBEE91E-5177-4248-A08F-2F6000BFE3B6)/\\EFI\\Boot\\BOOTX64.efi");
+    path
+}
+
+/// Create a device path for secondary/fallback boot target.
+///
+/// This points to a different PCI device as a fallback boot option.
+/// On Q35, this could be a secondary virtio device or AHCI controller.
+fn create_secondary_boot_path() -> DevicePathBuf {
+    let mut path = DevicePathBuf::from_device_path_node_iter(core::iter::once(Acpi::new_pci_root(0)));
+    let pci_path = DevicePathBuf::from_device_path_node_iter(core::iter::once(Pci { function: 0, device: 31 }));
+    path.append_device_path(&pci_path);
+    path
+}
+
 impl ComponentInfo for Q35 {
     fn configs(mut add: Add<Config>) {
         add.config(patina_mm::config::MmCommunicationConfiguration {
@@ -118,6 +163,17 @@ impl ComponentInfo for Q35 {
             #[cfg(feature = "exit_on_patina_test_failure")]
             qemu_exit::X86::new(0xf4, 0x1).exit_failure();
         }));
+        // Boot orchestration component
+        add.component(BootDispatcher::new(SimpleBootManager::new(
+            BootConfig::new(create_primary_boot_path())
+                .with_hotkey(0x86)
+                .with_hotkey_device(create_secondary_boot_path())
+                .with_failure_handler(|| {
+                    log::error!("===========================================");
+                    log::error!("BOOT FAILED: All boot options exhausted");
+                    log::error!("===========================================");
+                }),
+        )));
     }
 }
 
