@@ -10,7 +10,6 @@ default_to_workspace = false
 [env]
 NO_STD_FLAGS = "--profile ${RUSTC_PROFILE} -Zbuild-std=core,compiler_builtins,alloc -Zbuild-std-features=compiler-builtins-mem -Zunstable-options --timings"
 STD_FLAGS = "--profile ${RUSTC_PROFILE} --features std"
-TEST_FLAGS = { value = "", condition = { env_not_set = ["TEST_FLAGS"] } }
 COV_FLAGS = { value = "--workspace --profile test --ignore-filename-regex .*test.*", condition = { env_not_set = ["COV_FLAGS"] } }
 RUSTDOCFLAGS = "-D warnings -D missing_docs"
 # Base features included in all platform firmware builds.
@@ -89,11 +88,10 @@ clear = true
 run_task = [{ name = ["check-no-default-features-code", "check-no-default-features-tests"], parallel = true }]
 
 [tasks.test]
-description = "Builds all rust tests in the workspace. Example `cargo make test`"
+description = "Runs tests with native cargo test behavior. Example `cargo make test` or `cargo make test -p package_name -- --nocapture`"
 clear = true
 command = "cargo"
-args = ["test", "@@split(INDIVIDUAL_PACKAGE_TARGETS, )", "@@split(TEST_FLAGS, )"]
-dependencies = ["individual-package-targets"]
+args = ["test", "@@split(CARGO_MAKE_TASK_ARGS,;)"]
 
 [tasks.coverage-collect]
 description = "Run tests and collect coverage data without generating reports."

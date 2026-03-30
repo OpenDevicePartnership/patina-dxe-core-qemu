@@ -39,6 +39,7 @@ words:
   - mmram
   - msuefi
   - msvc
+  - nocapture
   - ovmf
   - pdata
   - pdbaltpath
