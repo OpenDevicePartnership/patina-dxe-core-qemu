@@ -12,7 +12,10 @@
 
 use core::{ffi::c_void, panic::PanicInfo};
 use patina::{log::Format, serial::uart::UartPl011};
-use patina_adv_logger::{component::AdvancedLoggerComponent, logger::AdvancedLogger};
+use patina_adv_logger::{
+    component::AdvancedLoggerComponent,
+    logger::{AdvancedLogger, TargetFilter},
+};
 use patina_dxe_core::*;
 use patina_ffs_extractors::CompositeSectionExtractor;
 use patina_smbios;
@@ -38,10 +41,10 @@ fn panic(info: &PanicInfo) -> ! {
 static LOGGER: AdvancedLogger<UartPl011> = AdvancedLogger::new(
     Format::Standard,
     &[
-        ("goblin", log::LevelFilter::Off),
-        ("gcd_measure", log::LevelFilter::Off),
-        ("allocations", log::LevelFilter::Off),
-        ("efi_memory_map", log::LevelFilter::Off),
+        TargetFilter { target: "goblin", log_level: log::LevelFilter::Off, hw_filter_override: None },
+        TargetFilter { target: "gcd_measure", log_level: log::LevelFilter::Off, hw_filter_override: None },
+        TargetFilter { target: "allocations", log_level: log::LevelFilter::Off, hw_filter_override: None },
+        TargetFilter { target: "efi_memory_map", log_level: log::LevelFilter::Off, hw_filter_override: None },
     ],
     log::LevelFilter::Info,
     UartPl011::new(0x6000_0000),
@@ -74,7 +77,7 @@ impl ComponentInfo for Sbsa {
         add.component(AdvancedLoggerComponent::<UartPl011>::new(&LOGGER));
         add.component(patina_smbios::component::SmbiosProvider::new(3, 9));
         add.component(sbsa_services::smbios_platform::SbsaSmbiosPlatform::new());
-        add.component(patina::test::TestRunner::default().with_callback(|test_name, err_msg| {
+        add.component(patina_test::component::TestRunner::default().with_callback(|test_name, err_msg| {
             log::error!("Test {} failed: {}", test_name, err_msg);
             #[cfg(feature = "exit_on_patina_test_failure")]
             qemu_exit::AArch64::new().exit_failure();

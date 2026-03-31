@@ -14,19 +14,16 @@ extern crate alloc;
 use alloc::{ffi::CString, vec, vec::Vec};
 use core::ffi::c_char;
 
-use patina::{
-    boot_services::{BootServices, StandardBootServices},
-    test::patina_test,
-    u_assert, u_assert_eq, u_assert_ne,
-};
+use patina::boot_services::{BootServices, StandardBootServices};
 use patina_smbios::service::{SMBIOS_HANDLE_PI_RESERVED, SmbiosHandle, SmbiosTableHeader};
+use patina_test::{patina_test, u_assert, u_assert_eq, u_assert_ne};
 use r_efi::efi;
 
 /// Tests the SMBIOS C Protocol FFI layer by calling the protocol functions directly.
 /// This exercises the EDK2-compatible protocol layer (Add, UpdateString, Remove, GetNext)
 /// which are the FFI functions that C code calls.
 #[patina_test]
-fn q35_smbios_ffi_test(boot_services: StandardBootServices) -> patina::test::Result {
+fn q35_smbios_ffi_test(boot_services: StandardBootServices) -> patina_test::error::Result {
     log::debug!("SMBIOS FFI Test - Testing C Protocol FFI Layer");
 
     test_c_protocol_layer(&boot_services)?;
@@ -36,7 +33,7 @@ fn q35_smbios_ffi_test(boot_services: StandardBootServices) -> patina::test::Res
 }
 
 /// Test the C Protocol FFI layer by calling the protocol functions directly
-fn test_c_protocol_layer(boot_services: &StandardBootServices) -> patina::test::Result {
+fn test_c_protocol_layer(boot_services: &StandardBootServices) -> patina_test::error::Result {
     log::trace!("Testing SMBIOS C Protocol functions...");
 
     // Define the SMBIOS protocol GUID

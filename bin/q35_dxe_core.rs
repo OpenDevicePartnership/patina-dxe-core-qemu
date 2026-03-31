@@ -12,7 +12,10 @@
 
 use core::{ffi::c_void, panic::PanicInfo};
 use patina::{log::Format, serial::uart::Uart16550};
-use patina_adv_logger::{component::AdvancedLoggerComponent, logger::AdvancedLogger};
+use patina_adv_logger::{
+    component::AdvancedLoggerComponent,
+    logger::{AdvancedLogger, TargetFilter},
+};
 use patina_dxe_core::*;
 use patina_ffs_extractors::CompositeSectionExtractor;
 use patina_stacktrace::StackTrace;
@@ -43,13 +46,13 @@ const PM_TIMER_PORT: u16 = 0x608;
 static LOGGER: AdvancedLogger<Uart16550> = AdvancedLogger::new(
     Format::Standard,
     &[
-        ("goblin", log::LevelFilter::Off),
-        ("gcd_measure", log::LevelFilter::Off),
-        ("allocations", log::LevelFilter::Off),
-        ("efi_memory_map", log::LevelFilter::Off),
-        ("mm_comm", log::LevelFilter::Off),
-        ("sw_mmi", log::LevelFilter::Off),
-        ("patina_performance", log::LevelFilter::Off),
+        TargetFilter { target: "goblin", log_level: log::LevelFilter::Off, hw_filter_override: None },
+        TargetFilter { target: "gcd_measure", log_level: log::LevelFilter::Off, hw_filter_override: None },
+        TargetFilter { target: "allocations", log_level: log::LevelFilter::Off, hw_filter_override: None },
+        TargetFilter { target: "efi_memory_map", log_level: log::LevelFilter::Off, hw_filter_override: None },
+        TargetFilter { target: "mm_comm", log_level: log::LevelFilter::Off, hw_filter_override: None },
+        TargetFilter { target: "sw_mmi", log_level: log::LevelFilter::Off, hw_filter_override: None },
+        TargetFilter { target: "patina_performance", log_level: log::LevelFilter::Off, hw_filter_override: None },
     ],
     log::LevelFilter::Info,
     Uart16550::Io { base: 0x402 },
@@ -113,7 +116,7 @@ impl ComponentInfo for Q35 {
         add.component(patina_smbios::component::SmbiosProvider::new(3, 9));
         add.component(q35_services::smbios_platform::Q35SmbiosPlatform::new());
         add.component(patina_acpi::component::AcpiComponent::default());
-        add.component(patina::test::TestRunner::default().with_callback(|test_name, err_msg| {
+        add.component(patina_test::component::TestRunner::default().with_callback(|test_name, err_msg| {
             log::error!("Test {} failed: {}", test_name, err_msg);
             #[cfg(feature = "exit_on_patina_test_failure")]
             qemu_exit::X86::new(0xf4, 0x1).exit_failure();
