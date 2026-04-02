@@ -114,7 +114,7 @@ jobs:
           EOF
 
       - name: Upload PR Metadata
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: patina-qemu-pr-metadata
           path: metadata/pr-metadata.json
