@@ -22,7 +22,12 @@ required-features = ["x64", "dxe_core"]
 [[bin]]
 name = "q35_mm_supervisor"
 path = "bin/q35_mm_supervisor.rs"
-required-features = ["x64", "save_state_amd"]
+required-features = ["x64", "save_state_amd", "supv"]
+
+[[bin]]
+name = "q35_mm_user_core"
+path = "bin/q35_mm_user_core.rs"
+required-features = ["x64", "user_core"]
 
 [lib]
 name = "qemu_resources"
@@ -32,7 +37,6 @@ path = "src/lib.rs"
 log = { version = "^0.4", default-features = false, features = [
     "release_max_level_info",
 ] }
-patina_mm_supervisor_core = { version = "21" }
 patina = { version = "21" }
 patina_stacktrace = { version = "21" }
 r-efi = { version = "^5", default-features = false }
@@ -53,6 +57,13 @@ patina_samples = { version = "21", optional = true }
 patina_smbios = { version = "21", optional = true }
 patina_test = { version = "21", features = ["test-runner"], optional = true }
 patina_ffs_extractors = { version = "21", optional = true }
+
+# MM supervisor specific dependencies
+patina_mm_supervisor_core = { version = "21", optional = true }
+
+# MM user core specific dependencies
+patina_mm_user_core = { version = "21", optional = true }
+patina_internal_mm_common = { version = "21", optional = true }
 
 [features]
 # Keep the default features here in sync with the features listed in BASE_FEATURES in Makefile.toml
@@ -79,9 +90,17 @@ dxe_core = [
     "patina_test",
     "patina_ffs_extractors",
 ]
+supv = ["patina_mm_supervisor_core"]
+user_core = [
+    "patina_mm_user_core",
+    "patina_adv_logger",
+    "patina_internal_mm_common",
+]
 
 [patch.crates-io]
 patina_paging = { path = 'D:\Repos\patina-paging' }
 patina = { path = 'D:\Repos\patina\sdk\patina' }
 patina_mm_supervisor_core = { path = 'D:\Repos\patina\patina_mm_supervisor_core' }
 patina_stacktrace = { path = 'D:\Repos\patina\core\patina_stacktrace' }
+patina_mm_user_core = { path = 'D:\Repos\patina\patina_mm_user_core' }
+patina_internal_mm_common = { path = 'D:\Repos\patina\core\patina_internal_mm_common' }

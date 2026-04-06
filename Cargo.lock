@@ -392,7 +392,7 @@ dependencies = [
  "log",
  "memoffset",
  "patina",
- "patina_test",
+ "patina_test 21.0.0",
  "r-efi",
  "scroll",
  "spin",
@@ -409,7 +409,21 @@ dependencies = [
  "log",
  "mu_rust_helpers",
  "patina",
- "patina_test",
+ "patina_test 21.0.0",
+ "r-efi",
+ "spin",
+ "zerocopy",
+ "zerocopy-derive",
+]
+
+[[package]]
+name = "patina_adv_logger"
+version = "21.0.1"
+dependencies = [
+ "log",
+ "mu_rust_helpers",
+ "patina",
+ "patina_test 21.0.1",
  "r-efi",
  "spin",
  "zerocopy",
@@ -455,10 +469,10 @@ dependencies = [
  "patina_ffs",
  "patina_internal_collections",
  "patina_internal_cpu 21.0.0",
- "patina_internal_depex",
+ "patina_internal_depex 21.0.0",
  "patina_paging",
  "patina_performance",
- "patina_test",
+ "patina_test 21.0.0",
  "r-efi",
  "scroll",
  "spin",
@@ -551,6 +565,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "patina_internal_depex"
+version = "21.0.1"
+dependencies = [
+ "log",
+ "r-efi",
+ "uuid",
+]
+
+[[package]]
 name = "patina_internal_mm_common"
 version = "21.0.1"
 dependencies = [
@@ -628,6 +651,21 @@ dependencies = [
  "r-efi",
  "spin",
  "x86_64",
+]
+
+[[package]]
+name = "patina_mm_user_core"
+version = "21.0.1"
+dependencies = [
+ "goblin",
+ "log",
+ "patina",
+ "patina_adv_logger 21.0.1",
+ "patina_internal_depex 21.0.1",
+ "patina_internal_mm_common",
+ "r-efi",
+ "spin",
+ "uuid",
 ]
 
 [[package]]
@@ -716,6 +754,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "patina_test"
+version = "21.0.1"
+dependencies = [
+ "linkme",
+ "log",
+ "patina",
+ "patina_macro 21.0.1",
+ "r-efi",
+ "spin",
+]
+
+[[package]]
 name = "plain"
 version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -749,17 +799,19 @@ dependencies = [
  "log",
  "patina",
  "patina_acpi",
- "patina_adv_logger",
+ "patina_adv_logger 21.0.0",
  "patina_debugger",
  "patina_dxe_core",
  "patina_ffs_extractors",
+ "patina_internal_mm_common",
  "patina_mm",
  "patina_mm_supervisor_core",
+ "patina_mm_user_core",
  "patina_performance",
  "patina_samples",
  "patina_smbios",
  "patina_stacktrace",
- "patina_test",
+ "patina_test 21.0.0",
  "qemu-exit",
  "r-efi",
  "x86_64",
