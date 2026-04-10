@@ -1,7 +1,7 @@
 //! Example MM Supervisor Binary for QEMU Q35
 //!
 //! This is an example platform binary that demonstrates how to build a PE/COFF
-//! MM Supervisor using the `patina_mm_supervisor_core` crate.
+//! MM Supervisor using the `patina_mm_supervisor` crate.
 //!
 //! ## Building
 //!
@@ -34,7 +34,7 @@
 
 use core::{ffi::c_void, panic::PanicInfo};
 use core::sync::atomic::AtomicBool;
-use patina_mm_supervisor_core::*;
+use patina_mm_supervisor::*;
 // use the the uart from patina
 use patina::{log::Format, serial::uart::Uart16550};
 use patina::log::SerialLogger;

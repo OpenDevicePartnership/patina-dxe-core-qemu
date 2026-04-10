@@ -59,11 +59,10 @@ patina_test = { version = "21", features = ["test-runner"], optional = true }
 patina_ffs_extractors = { version = "21", optional = true }
 
 # MM supervisor specific dependencies
-patina_mm_supervisor_core = { version = "21", optional = true }
+patina_mm_supervisor = { version = "21", optional = true }
 
 # MM user core specific dependencies
 patina_mm_user_core = { version = "21", optional = true }
-patina_internal_mm_common = { version = "21", optional = true }
 
 [features]
 # Keep the default features here in sync with the features listed in BASE_FEATURES in Makefile.toml
@@ -77,7 +76,7 @@ std = []
 build_debugger = ["patina_dxe_core/debugger_reload"]
 enable_debugger = ["build_debugger"]
 exit_on_patina_test_failure = ["qemu-exit"]
-save_state_amd = ["patina_mm_supervisor_core/save_state_amd"]
+save_state_amd = ["patina_mm_supervisor/save_state_amd"]
 dxe_core = [
     "patina_acpi",
     "patina_adv_logger",
@@ -90,17 +89,15 @@ dxe_core = [
     "patina_test",
     "patina_ffs_extractors",
 ]
-supv = ["patina_mm_supervisor_core"]
+supv = ["patina_mm_supervisor"]
 user_core = [
     "patina_mm_user_core",
     "patina_adv_logger",
-    "patina_internal_mm_common",
 ]
 
 [patch.crates-io]
 patina_paging = { path = 'D:\Repos\patina-paging' }
 patina = { path = 'D:\Repos\patina\sdk\patina' }
-patina_mm_supervisor_core = { path = 'D:\Repos\patina\patina_mm_supervisor_core' }
+patina_mm_supervisor = { path = 'D:\Repos\patina\patina_mm_supervisor' }
 patina_stacktrace = { path = 'D:\Repos\patina\core\patina_stacktrace' }
 patina_mm_user_core = { path = 'D:\Repos\patina\patina_mm_user_core' }
-patina_internal_mm_common = { path = 'D:\Repos\patina\core\patina_internal_mm_common' }

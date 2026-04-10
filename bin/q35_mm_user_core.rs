@@ -32,14 +32,9 @@
 use core::panic::PanicInfo;
 use core::sync::atomic::AtomicBool;
 use core::ffi::c_void;
-use patina::{log::Format, serial::uart::Uart16550};
+use patina::{log::Format, serial::uart::Uart16550, management_mode::supervisor::UserCommandType};
 use patina_adv_logger::logger::{ AdvancedLogger, TargetFilter};
-use patina_internal_mm_common::UserCommandType;
 use patina_mm_user_core::MmUserCore;
-
-// =============================================================================
-// Static Core Instance
-// =============================================================================
 
 /// Flag indicating that advanced logger initialization is complete.
 static ADV_LOGGER_INIT_COMPLETE: AtomicBool = AtomicBool::new(false);
@@ -61,19 +56,10 @@ static LOGGER: AdvancedLogger<Uart16550> = AdvancedLogger::new(
     Uart16550::Io { base: 0x402 },
 );
 
-
-// =============================================================================
-// Panic Handler
-// =============================================================================
-
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
     loop {}
 }
-
-// =============================================================================
-// Entry Point
-// =============================================================================
 
 /// The entry point for the MM User Core binary.
 ///

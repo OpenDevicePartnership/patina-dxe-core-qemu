@@ -574,13 +574,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "patina_internal_mm_common"
-version = "21.0.1"
-dependencies = [
- "r-efi",
-]
-
-[[package]]
 name = "patina_lzma_rs"
 version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -628,24 +621,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "patina_mm_policy"
-version = "21.0.1"
-dependencies = [
- "log",
- "r-efi",
- "spin",
-]
-
-[[package]]
-name = "patina_mm_supervisor_core"
+name = "patina_mm_supervisor"
 version = "21.0.1"
 dependencies = [
  "linkme",
  "log",
  "patina",
  "patina_internal_cpu 21.0.1",
- "patina_internal_mm_common",
- "patina_mm_policy",
  "patina_paging",
  "patina_stacktrace",
  "r-efi",
@@ -662,7 +644,6 @@ dependencies = [
  "patina",
  "patina_adv_logger 21.0.1",
  "patina_internal_depex 21.0.1",
- "patina_internal_mm_common",
  "r-efi",
  "spin",
  "uuid",
@@ -803,9 +784,8 @@ dependencies = [
  "patina_debugger",
  "patina_dxe_core",
  "patina_ffs_extractors",
- "patina_internal_mm_common",
  "patina_mm",
- "patina_mm_supervisor_core",
+ "patina_mm_supervisor",
  "patina_mm_user_core",
  "patina_performance",
  "patina_samples",
