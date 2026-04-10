@@ -7,17 +7,27 @@ license = "Apache-2.0"
 [[bin]]
 name = "qemu_q35_dxe_core"
 path = "bin/q35_dxe_core.rs"
-required-features = ["x64"]
+required-features = ["x64", "dxe_core"]
 
 [[bin]]
 name = "qemu_sbsa_dxe_core"
 path = "bin/sbsa_dxe_core.rs"
-required-features = ["aarch64"]
+required-features = ["aarch64", "dxe_core"]
 
 [[bin]]
 name = "qemu_ovmf_dxe_core"
 path = "bin/ovmf_dxe_core.rs"
-required-features = ["x64"]
+required-features = ["x64", "dxe_core"]
+
+[[bin]]
+name = "q35_mm_supervisor"
+path = "bin/q35_mm_supervisor.rs"
+required-features = ["x64", "save_state_amd", "supv"]
+
+[[bin]]
+name = "q35_mm_user_core"
+path = "bin/q35_mm_user_core.rs"
+required-features = ["x64", "user_core"]
 
 [lib]
 name = "qemu_resources"
@@ -27,17 +37,7 @@ path = "src/lib.rs"
 log = { version = "^0.4", default-features = false, features = [
     "release_max_level_info",
 ] }
-patina_acpi = { version = "21" }
-patina_adv_logger = { version = "21" }
-patina_debugger = { version = "21" }
-patina_dxe_core = { version = "21" }
-patina_mm = { version = "21" }
-patina_performance = { version = "21" }
-patina_samples = { version = "21" }
-patina_smbios = { version = "21" }
-patina_test = { version = "21", features = ["test-runner"] }
 patina = { version = "21" }
-patina_ffs_extractors = { version = "21" }
 patina_stacktrace = { version = "21" }
 r-efi = { version = "^5", default-features = false }
 x86_64 = { version = "=0.15.2", default-features = false, features = [
@@ -45,6 +45,24 @@ x86_64 = { version = "=0.15.2", default-features = false, features = [
 ], optional = true }
 zerocopy = { version = "0.8", features = ["derive"] }
 qemu-exit = { version = "3", optional = true }
+
+# DXE core specific dependencies
+patina_acpi = { version = "21", optional = true }
+patina_adv_logger = { version = "21", optional = true }
+patina_debugger = { version = "21", optional = true }
+patina_dxe_core = { version = "21", optional = true }
+patina_mm = { version = "21", optional = true }
+patina_performance = { version = "21", optional = true }
+patina_samples = { version = "21", optional = true }
+patina_smbios = { version = "21", optional = true }
+patina_test = { version = "21", features = ["test-runner"], optional = true }
+patina_ffs_extractors = { version = "21", optional = true }
+
+# MM supervisor specific dependencies
+patina_mm_supervisor = { version = "21", optional = true }
+
+# MM user core specific dependencies
+patina_mm_user_core = { version = "21", optional = true }
 
 [features]
 # Keep the default features here in sync with the features listed in BASE_FEATURES in Makefile.toml
@@ -58,3 +76,28 @@ std = []
 build_debugger = ["patina_dxe_core/debugger_reload"]
 enable_debugger = ["build_debugger"]
 exit_on_patina_test_failure = ["qemu-exit"]
+save_state_amd = ["patina_mm_supervisor/save_state_amd"]
+dxe_core = [
+    "patina_acpi",
+    "patina_adv_logger",
+    "patina_debugger",
+    "patina_dxe_core",
+    "patina_mm",
+    "patina_performance",
+    "patina_samples",
+    "patina_smbios",
+    "patina_test",
+    "patina_ffs_extractors",
+]
+supv = ["patina_mm_supervisor"]
+user_core = [
+    "patina_mm_user_core",
+    "patina_adv_logger",
+]
+
+[patch.crates-io]
+patina_paging = { path = 'D:\Repos\patina-paging' }
+patina = { path = 'D:\Repos\patina\sdk\patina' }
+patina_mm_supervisor = { path = 'D:\Repos\patina\patina_mm_supervisor' }
+patina_stacktrace = { path = 'D:\Repos\patina\core\patina_stacktrace' }
+patina_mm_user_core = { path = 'D:\Repos\patina\patina_mm_user_core' }
