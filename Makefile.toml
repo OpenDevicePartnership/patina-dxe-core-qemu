@@ -249,6 +249,7 @@ script = '''
 # Find all arguments after --crate-patch and collect them
 patch_repos = array
 leave_patch = set false
+no_build = set false
 if not is_empty ${1}
     args = split ${1} ";"
     found_patch_flag = set false
@@ -258,6 +259,8 @@ if not is_empty ${1}
             found_patch_flag = set true
         elseif eq ${arg} "--leave-patch"
             leave_patch = set true
+        elseif eq ${arg} "--no-build"
+            no_build = set true
         elseif ${found_patch_flag}
             array_push ${patch_repos} ${arg}
             found_patch_flag = set false
@@ -350,7 +353,9 @@ if ${needs_patch}
 end
 
 # Execute the actual cargo command
-cm_run_task build-efi
+if not ${no_build}
+    cm_run_task build-efi
+end
 
 if ${needs_patch}
     if not ${leave_patch}
