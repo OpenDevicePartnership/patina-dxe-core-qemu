@@ -24,6 +24,10 @@ use patina_smbios::{
     smbios_record::{
         Type0PlatformFirmwareInformation, Type1SystemInformation, Type2BaseboardInformation, Type3SystemEnclosure,
     },
+    smbios_types::{
+        BiosCharacteristics, BiosCharacteristicsExt1, BiosCharacteristicsExt2, BoardType, BootUpState,
+        ExtendedBiosRomSize, FeatureFlags, PowerSupplyState, SecurityStatus, ThermalState, WakeUpType,
+    },
 };
 
 /// Q35 platform SMBIOS component that populates and publishes SMBIOS tables.
@@ -60,20 +64,14 @@ impl Q35SmbiosPlatform {
             bios_starting_address_segment: 0xE800,
             firmware_release_date: 3,
             firmware_rom_size: 0xFF, // 16MB
-            // BIOS Characteristics (SMBIOS spec 7.1.1)
-            // Bit 3: BIOS Characteristics are supported
-            characteristics: 0x08,
-            // BIOS Characteristics Extension Byte 1 (SMBIOS spec 7.1.2.1)
-            // Bit 0: ACPI supported, Bit 1: USB Legacy supported
-            characteristics_ext1: 0x03,
-            // BIOS Characteristics Extension Byte 2 (SMBIOS spec 7.1.2.2)
-            // Bit 0: BIOS Boot Specification supported, Bit 1: Function key-initiated network boot supported
-            characteristics_ext2: 0x03,
+            characteristics: BiosCharacteristics::from_bits(0x08),
+            characteristics_ext1: BiosCharacteristicsExt1::from_bits(0x03),
+            characteristics_ext2: BiosCharacteristicsExt2::from_bits(0x03),
             system_bios_major_release: 1,
             system_bios_minor_release: 0,
             embedded_controller_major_release: 0xFF,
             embedded_controller_minor_release: 0xFF,
-            extended_bios_rom_size: 0,
+            extended_bios_rom_size: ExtendedBiosRomSize::new(),
             string_pool: vec![
                 String::from("Patina Firmware"),
                 String::from(env!("CARGO_PKG_VERSION")),
@@ -94,7 +92,7 @@ impl Q35SmbiosPlatform {
             version: 3,
             serial_number: 4,
             uuid: [0; 16],
-            wake_up_type: 0x06, // Power Switch
+            wake_up_type: WakeUpType::PowerSwitch,
             sku_number: 5,
             family: 6,
             string_pool: vec![
@@ -119,10 +117,10 @@ impl Q35SmbiosPlatform {
             version: 2,
             serial_number: 3,
             asset_tag_number: 4,
-            bootup_state: 0x03,
-            power_supply_state: 0x03,
-            thermal_state: 0x03,
-            security_status: 0x02,
+            bootup_state: BootUpState::Safe,
+            power_supply_state: PowerSupplyState::Safe,
+            thermal_state: ThermalState::Safe,
+            security_status: SecurityStatus::Unknown,
             oem_defined: 0x00000000,
             height: 0x00,
             number_of_power_cords: 0x01,
@@ -152,10 +150,10 @@ impl Q35SmbiosPlatform {
             version: 3,
             serial_number: 4,
             asset_tag: 5,
-            feature_flags: 0x01, // Board is a hosting board
+            feature_flags: FeatureFlags::new().with_hosting_board(true),
             location_in_chassis: 6,
             chassis_handle: type3_handle,
-            board_type: 0x0A, // Motherboard
+            board_type: BoardType::Motherboard,
             contained_object_handles: 0,
             string_pool: vec![
                 String::from("Example Corporation"),
