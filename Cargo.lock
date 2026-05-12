@@ -351,9 +351,8 @@ checksum = "c5a797f0e07bdf071d15742978fc3128ec6c22891c31a3a931513263904c982a"
 
 [[package]]
 name = "patina"
-version = "21.0.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0f11549235c579955a9eade3451a3e9c9ed4f4106dc50b61e1a7e3d8667bf0ac"
+version = "21.0.4"
+source = "git+https://github.com/kat-perez/patina?branch=kat-perez%2Fsre-base#afb99c386a18d866cc08f71647659c2b6be81f0b"
 dependencies = [
  "cfg-if",
  "compile-time",
@@ -365,7 +364,7 @@ dependencies = [
  "log",
  "mu_rust_helpers",
  "num-traits",
- "patina_macro",
+ "patina_macro 21.0.4",
  "r-efi",
  "safe-mmio",
  "scroll",
@@ -403,6 +402,20 @@ dependencies = [
  "mu_rust_helpers",
  "patina",
  "patina_test",
+ "r-efi",
+ "spin",
+ "zerocopy",
+ "zerocopy-derive",
+]
+
+[[package]]
+name = "patina_boot"
+version = "0.1.0"
+source = "git+https://github.com/OpenDevicePartnership/patina-components?branch=main#1bcdd7a34b7558a38dacb7e2db069ff73e610188"
+dependencies = [
+ "log",
+ "patina",
+ "patina_macro 21.0.2",
  "r-efi",
  "spin",
  "zerocopy",
@@ -534,9 +547,31 @@ dependencies = [
 
 [[package]]
 name = "patina_macro"
+version = "21.0.2"
+source = "git+https://github.com/OpenDevicePartnership/patina?branch=feature%2Fpatina-boot#adc19cdf6344684796c599aa512c62b227068031"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+ "uuid",
+]
+
+[[package]]
+name = "patina_macro"
 version = "21.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7d520271070a33fe6b454ab5a7f136b88963cbebcfffb3b76d017b3280b1845c"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+ "uuid",
+]
+
+[[package]]
+name = "patina_macro"
+version = "21.0.4"
+source = "git+https://github.com/kat-perez/patina?branch=kat-perez%2Fsre-base#afb99c386a18d866cc08f71647659c2b6be81f0b"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -569,6 +604,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "patina_nvme"
+version = "0.1.0"
+source = "git+https://github.com/kat-perez/patina-components?branch=kat-perez%2Fpatina-nvme#6e4608e136b6bdab5b5e64e6851f7afadb829c7e"
+dependencies = [
+ "log",
+ "patina",
+ "r-efi",
+]
+
+[[package]]
 name = "patina_paging"
 version = "11.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -578,6 +623,16 @@ dependencies = [
  "bitflags 2.11.1",
  "cfg-if",
  "log",
+]
+
+[[package]]
+name = "patina_partition"
+version = "0.1.0"
+source = "git+https://github.com/kat-perez/patina-components?branch=kat-perez%2Fpatina-partition#3937db8ed783678d089ffa547fb38ec20c32ffcb"
+dependencies = [
+ "log",
+ "patina",
+ "r-efi",
 ]
 
 [[package]]
@@ -597,6 +652,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "patina_ram_disk"
+version = "0.1.0"
+source = "git+https://github.com/kat-perez/patina-components?branch=kat-perez%2Fpatina-ram-disk#75dcf21347f053159a7d4b88d920d94dcef016a7"
+dependencies = [
+ "patina",
+ "r-efi",
+]
+
+[[package]]
 name = "patina_samples"
 version = "21.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -604,7 +668,7 @@ checksum = "3d460371dc827972748895d0a6a0fb32651bc58684581394938b77f2e06ca58a"
 dependencies = [
  "log",
  "patina",
- "patina_macro",
+ "patina_macro 21.0.3",
  "patina_smbios",
 ]
 
@@ -616,11 +680,25 @@ checksum = "0017dbf39385eb828a9447e7c6db09bfe03031b0ae9846316c28aab11bf6388f"
 dependencies = [
  "log",
  "patina",
- "patina_macro",
+ "patina_macro 21.0.3",
  "r-efi",
  "spin",
  "zerocopy",
  "zerocopy-derive",
+]
+
+[[package]]
+name = "patina_sre"
+version = "0.1.0"
+source = "git+https://github.com/kat-perez/odp-platform-common?branch=kat-perez%2Fpatina-sre#b140afee5cf6552b4d6c071b7d280127bf4d88f5"
+dependencies = [
+ "log",
+ "patina",
+ "patina_boot",
+ "patina_nvme",
+ "patina_partition",
+ "patina_ram_disk",
+ "r-efi",
 ]
 
 [[package]]
@@ -642,7 +720,7 @@ dependencies = [
  "linkme",
  "log",
  "patina",
- "patina_macro",
+ "patina_macro 21.0.3",
  "r-efi",
  "spin",
 ]
@@ -682,6 +760,7 @@ dependencies = [
  "patina",
  "patina_acpi",
  "patina_adv_logger",
+ "patina_boot",
  "patina_debugger",
  "patina_dxe_core",
  "patina_ffs_extractors",
@@ -689,6 +768,7 @@ dependencies = [
  "patina_performance",
  "patina_samples",
  "patina_smbios",
+ "patina_sre",
  "patina_stacktrace",
  "patina_test",
  "qemu-exit",

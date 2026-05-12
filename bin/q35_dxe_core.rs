@@ -12,12 +12,19 @@
 
 use core::{ffi::c_void, panic::PanicInfo};
 use patina::{log::Format, serial::uart::Uart16550};
+use patina::device_path::{node_defs::EndEntire, paths::DevicePathBuf};
 use patina_adv_logger::{
     component::AdvancedLoggerComponent,
     logger::{AdvancedLogger, TargetFilter},
 };
+use patina_boot::BootDispatcher;
 use patina_dxe_core::*;
 use patina_ffs_extractors::CompositeSectionExtractor;
+#[cfg(feature = "force_sre")]
+use patina_sre::AlwaysSre as ConfiguredHotkey;
+#[cfg(not(feature = "force_sre"))]
+use patina_sre::NeverSre as ConfiguredHotkey;
+use patina_sre::SreBootManager;
 use patina_stacktrace::StackTrace;
 use qemu_resources::q35::component::service as q35_services;
 extern crate alloc;
@@ -121,7 +128,25 @@ impl ComponentInfo for Q35 {
             #[cfg(feature = "exit_on_patina_test_failure")]
             qemu_exit::X86::new(0xf4, 0x1).exit_failure();
         }));
+
+        // SRE boot orchestrator. Device paths are placeholders (single EndEntire node) for
+        // initial integration: at runtime the helper protocol lookups will return NOT_FOUND
+        // and the orchestrator logs each failure — useful for confirming the component is
+        // wired and reachable without needing a real boot partition / NVMe controller in QEMU.
+        // Real device paths land alongside the QEMU disk image that hosts the SRE WIM.
+        add.component(BootDispatcher::new(SreBootManager::new(
+            placeholder_device_path(),
+            placeholder_device_path(),
+            "\\SRE\\winvos.wim",
+            ConfiguredHotkey,
+        )));
     }
+}
+
+/// Build a placeholder `DevicePathBuf` containing only an EndEntire terminator node.
+/// Replace with real device paths once the QEMU SRE disk image is in place.
+fn placeholder_device_path() -> DevicePathBuf {
+    DevicePathBuf::from_device_path_node_iter(core::iter::once(EndEntire))
 }
 
 impl PlatformInfo for Q35 {

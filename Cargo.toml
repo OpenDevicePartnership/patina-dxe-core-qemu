@@ -36,9 +36,13 @@ patina_performance = { version = "21" }
 patina_samples = { version = "21" }
 patina_smbios = { version = "21" }
 patina_test = { version = "21", features = ["test-runner"] }
-patina = { version = "21" }
+patina = { version = "21", features = ["unstable-device-path"] }
 patina_ffs_extractors = { version = "21" }
 patina_stacktrace = { version = "21" }
+# SRE orchestrator + its supporting helpers. Currently pulled from kat-perez git branches
+# until the corresponding releases ship; see the [patch] block at the bottom of this file.
+patina_boot = { git = "https://github.com/OpenDevicePartnership/patina-components", branch = "main" }
+patina_sre = { git = "https://github.com/kat-perez/odp-platform-common", branch = "kat-perez/patina-sre" }
 r-efi = { version = "^5", default-features = false }
 x86_64 = { version = "=0.15.2", default-features = false, features = [
   "instructions"
@@ -58,3 +62,20 @@ std = []
 build_debugger = ["patina_dxe_core/debugger_reload"]
 enable_debugger = ["build_debugger"]
 exit_on_patina_test_failure = ["qemu-exit"]
+# Force the SRE recovery path on every boot (uses patina_sre::AlwaysSre). Without this feature
+# the orchestrator defaults to patina_sre::NeverSre and always takes the normal boot path.
+# Useful for QEMU validation of the SRE flow without needing hotkey hardware.
+force_sre = []
+
+# Force every patina dep (this crate's `version = "21"`, plus transitive git deps coming in
+# via patina_boot / patina_sre) onto a single source — the kat-perez/sre-base branch that
+# combines feature/patina-boot with the EFI_RAM_DISK_PROTOCOL binding from patina#1490.
+# Without this, cargo resolves two patina versions (crates.io and git) and SreBootManager
+# can't be added as a component because the IntoComponent trait is different per copy.
+# Drop both patch entries once #1490 / feature/patina-boot merge and a patina release ships
+# the required APIs.
+[patch.crates-io]
+patina = { git = "https://github.com/kat-perez/patina", branch = "kat-perez/sre-base" }
+
+[patch."https://github.com/OpenDevicePartnership/patina"]
+patina = { git = "https://github.com/kat-perez/patina", branch = "kat-perez/sre-base" }
