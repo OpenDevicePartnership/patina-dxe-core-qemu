@@ -7,7 +7,7 @@
 //!
 //! Build with cargo for the UEFI target:
 //! ```bash
-//! cargo build --target x86_64-unknown-uefi --bin q35_mm_supervisor --features x64,save_state_amd
+//! cargo build --target x86_64-unknown-uefi --bin q35_mm_supervisor --features x64,save_state_amd,supv --no-default-features
 //! ```
 //!
 //! ## Entry Point

@@ -8,7 +8,7 @@
 //!
 //! Build with cargo for the UEFI target:
 //! ```bash
-//! cargo build --release --target x86_64-unknown-uefi --bin example_mm_user
+//! cargo build --target x86_64-unknown-uefi --bin q35_mm_user_core --features="x64 user_core"
 //! ```
 //!
 //! ## Entry Point
