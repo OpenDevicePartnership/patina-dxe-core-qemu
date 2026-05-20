@@ -98,6 +98,7 @@ user_core = [
 [patch.crates-io]
 patina_paging = { path = 'D:\Repos\patina-paging' }
 patina = { path = 'D:\Repos\patina\sdk\patina' }
+patina_mm = { path = 'D:\Repos\patina\components\patina_mm' }
 patina_mm_supervisor = { path = 'D:\Repos\patina\patina_mm_supervisor' }
 patina_stacktrace = { path = 'D:\Repos\patina\core\patina_stacktrace' }
 patina_mm_user_core = { path = 'D:\Repos\patina\patina_mm_user_core' }

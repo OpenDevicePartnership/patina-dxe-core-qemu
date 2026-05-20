@@ -594,8 +594,6 @@ dependencies = [
 [[package]]
 name = "patina_mm"
 version = "21.0.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5b087ec85cf79141783a03be5dc69d1785b94b834e9754b68d2096699dfc6129"
 dependencies = [
  "cfg-if",
  "log",
