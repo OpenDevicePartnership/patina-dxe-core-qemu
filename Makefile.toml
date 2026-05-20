@@ -471,6 +471,16 @@ description = """Builds the RELEASE OVMF UEFI firmware."""
 env = { CARGO_BIN_NAME = "qemu_ovmf_dxe_core", "RUSTC_PROFILE" = "release", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "${BASE_FEATURES},x64,v1_resource_descriptor_support", CARGO_TARGET_X86_64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:qemu_ovmf_dxe_core.pdb" }
 run_task = "patch"
 
+[tasks.virt]
+description = """Builds the DEBUG VIRT UEFI firmware."""
+env = { CARGO_BIN_NAME = "qemu_virt_dxe_core", "RUSTC_PROFILE" = "dev", CARGO_BIN_TARGET = "aarch64-unknown-uefi", CARGO_BIN_FEATURES = "${BASE_FEATURES},aarch64,build_debugger", CARGO_TARGET_AARCH64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:qemu_virt_dxe_core.pdb" }
+run_task = "patch"
+
+[tasks.virt-release]
+description = """Builds the RELEASE VIRT UEFI firmware."""
+env = { CARGO_BIN_NAME = "qemu_virt_dxe_core", "RUSTC_PROFILE" = "release", CARGO_BIN_TARGET = "aarch64-unknown-uefi", CARGO_BIN_FEATURES = "${BASE_FEATURES},aarch64", CARGO_TARGET_AARCH64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:qemu_virt_dxe_core.pdb" }
+run_task = "patch"
+
 [tasks.doc]
 description = "Builds all rust documentation in the workspace. Example `cargo make doc`"
 command = "cargo"

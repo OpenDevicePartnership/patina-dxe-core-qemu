@@ -64,6 +64,20 @@ binary in the [patina-qemu](https://github.com/OpenDevicePartnership/patina-qemu
    Output File:      'target/aarch64-unknown-uefi/release/qemu_sbsa_dxe_core.efi'
    ```
 
+- VIRT (aarch64) debug
+
+   ```shell
+   Compile Command:  'cargo make virt'
+   Output File:      'target/aarch64-unknown-uefi/debug/qemu_virt_dxe_core.efi'
+   ```
+
+- VIRT (aarch64) release
+
+   ```shell
+   Compile Command:  'cargo make virt-release'
+   Output File:      'target/aarch64-unknown-uefi/release/qemu_virt_dxe_core.efi'
+   ```
+
 The [patina_debugger](https://github.com/OpenDevicePartnership/patina/blob/main/docs/src/dxe_core/debugging.md) is
 built by default on debug builds, but not release builds. It can be built on release builds by passing the
 `build_debugger` feature to the build, e.g. `cargo make q35-release --features build_debugger`. The debugger

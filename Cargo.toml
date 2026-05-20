@@ -19,6 +19,11 @@ name = "qemu_ovmf_dxe_core"
 path = "bin/ovmf_dxe_core.rs"
 required-features = ["x64"]
 
+[[bin]]
+name = "qemu_virt_dxe_core"
+path = "bin/arm_virt_dxe_core.rs"
+required-features = ["aarch64"]
+
 [lib]
 name = "qemu_resources"
 path = "src/lib.rs"
