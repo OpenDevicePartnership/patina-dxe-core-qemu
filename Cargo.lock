@@ -352,8 +352,6 @@ checksum = "c5a797f0e07bdf071d15742978fc3128ec6c22891c31a3a931513263904c982a"
 [[package]]
 name = "patina"
 version = "21.0.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0c9f607821873ecc6c5d6ad30d545ec9dc12a0c73da1a19cd803d1db5850938b"
 dependencies = [
  "cfg-if",
  "compile-time",
@@ -365,7 +363,7 @@ dependencies = [
  "log",
  "mu_rust_helpers",
  "num-traits",
- "patina_macro",
+ "patina_macro 21.0.4",
  "r-efi",
  "safe-mmio",
  "scroll",
@@ -385,9 +383,23 @@ dependencies = [
  "log",
  "memoffset",
  "patina",
- "patina_test",
+ "patina_test 21.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "r-efi",
  "scroll",
+ "spin",
+ "zerocopy",
+ "zerocopy-derive",
+]
+
+[[package]]
+name = "patina_adv_logger"
+version = "21.0.4"
+dependencies = [
+ "log",
+ "mu_rust_helpers",
+ "patina",
+ "patina_test 21.0.4",
+ "r-efi",
  "spin",
  "zerocopy",
  "zerocopy-derive",
@@ -402,7 +414,7 @@ dependencies = [
  "log",
  "mu_rust_helpers",
  "patina",
- "patina_test",
+ "patina_test 21.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "r-efi",
  "spin",
  "zerocopy",
@@ -420,7 +432,7 @@ dependencies = [
  "gdbstub",
  "log",
  "patina",
- "patina_internal_cpu",
+ "patina_internal_cpu 21.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "patina_mtrr",
  "patina_paging",
  "spin",
@@ -446,11 +458,11 @@ dependencies = [
  "patina_debugger",
  "patina_ffs",
  "patina_internal_collections",
- "patina_internal_cpu",
- "patina_internal_depex",
+ "patina_internal_cpu 21.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "patina_internal_depex 21.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "patina_paging",
  "patina_performance",
- "patina_test",
+ "patina_test 21.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "r-efi",
  "scroll",
  "spin",
@@ -496,6 +508,22 @@ dependencies = [
 [[package]]
 name = "patina_internal_cpu"
 version = "21.0.4"
+dependencies = [
+ "arm-gic",
+ "cfg-if",
+ "lazy_static",
+ "log",
+ "patina",
+ "patina_mtrr",
+ "patina_paging",
+ "patina_stacktrace",
+ "r-efi",
+ "spin",
+]
+
+[[package]]
+name = "patina_internal_cpu"
+version = "21.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d64ce20c6db4fc1acce57175b32c91ac9a33ef531c5472266b85b478b4ddde9f"
 dependencies = [
@@ -509,6 +537,15 @@ dependencies = [
  "patina_stacktrace",
  "r-efi",
  "spin",
+]
+
+[[package]]
+name = "patina_internal_depex"
+version = "21.0.4"
+dependencies = [
+ "log",
+ "r-efi",
+ "uuid",
 ]
 
 [[package]]
@@ -535,6 +572,16 @@ dependencies = [
 [[package]]
 name = "patina_macro"
 version = "21.0.4"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+ "uuid",
+]
+
+[[package]]
+name = "patina_macro"
+version = "21.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bd787611c35e5d03a0a2f2ac2c1d8a0b937c6857526be9358e2799dcd9a1bc31"
 dependencies = [
@@ -547,8 +594,6 @@ dependencies = [
 [[package]]
 name = "patina_mm"
 version = "21.0.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5b087ec85cf79141783a03be5dc69d1785b94b834e9754b68d2096699dfc6129"
 dependencies = [
  "cfg-if",
  "log",
@@ -556,6 +601,34 @@ dependencies = [
  "r-efi",
  "zerocopy",
  "zerocopy-derive",
+]
+
+[[package]]
+name = "patina_mm_supervisor"
+version = "21.0.4"
+dependencies = [
+ "linkme",
+ "log",
+ "patina",
+ "patina_internal_cpu 21.0.4",
+ "patina_paging",
+ "patina_stacktrace",
+ "r-efi",
+ "spin",
+]
+
+[[package]]
+name = "patina_mm_user_core"
+version = "21.0.4"
+dependencies = [
+ "goblin",
+ "log",
+ "patina",
+ "patina_adv_logger 21.0.4",
+ "patina_internal_depex 21.0.4",
+ "r-efi",
+ "spin",
+ "uuid",
 ]
 
 [[package]]
@@ -570,9 +643,7 @@ dependencies = [
 
 [[package]]
 name = "patina_paging"
-version = "11.0.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5265104f7091071dea0506fe9e733cf347cc49c3ae49eaf0067508297e0e296b"
+version = "11.0.3"
 dependencies = [
  "bitfield-struct",
  "bitflags 2.11.1",
@@ -604,7 +675,7 @@ checksum = "d3e63cce9c3a45f322850a7830726613e021e6e04e7480829b395b7ddf92f965"
 dependencies = [
  "log",
  "patina",
- "patina_macro",
+ "patina_macro 21.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "patina_smbios",
 ]
 
@@ -616,7 +687,7 @@ checksum = "618e555b77d593a9a7707845c0011d290d7b48338621b45c68f7cc9569f54121"
 dependencies = [
  "log",
  "patina",
- "patina_macro",
+ "patina_macro 21.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "r-efi",
  "spin",
  "zerocopy",
@@ -626,11 +697,21 @@ dependencies = [
 [[package]]
 name = "patina_stacktrace"
 version = "21.0.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6918011fc100d9e53aad0e30f9ae1c86131326fb4996baee7121319c70df5712"
 dependencies = [
  "cfg-if",
  "log",
+]
+
+[[package]]
+name = "patina_test"
+version = "21.0.4"
+dependencies = [
+ "linkme",
+ "log",
+ "patina",
+ "patina_macro 21.0.4",
+ "r-efi",
+ "spin",
 ]
 
 [[package]]
@@ -642,7 +723,7 @@ dependencies = [
  "linkme",
  "log",
  "patina",
- "patina_macro",
+ "patina_macro 21.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "r-efi",
  "spin",
 ]
@@ -681,16 +762,18 @@ dependencies = [
  "log",
  "patina",
  "patina_acpi",
- "patina_adv_logger",
+ "patina_adv_logger 21.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "patina_debugger",
  "patina_dxe_core",
  "patina_ffs_extractors",
  "patina_mm",
+ "patina_mm_supervisor",
+ "patina_mm_user_core",
  "patina_performance",
  "patina_samples",
  "patina_smbios",
  "patina_stacktrace",
- "patina_test",
+ "patina_test 21.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "qemu-exit",
  "r-efi",
  "x86_64",
