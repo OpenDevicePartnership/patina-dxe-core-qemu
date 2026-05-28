@@ -58,6 +58,7 @@ words:
   - tiano
   - uart
   - uefi
+  - virt
   - vswhere
   - webpki
   - zbuild
