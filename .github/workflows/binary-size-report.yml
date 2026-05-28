@@ -34,11 +34,9 @@ jobs:
           cargo make q35
           cargo make ovmf
           cargo make sbsa
-          cargo make armvirt
           cargo make q35-release
           cargo make ovmf-release
           cargo make sbsa-release
-          cargo make armvirt-release
 
       - name: Get Base Branch (${{ github.base_ref }}) Sizes
         id: size-base
@@ -66,11 +64,9 @@ jobs:
           cargo make q35
           cargo make ovmf
           cargo make sbsa
-          cargo make armvirt
           cargo make q35-release
           cargo make ovmf-release
           cargo make sbsa-release
-          cargo make armvirt-release
 
       - name: Get PR Branch (${{ github.head_ref }}) Sizes
         id: size-pr
