@@ -54,6 +54,12 @@ jobs:
           cp target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.efi artifacts/debug/qemu_sbsa_dxe_core.efi
           cp target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.pdb artifacts/debug/qemu_sbsa_dxe_core.pdb
 
+      - name: Build Arm Virt Debug
+        run: |
+          cargo make armvirt
+          cp target/aarch64-unknown-uefi/debug/qemu_armvirt_dxe_core.efi artifacts/debug/qemu_armvirt_dxe_core.efi
+          cp target/aarch64-unknown-uefi/debug/qemu_armvirt_dxe_core.pdb artifacts/debug/qemu_armvirt_dxe_core.pdb
+
       - name: Build Q35 Release
         run: |
           cargo make q35-release
@@ -72,6 +78,12 @@ jobs:
           cp target/aarch64-unknown-uefi/release/qemu_sbsa_dxe_core.efi artifacts/release/qemu_sbsa_dxe_core.efi
           cp target/aarch64-unknown-uefi/release/qemu_sbsa_dxe_core.pdb artifacts/release/qemu_sbsa_dxe_core.pdb
 
+      - name: Build Arm Virt Release
+        run: |
+          cargo make armvirt-release
+          cp target/aarch64-unknown-uefi/release/qemu_armvirt_dxe_core.efi artifacts/release/qemu_armvirt_dxe_core.efi
+          cp target/aarch64-unknown-uefi/release/qemu_armvirt_dxe_core.pdb artifacts/release/qemu_armvirt_dxe_core.pdb
+
       - name: Build Q35 Debug (Debugger)
         run: |
           cargo make q35 --features enable_debugger
@@ -89,6 +101,12 @@ jobs:
           cargo make sbsa --features enable_debugger
           cp target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.efi artifacts/debug/debugger/qemu_sbsa_dxe_core.efi
           cp target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.pdb artifacts/debug/debugger/qemu_sbsa_dxe_core.pdb
+
+      - name: Build Arm Virt Debug (Debugger)
+        run: |
+          cargo make armvirt --features enable_debugger
+          cp target/aarch64-unknown-uefi/debug/qemu_armvirt_dxe_core.efi artifacts/debug/debugger/qemu_armvirt_dxe_core.efi
+          cp target/aarch64-unknown-uefi/debug/qemu_armvirt_dxe_core.pdb artifacts/debug/debugger/qemu_armvirt_dxe_core.pdb
 
       - name: Upload Binaries
         if: ${{ github.event_name != 'release' }}

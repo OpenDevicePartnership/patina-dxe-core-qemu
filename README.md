@@ -67,15 +67,15 @@ binary in the [patina-qemu](https://github.com/OpenDevicePartnership/patina-qemu
 - VIRT (aarch64) debug
 
    ```shell
-   Compile Command:  'cargo make virt'
-   Output File:      'target/aarch64-unknown-uefi/debug/qemu_virt_dxe_core.efi'
+   Compile Command:  'cargo make armvirt'
+   Output File:      'target/aarch64-unknown-uefi/debug/qemu_armvirt_dxe_core.efi'
    ```
 
 - VIRT (aarch64) release
 
    ```shell
-   Compile Command:  'cargo make virt-release'
-   Output File:      'target/aarch64-unknown-uefi/release/qemu_virt_dxe_core.efi'
+   Compile Command:  'cargo make armvirt-release'
+   Output File:      'target/aarch64-unknown-uefi/release/qemu_armvirt_dxe_core.efi'
    ```
 
 The [patina_debugger](https://github.com/OpenDevicePartnership/patina/blob/main/docs/src/dxe_core/debugging.md) is

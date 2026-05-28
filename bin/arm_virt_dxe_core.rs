@@ -1,4 +1,4 @@
-//! DXE Core Sample AARCH64 Binary for QEMU SBSA
+//! DXE Core Sample AARCH64 Binary for QEMU Arm Virt
 //!
 //! ## License
 //!
@@ -22,7 +22,7 @@ use patina_smbios;
 use patina_stacktrace::StackTrace;
 #[cfg(feature = "exit_on_patina_test_failure")]
 use qemu_exit::QEMUExit;
-use qemu_resources::sbsa::component::service as sbsa_services;
+use qemu_resources::armvirt::component::service as armvirt_services;
 extern crate alloc;
 
 #[panic_handler]
@@ -59,12 +59,12 @@ const _ENABLE_DEBUGGER: bool = false;
 static DEBUGGER: patina_debugger::PatinaDebugger<UartPl011> =
     patina_debugger::PatinaDebugger::new(UartPl011::new(0x0900_0000)).with_force_enable(_ENABLE_DEBUGGER);
 
-struct Sbsa;
+struct ArmVirt;
 
-// Default `MemoryInfo` implementation is sufficient for SBSA.
-impl MemoryInfo for Sbsa {}
+// Default `MemoryInfo` implementation is sufficient for Arm Virt.
+impl MemoryInfo for ArmVirt {}
 
-impl CpuInfo for Sbsa {
+impl CpuInfo for ArmVirt {
     fn gic_bases() -> GicBases {
         // SAFETY: gicd and gicr bases correctly point to the register spaces.
         // SAFETY: Access to these registers is exclusive to this struct instance.
@@ -72,11 +72,11 @@ impl CpuInfo for Sbsa {
     }
 }
 
-impl ComponentInfo for Sbsa {
+impl ComponentInfo for ArmVirt {
     fn components(mut add: Add<Component>) {
         add.component(AdvancedLoggerComponent::<UartPl011>::new(&LOGGER));
         add.component(patina_smbios::component::SmbiosProvider::new(3, 9));
-        add.component(sbsa_services::smbios_platform::SbsaSmbiosPlatform::new());
+        add.component(armvirt_services::smbios_platform::ArmVirtSmbiosPlatform::new());
         add.component(patina_test::component::TestRunner::default().with_callback(|test_name, err_msg| {
             log::error!("Test {} failed: {}", test_name, err_msg);
             #[cfg(feature = "exit_on_patina_test_failure")]
@@ -100,14 +100,14 @@ impl ComponentInfo for Sbsa {
     }
 }
 
-impl PlatformInfo for Sbsa {
+impl PlatformInfo for ArmVirt {
     type CpuInfo = Self;
     type MemoryInfo = Self;
     type ComponentInfo = Self;
     type Extractor = CompositeSectionExtractor;
 }
 
-static CORE: Core<Sbsa> = Core::new(CompositeSectionExtractor::new());
+static CORE: Core<ArmVirt> = Core::new(CompositeSectionExtractor::new());
 
 #[cfg_attr(target_os = "uefi", unsafe(export_name = "efi_main"))]
 pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
