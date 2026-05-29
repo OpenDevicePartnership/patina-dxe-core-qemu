@@ -47,7 +47,7 @@ static LOGGER: AdvancedLogger<UartPl011> = AdvancedLogger::new(
         TargetFilter { target: "efi_memory_map", log_level: log::LevelFilter::Off, hw_filter_override: None },
     ],
     log::LevelFilter::Info,
-    UartPl011::new(0x0900_0000),
+    UartPl011::new(PL011_UART_BASE),
 );
 
 #[cfg(feature = "enable_debugger")]
@@ -55,9 +55,18 @@ const _ENABLE_DEBUGGER: bool = true;
 #[cfg(not(feature = "enable_debugger"))]
 const _ENABLE_DEBUGGER: bool = false;
 
+/// Base address of the PL011 UART on the QEMU Arm Virt machine.
+const PL011_UART_BASE: usize = 0x0900_0000;
+
+/// Base address of the GIC distributor on the QEMU Arm Virt machine.
+const GICD_BASE: u64 = 0x0800_0000;
+
+/// Base address of the GIC redistributor on the QEMU Arm Virt machine.
+const GICR_BASE: u64 = 0x080A_0000;
+
 #[cfg(feature = "build_debugger")]
 static DEBUGGER: patina_debugger::PatinaDebugger<UartPl011> =
-    patina_debugger::PatinaDebugger::new(UartPl011::new(0x0900_0000)).with_force_enable(_ENABLE_DEBUGGER);
+    patina_debugger::PatinaDebugger::new(UartPl011::new(PL011_UART_BASE)).with_force_enable(_ENABLE_DEBUGGER);
 
 struct ArmVirt;
 
@@ -68,7 +77,7 @@ impl CpuInfo for ArmVirt {
     fn gic_bases() -> GicBases {
         // SAFETY: gicd and gicr bases correctly point to the register spaces.
         // SAFETY: Access to these registers is exclusive to this struct instance.
-        unsafe { GicBases::new(0x08000000, 0x080A0000) }
+        unsafe { GicBases::new(GICD_BASE, GICR_BASE) }
     }
 }
 
