@@ -8,8 +8,7 @@
 default_to_workspace = false
 
 [env]
-NO_STD_FLAGS = "--profile ${RUSTC_PROFILE} -Zbuild-std=core,compiler_builtins,alloc -Zbuild-std-features=compiler-builtins-mem -Zunstable-options --timings"
-STD_FLAGS = "--profile ${RUSTC_PROFILE} --features std"
+NO_STD_FLAGS = "--profile ${RUSTC_PROFILE} --timings"
 COV_FLAGS = { value = "--workspace --profile test --ignore-filename-regex .*test.*", condition = { env_not_set = ["COV_FLAGS"] } }
 RUSTDOCFLAGS = "-D warnings -D missing_docs"
 # Base features included in all platform firmware builds.
@@ -45,29 +44,28 @@ set_env INDIVIDUAL_PACKAGE_TARGETS ${joined_args}
 release ${joined_args}
 '''
 
-[tasks.check_no_std]
-description = "Checks rust code for no_std build errors with results."
+[tasks.check_code_x64]
+description = "Checks rust code for x64 build errors with results."
 private = true
 command = "cargo"
-args = ["check", "--target", "x86_64-unknown-uefi", "@@split(NO_STD_FLAGS, )", "@@split(CARGO_MAKE_TASK_ARGS, )"]
+args = ["check", "--target", "x86_64-unknown-uefi", "--features", "ci_features,x64", "@@split(CARGO_MAKE_TASK_ARGS, )", "@@split(NO_STD_FLAGS, )",]
 
-[tasks.check_std]
-description = "Checks rust code for std build errors with results."
+[tasks.check_code_aarch64]
+description = "Checks rust code for aarch64 build errors with results."
 private = true
 command = "cargo"
-args = ["check", "@@split(STD_FLAGS, )", "@@split(CARGO_MAKE_TASK_ARGS, )"]
+args = ["check", "--target", "aarch64-unknown-uefi", "--features", "ci_features,aarch64", "@@split(CARGO_MAKE_TASK_ARGS, )", "@@split(NO_STD_FLAGS, )",]
 
 [tasks.check_tests]
 description = "Checks rust test code for build errors with results."
 private = true
 command = "cargo"
-args = ["test", "--no-run", "@@split(CARGO_MAKE_TASK_ARGS, )"]
-
+args = ["test", "--no-run", "--all-targets", "--all-features", "@@split(CARGO_MAKE_TASK_ARGS, )",]
 
 [tasks.check]
 description = "Checks rust code for errors. Example `cargo make check`"
 clear = true
-run_task = [{ name = ["check_no_std", "check_std", "check_tests"], parallel = true }]
+run_task = [{ name = ["check_code_x64", "check_code_aarch64", "check_tests"], parallel = true }]
 
 [tasks.check-no-default-features-code]
 description = "Checks rust code compiles without default features."
@@ -482,10 +480,27 @@ command = "cargo"
 args = ["doc", "@@split(INDIVIDUAL_PACKAGE_TARGETS, )", "--features", "doc", "--open"]
 
 [tasks.clippy]
-description = "Run cargo clippy."
+description = "Run cargo clippy for the host target and both UEFI cross-compilation targets."
 clear = true
+run_task = [{ name = ["clippy-x64", "clippy-aarch64", "clippy-std"], parallel = true }]
+
+[tasks.clippy-x64]
+description = "Run cargo clippy for x86_64-unknown-uefi."
+private = true
 command = "cargo"
-args = ["clippy", "--", "-D", "warnings"]
+args = ["clippy", "--target", "x86_64-unknown-uefi", "--features", "ci_features,x64", "@@split(NO_STD_FLAGS, )", "--", "-D", "warnings"]
+
+[tasks.clippy-aarch64]
+description = "Run cargo clippy for aarch64-unknown-uefi."
+private = true
+command = "cargo"
+args = ["clippy", "--target", "aarch64-unknown-uefi", "--features", "ci_features,aarch64", "@@split(NO_STD_FLAGS, )", "--", "-D", "warnings"]
+
+[tasks.clippy-std]
+description = "Run cargo clippy for the host target (library and tests only)."
+private = true
+command = "cargo"
+args = ["clippy", "--tests", "--", "-D", "warnings"]
 
 [tasks.fmt]
 description = "Run cargo format."
