@@ -54,13 +54,13 @@ static DEBUGGER: patina_debugger::PatinaDebugger<Uart16550> =
         .with_force_enable(_ENABLE_DEBUGGER)
         .with_log_policy(patina_debugger::DebuggerLoggingPolicy::FullLogging);
 
-struct OVMF;
+struct Ovmf;
 
 // Default `MemoryInfo` implementation is sufficient for OVMF.
-impl MemoryInfo for OVMF {}
+impl MemoryInfo for Ovmf {}
 
 // OVMF should use TSC frequency calibrated from ACPI PM Timer.
-impl CpuInfo for OVMF {
+impl CpuInfo for Ovmf {
     fn perf_timer_frequency() -> Option<u64> {
         // SAFETY: Reading from the PM Timer I/O port is safe as long as the port is valid.
         // On OVMF, the PM Timer is always available at the specified port address.
@@ -68,7 +68,7 @@ impl CpuInfo for OVMF {
     }
 }
 
-impl ComponentInfo for OVMF {
+impl ComponentInfo for Ovmf {
     fn configs(_add: Add<Config>) {
         // Add components and configs later
     }
@@ -78,17 +78,19 @@ impl ComponentInfo for OVMF {
     }
 }
 
-impl PlatformInfo for OVMF {
+impl PlatformInfo for Ovmf {
     type CpuInfo = Self;
     type MemoryInfo = Self;
     type ComponentInfo = Self;
     type Extractor = CompositeSectionExtractor;
 }
 
-static CORE: Core<OVMF> = Core::new(CompositeSectionExtractor::new());
+static CORE: Core<Ovmf> = Core::new(CompositeSectionExtractor::new());
 
 #[cfg_attr(target_os = "uefi", unsafe(export_name = "efi_main"))]
-pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
+/// # Safety
+/// We must take on faith that the physical_hob_list pointer is valid.
+pub unsafe extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
     log::set_logger(&LOGGER).map(|()| log::set_max_level(log::LevelFilter::Trace)).unwrap();
 
     #[cfg(feature = "build_debugger")]
