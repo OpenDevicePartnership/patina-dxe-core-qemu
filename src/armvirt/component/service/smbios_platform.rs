@@ -266,7 +266,7 @@ impl ArmVirtSmbiosPlatform {
             string_pool: vec![],
         };
 
-        let mut type16_handle = 0xFFFF;
+        let mut type16_handle = 0xFFFE;
         match smbios.add_record(None, &memory_array) {
             Ok(handle) => {
                 log::trace!("  Type 16 (Physical Memory Array) - Handle 0x{:04X}", handle);
