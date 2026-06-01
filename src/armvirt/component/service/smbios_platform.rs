@@ -234,7 +234,7 @@ impl ArmVirtSmbiosPlatform {
             core_enabled: 1,
             thread_count: 1,
             processor_characteristics: 0x04, // 64-bit capable
-            processor_family2: 0x0100,       // ARMv8
+            processor_family2: 0x0101,       // ARMv8
             core_count2: 1,
             core_enabled2: 1,
             thread_count2: 1,
