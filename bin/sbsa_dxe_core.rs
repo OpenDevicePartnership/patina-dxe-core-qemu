@@ -18,7 +18,6 @@ use patina_adv_logger::{
 };
 use patina_dxe_core::*;
 use patina_ffs_extractors::CompositeSectionExtractor;
-use patina_smbios;
 use patina_stacktrace::StackTrace;
 #[cfg(feature = "exit_on_patina_test_failure")]
 use qemu_exit::QEMUExit;
@@ -110,10 +109,12 @@ impl PlatformInfo for Sbsa {
 static CORE: Core<Sbsa> = Core::new(CompositeSectionExtractor::new());
 
 #[cfg_attr(target_os = "uefi", unsafe(export_name = "efi_main"))]
-pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
+/// # Safety
+/// We must take on faith that the physical_hob_list pointer is valid.
+pub unsafe extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
     log::set_logger(&LOGGER).map(|()| log::set_max_level(log::LevelFilter::Trace)).unwrap();
-    // SAFETY: The physical_hob_list pointer is considered valid at this point as it's provided by the core
-    // to the entry point.
+    // SAFETY: The physical_hob_list pointer is considered valid at this point as it's provided by the previous
+    // FW stage.
     unsafe {
         LOGGER.init(physical_hob_list).unwrap();
     }
