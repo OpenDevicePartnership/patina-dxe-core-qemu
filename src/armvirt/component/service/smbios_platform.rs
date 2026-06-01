@@ -266,88 +266,94 @@ impl ArmVirtSmbiosPlatform {
             string_pool: vec![],
         };
 
-        let mut type16_handle = 0xFFFE;
-        match smbios.add_record(None, &memory_array) {
+        let type16_handle = match smbios.add_record(None, &memory_array) {
             Ok(handle) => {
                 log::trace!("  Type 16 (Physical Memory Array) - Handle 0x{:04X}", handle);
-                type16_handle = handle;
+                Some(handle)
             }
-            Err(e) => log::warn!("  Failed to add Type 16: {:?}", e),
-        }
-
-        // Type 17: Memory Device
-        let memory_device = Type17MemoryDevice {
-            header: SmbiosTableHeader::new(17, 0, SMBIOS_HANDLE_PI_RESERVED),
-            physical_memory_array_handle: type16_handle,
-            memory_error_information_handle: 0xFFFE, // Not provided
-            total_width: 64,
-            data_width: 64,
-            size: 0x0400,      // 1024 MB
-            form_factor: 0x09, // DIMM
-            device_set: 0,
-            device_locator: 1,
-            bank_locator: 2,
-            memory_type: 0x1A,   // DDR4
-            type_detail: 0x0080, // Synchronous
-            speed: 3200,
-            manufacturer: 3,
-            serial_number: 4,
-            asset_tag: 5,
-            part_number: 6,
-            attributes: 0x01, // Single rank
-            extended_size: 0,
-            configured_memory_clock_speed: 3200,
-            minimum_voltage: 1200,
-            maximum_voltage: 1200,
-            configured_voltage: 1200,
-            memory_technology: 0x02,                  // DRAM
-            memory_operating_mode_capability: 0x0004, // Volatile
-            firmware_version: 7,
-            module_manufacturer_id: 0,
-            module_product_id: 0,
-            memory_subsystem_controller_manufacturer_id: 0,
-            memory_subsystem_controller_product_id: 0,
-            non_volatile_size: 0,
-            volatile_size: 0x40000000, // 1 GB
-            cache_size: 0,
-            logical_size: 0,
-            extended_speed: 0,
-            extended_configured_memory_speed: 0,
-            pmic0_manufacturer_id: 0,
-            pmic0_revision_number: 0,
-            rcd_manufacturer_id: 0,
-            rcd_revision_number: 0,
-            string_pool: vec![
-                String::from("DIMM 0"),
-                String::from("BANK 0"),
-                String::from("QEMU"),
-                String::from("SN-DIMM-001"),
-                String::from("ASSET-DIMM-001"),
-                String::from("QEMU-DIMM"),
-                String::from("v1.0"),
-            ],
+            Err(e) => {
+                log::warn!("  Failed to add Type 16: {:?}", e);
+                None
+            }
         };
 
-        match smbios.add_record(None, &memory_device) {
-            Ok(handle) => log::trace!("  Type 17 (Memory Device) - Handle 0x{:04X}", handle),
-            Err(e) => log::warn!("  Failed to add Type 17: {:?}", e),
-        }
+        if let Some(type16_handle) = type16_handle {
+            // Type 17: Memory Device
+            let memory_device = Type17MemoryDevice {
+                header: SmbiosTableHeader::new(17, 0, SMBIOS_HANDLE_PI_RESERVED),
+                physical_memory_array_handle: type16_handle,
+                memory_error_information_handle: 0xFFFE, // Not provided
+                total_width: 64,
+                data_width: 64,
+                size: 0x0400,      // 1024 MB
+                form_factor: 0x09, // DIMM
+                device_set: 0,
+                device_locator: 1,
+                bank_locator: 2,
+                memory_type: 0x1A,   // DDR4
+                type_detail: 0x0080, // Synchronous
+                speed: 3200,
+                manufacturer: 3,
+                serial_number: 4,
+                asset_tag: 5,
+                part_number: 6,
+                attributes: 0x01, // Single rank
+                extended_size: 0,
+                configured_memory_clock_speed: 3200,
+                minimum_voltage: 1200,
+                maximum_voltage: 1200,
+                configured_voltage: 1200,
+                memory_technology: 0x02,                  // DRAM
+                memory_operating_mode_capability: 0x0004, // Volatile
+                firmware_version: 7,
+                module_manufacturer_id: 0,
+                module_product_id: 0,
+                memory_subsystem_controller_manufacturer_id: 0,
+                memory_subsystem_controller_product_id: 0,
+                non_volatile_size: 0,
+                volatile_size: 0x40000000, // 1 GB
+                cache_size: 0,
+                logical_size: 0,
+                extended_speed: 0,
+                extended_configured_memory_speed: 0,
+                pmic0_manufacturer_id: 0,
+                pmic0_revision_number: 0,
+                rcd_manufacturer_id: 0,
+                rcd_revision_number: 0,
+                string_pool: vec![
+                    String::from("DIMM 0"),
+                    String::from("BANK 0"),
+                    String::from("QEMU"),
+                    String::from("SN-DIMM-001"),
+                    String::from("ASSET-DIMM-001"),
+                    String::from("QEMU-DIMM"),
+                    String::from("v1.0"),
+                ],
+            };
 
-        // Type 19: Memory Array Mapped Address
-        let memory_mapped = Type19MemoryArrayMappedAddress {
-            header: SmbiosTableHeader::new(19, 0, SMBIOS_HANDLE_PI_RESERVED),
-            starting_address: 0,
-            ending_address: 0x000FFFFF, // 1 GB - 1 in KB
-            memory_array_handle: type16_handle,
-            partition_width: 1,
-            extended_starting_address: 0,
-            extended_ending_address: 0,
-            string_pool: vec![],
-        };
+            match smbios.add_record(None, &memory_device) {
+                Ok(handle) => log::trace!("  Type 17 (Memory Device) - Handle 0x{:04X}", handle),
+                Err(e) => log::warn!("  Failed to add Type 17: {:?}", e),
+            }
 
-        match smbios.add_record(None, &memory_mapped) {
-            Ok(handle) => log::trace!("  Type 19 (Memory Array Mapped Address) - Handle 0x{:04X}", handle),
-            Err(e) => log::warn!("  Failed to add Type 19: {:?}", e),
+            // Type 19: Memory Array Mapped Address
+            let memory_mapped = Type19MemoryArrayMappedAddress {
+                header: SmbiosTableHeader::new(19, 0, SMBIOS_HANDLE_PI_RESERVED),
+                starting_address: 0,
+                ending_address: 0x000FFFFF, // 1 GB - 1 in KB
+                memory_array_handle: type16_handle,
+                partition_width: 1,
+                extended_starting_address: 0,
+                extended_ending_address: 0,
+                string_pool: vec![],
+            };
+
+            match smbios.add_record(None, &memory_mapped) {
+                Ok(handle) => log::trace!("  Type 19 (Memory Array Mapped Address) - Handle 0x{:04X}", handle),
+                Err(e) => log::warn!("  Failed to add Type 19: {:?}", e),
+            }
+        } else {
+            log::warn!("  Skipping Type 17 and Type 19 because Type 16 was not added");
         }
 
         log::debug!("Publishing SMBIOS table...");
