@@ -45,7 +45,7 @@ patina = { version = "21" }
 patina_ffs_extractors = { version = "21" }
 patina_stacktrace = { version = "21" }
 r-efi = { version = "^5", default-features = false }
-x86_64 = { version = "=0.15.2", default-features = false, features = [
+x86_64 = { version = "=0.15.4", default-features = false, features = [
   "instructions"
 ], optional = true }
 zerocopy = { version = "0.8", features = ["derive"] }
