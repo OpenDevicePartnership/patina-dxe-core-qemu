@@ -49,7 +49,7 @@ x86_64 = { version = "=0.15.4", default-features = false, features = [
   "instructions"
 ], optional = true }
 zerocopy = { version = "0.8", features = ["derive"] }
-qemu-exit = { version = "3", optional = true }
+qemu-exit = { version = "4", optional = true }
 
 [features]
 ci_features = ['build_debugger', 'compatibility_mode_allowed', 'enable_debugger', 'exit_on_patina_test_failure', 'v1_resource_descriptor_support']

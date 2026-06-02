@@ -119,7 +119,11 @@ impl ComponentInfo for Q35 {
         add.component(patina_test::component::TestRunner::default().with_callback(|test_name, err_msg| {
             log::error!("Test {} failed: {}", test_name, err_msg);
             #[cfg(feature = "exit_on_patina_test_failure")]
-            qemu_exit::X86::new(0xf4, 0x1).exit_failure();
+            // SAFETY: `X86::new` is unsafe as of qemu-exit 4.0.0 because the caller must
+            // ensure that the provided I/O base matches a QEMU `isa-debug-exit` device. The
+            // QEMU command line used to launch this firmware (in patina-qemu) configures
+            // `isa-debug-exit,iobase=0xf4,iosize=0x04`.
+            unsafe { qemu_exit::X86::new(0xf4, 0x1) }.exit_failure();
         }));
     }
 }
