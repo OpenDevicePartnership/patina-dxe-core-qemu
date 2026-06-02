@@ -33,6 +33,8 @@ words:
   - gdbstub
   - gicd
   - gicr
+  - iobase
+  - iosize
   - keccak
   - lzma
   - mdbook
