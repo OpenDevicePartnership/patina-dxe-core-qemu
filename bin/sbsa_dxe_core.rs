@@ -81,22 +81,16 @@ impl ComponentInfo for Sbsa {
             #[cfg(feature = "exit_on_patina_test_failure")]
             qemu_exit::AArch64::new().exit_failure();
         }));
-        add.component(patina_performance::component::performance_config_provider::PerformanceConfigurationProvider);
-        add.component(patina_performance::component::performance::Performance);
+        add.component(patina_performance::component::Performance::new().with_measurements(
+            patina::performance::Measurement::DriverBindingStart     // Adds driver binding start measurements.
+               | patina::performance::Measurement::DriverBindingStop // Adds driver binding stop measurements.
+               | patina::performance::Measurement::LoadImage         // Adds load image measurements.
+               | patina::performance::Measurement::StartImage, // Adds start image measurements.
+        ));
         add.component(patina_acpi::component::AcpiComponent::default());
     }
 
-    fn configs(mut add: Add<Config>) {
-        add.config(patina_performance::config::PerfConfig {
-            enable_component: true,
-            enabled_measurements: {
-                patina::performance::Measurement::DriverBindingStart         // Adds driver binding start measurements.
-               | patina::performance::Measurement::DriverBindingStop        // Adds driver binding stop measurements.
-               | patina::performance::Measurement::LoadImage                // Adds load image measurements.
-               | patina::performance::Measurement::StartImage // Adds start image measurements.
-            },
-        })
-    }
+    fn configs(_add: Add<Config>) {}
 }
 
 impl PlatformInfo for Sbsa {

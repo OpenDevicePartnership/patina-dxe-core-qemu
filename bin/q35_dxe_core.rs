@@ -93,15 +93,6 @@ impl ComponentInfo for Q35 {
             updatable_buffer_id: None,
             comm_buffers: vec![],
         });
-        add.config(patina_performance::config::PerfConfig {
-            enable_component: true,
-            enabled_measurements: {
-                patina::performance::Measurement::DriverBindingStart         // Adds driver binding start measurements.
-               | patina::performance::Measurement::DriverBindingStop        // Adds driver binding stop measurements.
-               | patina::performance::Measurement::LoadImage                // Adds load image measurements.
-               | patina::performance::Measurement::StartImage // Adds start image measurements.
-            },
-        })
     }
 
     fn components(mut add: Add<Component>) {
@@ -111,8 +102,12 @@ impl ComponentInfo for Q35 {
         add.component(patina_mm::component::sw_mmi_manager::SwMmiManager::new());
         add.component(patina_mm::component::communicator::MmCommunicator::new());
         add.component(q35_services::mm_test::QemuQ35MmTest::new());
-        add.component(patina_performance::component::performance_config_provider::PerformanceConfigurationProvider);
-        add.component(patina_performance::component::performance::Performance);
+        add.component(patina_performance::component::Performance::new().with_measurements(
+            patina::performance::Measurement::DriverBindingStart     // Adds driver binding start measurements.
+               | patina::performance::Measurement::DriverBindingStop // Adds driver binding stop measurements.
+               | patina::performance::Measurement::LoadImage         // Adds load image measurements.
+               | patina::performance::Measurement::StartImage, // Adds start image measurements.
+        ));
         add.component(patina_smbios::component::SmbiosProvider::new(3, 9));
         add.component(q35_services::smbios_platform::Q35SmbiosPlatform::new());
         add.component(patina_acpi::component::AcpiComponent::default());
