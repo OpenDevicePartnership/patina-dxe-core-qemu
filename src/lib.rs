@@ -15,5 +15,3 @@
 pub mod armvirt;
 #[cfg(any(feature = "x64", test))]
 pub mod q35;
-#[cfg(any(feature = "aarch64", test))]
-pub mod sbsa;

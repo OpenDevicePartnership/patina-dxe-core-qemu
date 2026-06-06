@@ -449,16 +449,6 @@ description = """Builds the RELEASE Q35 UEFI firmware."""
 env = { CARGO_BIN_NAME = "qemu_q35_dxe_core", "RUSTC_PROFILE" = "release", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "${BASE_FEATURES},x64", CARGO_TARGET_X86_64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:qemu_q35_dxe_core.pdb" }
 run_task = "patch"
 
-[tasks.sbsa]
-description = """Builds the DEBUG SBSA UEFI firmware."""
-env = { CARGO_BIN_NAME = "qemu_sbsa_dxe_core", "RUSTC_PROFILE" = "dev", CARGO_BIN_TARGET = "aarch64-unknown-uefi", CARGO_BIN_FEATURES = "${BASE_FEATURES},aarch64,build_debugger", CARGO_TARGET_AARCH64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:qemu_sbsa_dxe_core.pdb" }
-run_task = "patch"
-
-[tasks.sbsa-release]
-description = """Builds the RELEASE SBSA UEFI firmware."""
-env = { CARGO_BIN_NAME = "qemu_sbsa_dxe_core", "RUSTC_PROFILE" = "release", CARGO_BIN_TARGET = "aarch64-unknown-uefi", CARGO_BIN_FEATURES = "${BASE_FEATURES},aarch64", CARGO_TARGET_AARCH64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:qemu_sbsa_dxe_core.pdb" }
-run_task = "patch"
-
 [tasks.ovmf]
 description = """Builds the DEBUG OVMF UEFI firmware."""
 env = { CARGO_BIN_NAME = "qemu_ovmf_dxe_core", "RUSTC_PROFILE" = "dev", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "${BASE_FEATURES},x64,build_debugger,v1_resource_descriptor_support", CARGO_TARGET_X86_64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:qemu_ovmf_dxe_core.pdb" }
@@ -568,13 +558,13 @@ end
 cm_run_task bloat-q35-exec
 '''
 
-[tasks.bloat-sbsa-exec]
+[tasks.bloat-armvirt-exec]
 private = true
 command = "cargo"
-args = ["bloat", "--target", "aarch64-unknown-uefi", "--features", "aarch64", "--bin", "qemu_sbsa_dxe_core", "--profile", "${RUSTC_PROFILE}", "-Zbuild-std=core,compiler_builtins,alloc", "-Zbuild-std-features=compiler-builtins-mem", "-Zunstable-options", "@@split(CLEANED_ARGS, )"]
+args = ["bloat", "--target", "aarch64-unknown-uefi", "--features", "aarch64", "--bin", "qemu_armvirt_dxe_core", "--profile", "${RUSTC_PROFILE}", "-Zbuild-std=core,compiler_builtins,alloc", "-Zbuild-std-features=compiler-builtins-mem", "-Zunstable-options", "@@split(CLEANED_ARGS, )"]
 
-[tasks.bloat-sbsa]
-description = "Run cargo bloat for sbsa (aarch64-unknown-uefi). Examples: `cargo make bloat-sbsa -- --crates`, `cargo make bloat-sbsa -- --crates -n 40`."
+[tasks.bloat-armvirt]
+description = "Run cargo bloat for armvirt (aarch64-unknown-uefi). Examples: `cargo make bloat-armvirt -- --crates`, `cargo make bloat-armvirt -- --crates -n 40`."
 script_runner = "@duckscript"
 script = '''
 args = get_env CARGO_MAKE_TASK_ARGS
@@ -592,7 +582,7 @@ else
     set_env CLEANED_ARGS ""
 end
 
-cm_run_task bloat-sbsa-exec
+cm_run_task bloat-armvirt-exec
 '''
 
 [tasks.all]
@@ -605,10 +595,10 @@ dependencies = [
     "check-no-default-features",
     "q35",
     "ovmf",
-    "sbsa",
+    "armvirt",
     "q35-release",
     "ovmf-release",
-    "sbsa-release",
+    "armvirt-release",
     "test",
     "coverage",
     "doc-test",

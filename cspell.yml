@@ -55,7 +55,6 @@ words:
   - repr
   - rustc
   - rustls
-  - sbsa
   - smbiosview
   - supv
   - tiano

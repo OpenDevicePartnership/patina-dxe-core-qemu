@@ -48,12 +48,6 @@ jobs:
           cp target/x86_64-unknown-uefi/debug/qemu_ovmf_dxe_core.efi artifacts/debug/qemu_ovmf_dxe_core.efi
           cp target/x86_64-unknown-uefi/debug/qemu_ovmf_dxe_core.pdb artifacts/debug/qemu_ovmf_dxe_core.pdb
 
-      - name: Build SBSA Debug
-        run: |
-          cargo make sbsa
-          cp target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.efi artifacts/debug/qemu_sbsa_dxe_core.efi
-          cp target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.pdb artifacts/debug/qemu_sbsa_dxe_core.pdb
-
       - name: Build Arm Virt Debug
         run: |
           cargo make armvirt
@@ -72,12 +66,6 @@ jobs:
           cp target/x86_64-unknown-uefi/release/qemu_ovmf_dxe_core.efi artifacts/release/qemu_ovmf_dxe_core.efi
           cp target/x86_64-unknown-uefi/release/qemu_ovmf_dxe_core.pdb artifacts/release/qemu_ovmf_dxe_core.pdb
 
-      - name: Build SBSA Release
-        run: |
-          cargo make sbsa-release
-          cp target/aarch64-unknown-uefi/release/qemu_sbsa_dxe_core.efi artifacts/release/qemu_sbsa_dxe_core.efi
-          cp target/aarch64-unknown-uefi/release/qemu_sbsa_dxe_core.pdb artifacts/release/qemu_sbsa_dxe_core.pdb
-
       - name: Build Arm Virt Release
         run: |
           cargo make armvirt-release
@@ -95,12 +83,6 @@ jobs:
           cargo make ovmf --features enable_debugger
           cp target/x86_64-unknown-uefi/debug/qemu_ovmf_dxe_core.efi artifacts/debug/debugger/qemu_ovmf_dxe_core.efi
           cp target/x86_64-unknown-uefi/debug/qemu_ovmf_dxe_core.pdb artifacts/debug/debugger/qemu_ovmf_dxe_core.pdb
-
-      - name: Build SBSA Debug (Debugger)
-        run: |
-          cargo make sbsa --features enable_debugger
-          cp target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.efi artifacts/debug/debugger/qemu_sbsa_dxe_core.efi
-          cp target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.pdb artifacts/debug/debugger/qemu_sbsa_dxe_core.pdb
 
       - name: Build Arm Virt Debug (Debugger)
         run: |
