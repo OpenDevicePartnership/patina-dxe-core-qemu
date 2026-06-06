@@ -155,6 +155,11 @@ jobs:
           echo "| Q35 (x86_64)   | Base:\`${SHA1}\`<br>PR:\`${SHA2}\`<br>&nbsp; | $Q35_DEBUG_DIFF_COLUMN     | $Q35_RELEASE_DIFF_COLUMN     |" >> "$REPORT_FILE"
           echo "| OVMF (x86_64)  | Base:\`${SHA1}\`<br>PR:\`${SHA2}\`<br>&nbsp; | $OVMF_DEBUG_DIFF_COLUMN    | $OVMF_RELEASE_DIFF_COLUMN    |" >> "$REPORT_FILE"
           echo "| ARMVIRT (aarch64) | Base:\`${SHA1}\`<br>PR:\`${SHA2}\`<br>&nbsp; | $AARCH64_DEBUG_DIFF_COLUMN | $AARCH64_RELEASE_DIFF_COLUMN |" >> "$REPORT_FILE"
+          echo "| Platform          | Commit                                       | Δ Debug Size               | Δ Release Size               |" >> "$REPORT_FILE"
+          echo "|-------------------|----------------------------------------------|----------------------------|------------------------------|" >> "$REPORT_FILE"
+          echo "| Q35 (x86_64)      | Base:\`${SHA1}\`<br>PR:\`${SHA2}\`<br>&nbsp; | $Q35_DEBUG_DIFF_COLUMN     | $Q35_RELEASE_DIFF_COLUMN     |" >> "$REPORT_FILE"
+          echo "| OVMF (x86_64)     | Base:\`${SHA1}\`<br>PR:\`${SHA2}\`<br>&nbsp; | $OVMF_DEBUG_DIFF_COLUMN    | $OVMF_RELEASE_DIFF_COLUMN    |" >> "$REPORT_FILE"
+          echo "| ARMVIRT (aarch64) | Base:\`${SHA1}\`<br>PR:\`${SHA2}\`<br>&nbsp; | $AARCH64_DEBUG_DIFF_COLUMN | $AARCH64_RELEASE_DIFF_COLUMN |" >> "$REPORT_FILE"
           echo "" >> "$REPORT_FILE"
 
           cat "$REPORT_FILE" >> "$GITHUB_STEP_SUMMARY"
