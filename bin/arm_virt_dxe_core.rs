@@ -11,7 +11,10 @@
 #![no_main]
 
 use core::{ffi::c_void, panic::PanicInfo};
-use patina::{log::Format, serial::uart::UartPl011};
+use patina::{
+    log::Format,
+    serial::{uart::UartPl011, virtio::VirtioSerial},
+};
 use patina_adv_logger::{
     component::AdvancedLoggerComponent,
     logger::{AdvancedLogger, TargetFilter},
@@ -63,9 +66,16 @@ const GICD_BASE: u64 = 0x0800_0000;
 /// Base address of the GIC redistributor on the QEMU Arm Virt machine.
 const GICR_BASE: u64 = 0x080A_0000;
 
+/// The virtio-serial-mmio base address used. This is the only device
+/// so it's the last of 32 0x200 byte blocks start at 0xA000000.
+const VIRTIO_SERIAL_MMIO: usize = 0x0A00_0000 + (31 * 0x200);
+
 #[cfg(feature = "build_debugger")]
-static DEBUGGER: patina_debugger::PatinaDebugger<UartPl011> =
-    patina_debugger::PatinaDebugger::new(UartPl011::new(PL011_UART_BASE)).with_force_enable(_ENABLE_DEBUGGER);
+// SAFETY: VIRTIO_SERIAL_MMIO is a valid address for the virtio-mmio device.
+static DEBUGGER: patina_debugger::PatinaDebugger<VirtioSerial> =
+    patina_debugger::PatinaDebugger::new(unsafe { VirtioSerial::new(VIRTIO_SERIAL_MMIO) })
+        .with_transport_init() // Transport init required for virtio
+        .with_force_enable(_ENABLE_DEBUGGER);
 
 struct ArmVirt;
 
