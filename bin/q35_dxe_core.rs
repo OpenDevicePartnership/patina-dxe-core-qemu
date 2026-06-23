@@ -93,15 +93,6 @@ impl ComponentInfo for Q35 {
             updatable_buffer_id: None,
             comm_buffers: vec![],
         });
-        add.config(patina_performance::config::PerfConfig {
-            enable_component: true,
-            enabled_measurements: {
-                patina::performance::Measurement::DriverBindingStart         // Adds driver binding start measurements.
-               | patina::performance::Measurement::DriverBindingStop        // Adds driver binding stop measurements.
-               | patina::performance::Measurement::LoadImage                // Adds load image measurements.
-               | patina::performance::Measurement::StartImage // Adds start image measurements.
-            },
-        })
     }
 
     fn components(mut add: Add<Component>) {
@@ -111,15 +102,23 @@ impl ComponentInfo for Q35 {
         add.component(patina_mm::component::sw_mmi_manager::SwMmiManager::new());
         add.component(patina_mm::component::communicator::MmCommunicator::new());
         add.component(q35_services::mm_test::QemuQ35MmTest::new());
-        add.component(patina_performance::component::performance_config_provider::PerformanceConfigurationProvider);
-        add.component(patina_performance::component::performance::Performance);
+        add.component(patina_performance::component::Performance::new().with_measurements(
+            patina::performance::Measurement::DriverBindingStart     // Adds driver binding start measurements.
+               | patina::performance::Measurement::DriverBindingStop // Adds driver binding stop measurements.
+               | patina::performance::Measurement::LoadImage         // Adds load image measurements.
+               | patina::performance::Measurement::StartImage, // Adds start image measurements.
+        ));
         add.component(patina_smbios::component::SmbiosProvider::new(3, 9));
         add.component(q35_services::smbios_platform::Q35SmbiosPlatform::new());
         add.component(patina_acpi::component::AcpiComponent::default());
         add.component(patina_test::component::TestRunner::default().with_callback(|test_name, err_msg| {
             log::error!("Test {} failed: {}", test_name, err_msg);
             #[cfg(feature = "exit_on_patina_test_failure")]
-            qemu_exit::X86::new(0xf4, 0x1).exit_failure();
+            // SAFETY: `X86::new` is unsafe as of qemu-exit 4.0.0 because the caller must
+            // ensure that the provided I/O base matches a QEMU `isa-debug-exit` device. The
+            // QEMU command line used to launch this firmware (in patina-qemu) configures
+            // `isa-debug-exit,iobase=0xf4,iosize=0x04`.
+            unsafe { qemu_exit::X86::new(0xf4, 0x1) }.exit_failure();
         }));
     }
 }
@@ -134,10 +133,12 @@ impl PlatformInfo for Q35 {
 static CORE: Core<Q35> = Core::new(CompositeSectionExtractor::new());
 
 #[cfg_attr(target_os = "uefi", unsafe(export_name = "efi_main"))]
-pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
+/// # Safety
+/// We must take on faith that the physical_hob_list pointer is valid.
+pub unsafe extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
     log::set_logger(&LOGGER).map(|()| log::set_max_level(log::LevelFilter::Trace)).unwrap();
-    // SAFETY: The physical_hob_list pointer is considered valid at this point as it's provided by the core
-    // to the entry point.
+    // SAFETY: The physical_hob_list pointer is considered valid at this point as it's provided by the previous
+    // FW stage.
     unsafe {
         LOGGER.init(physical_hob_list).unwrap();
     }

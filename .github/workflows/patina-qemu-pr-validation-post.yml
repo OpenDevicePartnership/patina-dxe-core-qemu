@@ -20,7 +20,7 @@ permissions:
 
 jobs:
   post-process:
-    uses: OpenDevicePartnership/patina-devops/.github/workflows/PatinaQemuPrValidationPost.yml@patina_e2e_plat_validation
+    uses: OpenDevicePartnership/patina-devops/.github/workflows/PatinaQemuPrValidationPost.yml@main
     with:
       conclusion: ${{ github.event.workflow_run.conclusion }}
       head-sha: ${{ github.event.workflow_run.head_sha }}

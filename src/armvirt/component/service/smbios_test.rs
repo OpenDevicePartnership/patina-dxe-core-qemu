@@ -1,6 +1,6 @@
-//! QEMU SBSA SMBIOS Test
+//! QEMU Arm Virt SMBIOS Test
 //!
-//! Verifies that SMBIOS interfaces are working as expected on the QEMU SBSA platform
+//! Verifies that SMBIOS interfaces are working as expected on the QEMU Arm Virt platform
 //! by exercising the EDK2-compatible C protocol FFI layer.
 //!
 //! ## License
@@ -23,7 +23,7 @@ use r_efi::efi;
 /// This exercises the EDK2-compatible protocol layer (Add, UpdateString, Remove, GetNext)
 /// which are the FFI functions that C code calls.
 #[patina_test]
-fn sbsa_smbios_ffi_test(boot_services: StandardBootServices) -> patina_test::error::Result {
+fn armvirt_smbios_ffi_test(boot_services: StandardBootServices) -> patina_test::error::Result {
     log::debug!("SMBIOS FFI Test - Testing C Protocol FFI Layer");
 
     test_c_protocol_layer(&boot_services)?;

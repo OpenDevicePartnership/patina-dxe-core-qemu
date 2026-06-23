@@ -33,10 +33,10 @@ jobs:
         run: |
           cargo make q35
           cargo make ovmf
-          cargo make sbsa
+          cargo make armvirt
           cargo make q35-release
           cargo make ovmf-release
-          cargo make sbsa-release
+          cargo make armvirt-release
 
       - name: Get Base Branch (${{ github.base_ref }}) Sizes
         id: size-base
@@ -47,8 +47,8 @@ jobs:
           echo "q35_release=$(get_size target/x86_64-unknown-uefi/release/qemu_q35_dxe_core.efi)" >> $GITHUB_OUTPUT
           echo "ovmf_debug=$(get_size target/x86_64-unknown-uefi/debug/qemu_ovmf_dxe_core.efi)" >> $GITHUB_OUTPUT
           echo "ovmf_release=$(get_size target/x86_64-unknown-uefi/release/qemu_ovmf_dxe_core.efi)" >> $GITHUB_OUTPUT
-          echo "aarch64_debug=$(get_size target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.efi)" >> $GITHUB_OUTPUT
-          echo "aarch64_release=$(get_size target/aarch64-unknown-uefi/release/qemu_sbsa_dxe_core.efi)" >> $GITHUB_OUTPUT
+          echo "aarch64_debug=$(get_size target/aarch64-unknown-uefi/debug/qemu_armvirt_dxe_core.efi)" >> $GITHUB_OUTPUT
+          echo "aarch64_release=$(get_size target/aarch64-unknown-uefi/release/qemu_armvirt_dxe_core.efi)" >> $GITHUB_OUTPUT
 
       - name: ✅ Checkout PR Branch (${{ github.head_ref }}) ✅
         uses: actions/checkout@v6
@@ -63,10 +63,10 @@ jobs:
         run: |
           cargo make q35
           cargo make ovmf
-          cargo make sbsa
+          cargo make armvirt
           cargo make q35-release
           cargo make ovmf-release
-          cargo make sbsa-release
+          cargo make armvirt-release
 
       - name: Get PR Branch (${{ github.head_ref }}) Sizes
         id: size-pr
@@ -77,8 +77,8 @@ jobs:
           echo "q35_release=$(get_size target/x86_64-unknown-uefi/release/qemu_q35_dxe_core.efi)" >> $GITHUB_OUTPUT
           echo "ovmf_debug=$(get_size target/x86_64-unknown-uefi/debug/qemu_ovmf_dxe_core.efi)" >> $GITHUB_OUTPUT
           echo "ovmf_release=$(get_size target/x86_64-unknown-uefi/release/qemu_ovmf_dxe_core.efi)" >> $GITHUB_OUTPUT
-          echo "aarch64_debug=$(get_size target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.efi)" >> $GITHUB_OUTPUT
-          echo "aarch64_release=$(get_size target/aarch64-unknown-uefi/release/qemu_sbsa_dxe_core.efi)" >> $GITHUB_OUTPUT
+          echo "aarch64_debug=$(get_size target/aarch64-unknown-uefi/debug/qemu_armvirt_dxe_core.efi)" >> $GITHUB_OUTPUT
+          echo "aarch64_release=$(get_size target/aarch64-unknown-uefi/release/qemu_armvirt_dxe_core.efi)" >> $GITHUB_OUTPUT
 
       - name: 📊 Binary Size Report
         shell: bash
@@ -150,11 +150,11 @@ jobs:
           echo "<!-- binary-size-report -->" > "$REPORT_FILE"
           echo "### Binary Size Report" >> "$REPORT_FILE"
           echo "" >> "$REPORT_FILE"
-          echo "| Platform       | Commit                                       | Δ Debug Size               | Δ Release Size               |" >> "$REPORT_FILE"
-          echo "|----------------|----------------------------------------------|----------------------------|------------------------------|" >> "$REPORT_FILE"
-          echo "| Q35 (x86_64)   | Base:\`${SHA1}\`<br>PR:\`${SHA2}\`<br>&nbsp; | $Q35_DEBUG_DIFF_COLUMN     | $Q35_RELEASE_DIFF_COLUMN     |" >> "$REPORT_FILE"
-          echo "| OVMF (x86_64)  | Base:\`${SHA1}\`<br>PR:\`${SHA2}\`<br>&nbsp; | $OVMF_DEBUG_DIFF_COLUMN    | $OVMF_RELEASE_DIFF_COLUMN    |" >> "$REPORT_FILE"
-          echo "| SBSA (aarch64) | Base:\`${SHA1}\`<br>PR:\`${SHA2}\`<br>&nbsp; | $AARCH64_DEBUG_DIFF_COLUMN | $AARCH64_RELEASE_DIFF_COLUMN |" >> "$REPORT_FILE"
+          echo "| Platform          | Commit                                       | Δ Debug Size               | Δ Release Size               |" >> "$REPORT_FILE"
+          echo "|-------------------|----------------------------------------------|----------------------------|------------------------------|" >> "$REPORT_FILE"
+          echo "| Q35 (x86_64)      | Base:\`${SHA1}\`<br>PR:\`${SHA2}\`<br>&nbsp; | $Q35_DEBUG_DIFF_COLUMN     | $Q35_RELEASE_DIFF_COLUMN     |" >> "$REPORT_FILE"
+          echo "| OVMF (x86_64)     | Base:\`${SHA1}\`<br>PR:\`${SHA2}\`<br>&nbsp; | $OVMF_DEBUG_DIFF_COLUMN    | $OVMF_RELEASE_DIFF_COLUMN    |" >> "$REPORT_FILE"
+          echo "| ARMVIRT (aarch64) | Base:\`${SHA1}\`<br>PR:\`${SHA2}\`<br>&nbsp; | $AARCH64_DEBUG_DIFF_COLUMN | $AARCH64_RELEASE_DIFF_COLUMN |" >> "$REPORT_FILE"
           echo "" >> "$REPORT_FILE"
 
           cat "$REPORT_FILE" >> "$GITHUB_STEP_SUMMARY"

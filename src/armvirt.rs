@@ -1,6 +1,6 @@
-//! QEMU SBSA Resources
+//! QEMU Arm Virt Resources
 //!
-//! Resources used in the QEMU SBSA Patina binary.
+//! Resources used in the QEMU Arm Virt Patina binary.
 //!
 //! ## License
 //!

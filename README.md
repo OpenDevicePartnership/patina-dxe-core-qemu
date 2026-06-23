@@ -5,7 +5,7 @@
 The main purpose of this repository is to integrate the Rust components and dependencies necessary to build a sample
 Rust DXE Core binary that can be used in a QEMU UEFI firmware build.
 
-Currently, two QEMU platforms are supported, Q35 for x64 architecture and SBSA for aarch64 architecture.
+Currently, two QEMU platforms are supported, Q35 for x64 architecture and Arm Virt for aarch64 architecture.
 
 ## Documentation
 
@@ -64,18 +64,18 @@ binary in the [patina-qemu](https://github.com/OpenDevicePartnership/patina-qemu
    Output File:      'target/x86_64-unknown-uefi/release/qemu_ovmf_dxe_core.efi'
    ```
 
-- SBSA (aarch64) debug
+- ARMVIRT (aarch64) debug
 
    ```shell
-   Compile Command:  'cargo make sbsa'
-   Output File:      'target/aarch64-unknown-uefi/debug/qemu_sbsa_dxe_core.efi'
+   Compile Command:  'cargo make armvirt'
+   Output File:      'target/aarch64-unknown-uefi/debug/qemu_armvirt_dxe_core.efi'
    ```
 
-- SBSA (aarch64) release
+- ARMVIRT (aarch64) release
 
    ```shell
-   Compile Command:  'cargo make sbsa-release'
-   Output File:      'target/aarch64-unknown-uefi/release/qemu_sbsa_dxe_core.efi'
+   Compile Command:  'cargo make armvirt-release'
+   Output File:      'target/aarch64-unknown-uefi/release/qemu_armvirt_dxe_core.efi'
    ```
 
 The [patina_debugger](https://github.com/OpenDevicePartnership/patina/blob/main/docs/src/dxe_core/debugging.md) is
@@ -95,7 +95,7 @@ can keep them using the `--leave-patch` flag.
 | Build and keep patch | `cargo make q35 -- --crate-patch c:\src\patina\ --leave-patch` | Patches, builds, keeps patch |
 | Multiple repositories | `cargo make q35 -- --crate-patch c:\path1\ --crate-patch c:\path2\` | Patches multiple repos |
 
-The `--crate-patch` argument works with any build target (`q35`, `q35-release`, `sbsa`, `sbsa-release`).
+The `--crate-patch` argument works with any build target (`q35`, `q35-release`, `armvirt`, `armvirt-release`).
 
 ## Size Comparison
 
@@ -110,7 +110,7 @@ include the size of the CpuDxe and RuntimeDxe drivers.
 ### Cargo Bloat
 
 A size breakdown, whether by function or crate, can be analyzed by using `cargo make bloat-q35` or
-`cargo make bloat-sbsa`. Optionally, additional arguments can be passed, e.g. to see a crate breakdown:
+`cargo make bloat-armvirt`. Optionally, additional arguments can be passed, e.g. to see a crate breakdown:
 `cargo make bloat-q35 --crates -n 40`.
 
 ### Release Builds

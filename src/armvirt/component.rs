@@ -1,6 +1,6 @@
-//! QEMU SBSA Components
+//! QEMU Arm Virt Components
 //!
-//! Components used in the QEMU SBSA Patina binary.
+//! Components used in the QEMU Arm Virt Patina binary.
 //!
 //! ## License
 //!

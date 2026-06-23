@@ -1,6 +1,6 @@
-//! QEMU SBSA Services
+//! QEMU Arm Virt Services
 //!
-//! Services used in the QEMU SBSA Patina binary.
+//! Services used in the QEMU Arm Virt Patina binary.
 //!
 //! ## License
 //!

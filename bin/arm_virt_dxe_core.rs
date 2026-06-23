@@ -1,4 +1,4 @@
-//! DXE Core Sample AARCH64 Binary for QEMU SBSA
+//! DXE Core Sample AARCH64 Binary for QEMU Arm Virt
 //!
 //! ## License
 //!
@@ -18,11 +18,10 @@ use patina_adv_logger::{
 };
 use patina_dxe_core::*;
 use patina_ffs_extractors::CompositeSectionExtractor;
-use patina_smbios;
 use patina_stacktrace::StackTrace;
 #[cfg(feature = "exit_on_patina_test_failure")]
 use qemu_exit::QEMUExit;
-use qemu_resources::sbsa::component::service as sbsa_services;
+use qemu_resources::armvirt::component::service as armvirt_services;
 extern crate alloc;
 
 #[panic_handler]
@@ -47,7 +46,7 @@ static LOGGER: AdvancedLogger<UartPl011> = AdvancedLogger::new(
         TargetFilter { target: "efi_memory_map", log_level: log::LevelFilter::Off, hw_filter_override: None },
     ],
     log::LevelFilter::Info,
-    UartPl011::new(0x6000_0000),
+    UartPl011::new(PL011_UART_BASE),
 );
 
 #[cfg(feature = "enable_debugger")]
@@ -55,62 +54,67 @@ const _ENABLE_DEBUGGER: bool = true;
 #[cfg(not(feature = "enable_debugger"))]
 const _ENABLE_DEBUGGER: bool = false;
 
+/// Base address of the PL011 UART on the QEMU Arm Virt machine.
+const PL011_UART_BASE: usize = 0x0900_0000;
+
+/// Base address of the GIC distributor on the QEMU Arm Virt machine.
+const GICD_BASE: u64 = 0x0800_0000;
+
+/// Base address of the GIC redistributor on the QEMU Arm Virt machine.
+const GICR_BASE: u64 = 0x080A_0000;
+
 #[cfg(feature = "build_debugger")]
 static DEBUGGER: patina_debugger::PatinaDebugger<UartPl011> =
-    patina_debugger::PatinaDebugger::new(UartPl011::new(0x6000_0000)).with_force_enable(_ENABLE_DEBUGGER);
+    patina_debugger::PatinaDebugger::new(UartPl011::new(PL011_UART_BASE)).with_force_enable(_ENABLE_DEBUGGER);
 
-struct Sbsa;
+struct ArmVirt;
 
-// Default `MemoryInfo` implementation is sufficient for SBSA.
-impl MemoryInfo for Sbsa {}
+// Default `MemoryInfo` implementation is sufficient for Arm Virt.
+impl MemoryInfo for ArmVirt {}
 
-impl CpuInfo for Sbsa {
+impl CpuInfo for ArmVirt {
     fn gic_bases() -> GicBases {
         // SAFETY: gicd and gicr bases correctly point to the register spaces.
         // SAFETY: Access to these registers is exclusive to this struct instance.
-        unsafe { GicBases::new(0x40060000, 0x40080000) }
+        unsafe { GicBases::new(GICD_BASE, GICR_BASE) }
     }
 }
 
-impl ComponentInfo for Sbsa {
+impl ComponentInfo for ArmVirt {
     fn components(mut add: Add<Component>) {
         add.component(AdvancedLoggerComponent::<UartPl011>::new(&LOGGER));
         add.component(patina_smbios::component::SmbiosProvider::new(3, 9));
-        add.component(sbsa_services::smbios_platform::SbsaSmbiosPlatform::new());
+        add.component(armvirt_services::smbios_platform::ArmVirtSmbiosPlatform::new());
         add.component(patina_test::component::TestRunner::default().with_callback(|test_name, err_msg| {
             log::error!("Test {} failed: {}", test_name, err_msg);
             #[cfg(feature = "exit_on_patina_test_failure")]
             qemu_exit::AArch64::new().exit_failure();
         }));
-        add.component(patina_performance::component::performance_config_provider::PerformanceConfigurationProvider);
-        add.component(patina_performance::component::performance::Performance);
+        add.component(patina_performance::component::Performance::new().with_measurements(
+            patina::performance::Measurement::DriverBindingStart     // Adds driver binding start measurements.
+               | patina::performance::Measurement::DriverBindingStop // Adds driver binding stop measurements.
+               | patina::performance::Measurement::LoadImage         // Adds load image measurements.
+               | patina::performance::Measurement::StartImage, // Adds start image measurements.
+        ));
         add.component(patina_acpi::component::AcpiComponent::default());
     }
 
-    fn configs(mut add: Add<Config>) {
-        add.config(patina_performance::config::PerfConfig {
-            enable_component: true,
-            enabled_measurements: {
-                patina::performance::Measurement::DriverBindingStart         // Adds driver binding start measurements.
-               | patina::performance::Measurement::DriverBindingStop        // Adds driver binding stop measurements.
-               | patina::performance::Measurement::LoadImage                // Adds load image measurements.
-               | patina::performance::Measurement::StartImage // Adds start image measurements.
-            },
-        })
-    }
+    fn configs(_add: Add<Config>) {}
 }
 
-impl PlatformInfo for Sbsa {
+impl PlatformInfo for ArmVirt {
     type CpuInfo = Self;
     type MemoryInfo = Self;
     type ComponentInfo = Self;
     type Extractor = CompositeSectionExtractor;
 }
 
-static CORE: Core<Sbsa> = Core::new(CompositeSectionExtractor::new());
+static CORE: Core<ArmVirt> = Core::new(CompositeSectionExtractor::new());
 
 #[cfg_attr(target_os = "uefi", unsafe(export_name = "efi_main"))]
-pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
+/// # Safety
+/// We must take on faith that the physical_hob_list pointer is valid.
+pub unsafe extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
     log::set_logger(&LOGGER).map(|()| log::set_max_level(log::LevelFilter::Trace)).unwrap();
     // SAFETY: The physical_hob_list pointer is considered valid at this point as it's provided by the core
     // to the entry point.

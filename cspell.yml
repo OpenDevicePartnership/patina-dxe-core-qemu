@@ -22,6 +22,7 @@ allowCompoundWords: true
 words:
   - acpi
   - apmc
+  - armvirt
   - asan
   - depex
   - dimm
@@ -32,6 +33,8 @@ words:
   - gdbstub
   - gicd
   - gicr
+  - iobase
+  - iosize
   - keccak
   - lzma
   - mdbook
@@ -52,12 +55,13 @@ words:
   - repr
   - rustc
   - rustls
-  - sbsa
   - smbiosview
   - supv
+  - sysregs
   - tiano
   - uart
   - uefi
+  - virt
   - vswhere
   - webpki
   - zbuild

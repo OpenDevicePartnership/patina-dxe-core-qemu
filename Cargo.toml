@@ -1,6 +1,6 @@
 [package]
 name = "qemu_dxe_core"
-version = "3.0.5"
+version = "3.0.9"
 edition = "2024"
 license = "Apache-2.0"
 
@@ -10,14 +10,14 @@ path = "bin/q35_dxe_core.rs"
 required-features = ["x64", "dxe_core"]
 
 [[bin]]
-name = "qemu_sbsa_dxe_core"
-path = "bin/sbsa_dxe_core.rs"
-required-features = ["aarch64", "dxe_core"]
-
-[[bin]]
 name = "qemu_ovmf_dxe_core"
 path = "bin/ovmf_dxe_core.rs"
 required-features = ["x64", "dxe_core"]
+
+[[bin]]
+name = "qemu_armvirt_dxe_core"
+path = "bin/arm_virt_dxe_core.rs"
+required-features = ["aarch64", "dxe_core"]
 
 [[bin]]
 name = "q35_mm_supervisor"
@@ -28,23 +28,36 @@ required-features = ["x64", "save_state_amd", "supv"]
 name = "q35_mm_user_core"
 path = "bin/q35_mm_user_core.rs"
 required-features = ["x64", "user_core"]
-
 [lib]
 name = "qemu_resources"
 path = "src/lib.rs"
 
 [dependencies]
+
+# Patina dependencies
+patina = { version = "22" }
+patina_acpi = { version = "22" }
+patina_adv_logger = { version = "22" }
+patina_debugger = { version = "22" }
+patina_dxe_core = { version = "22" }
+patina_ffs_extractors = { version = "22" }
+patina_mm = { version = "22" }
+patina_performance = { version = "22" }
+patina_samples = { version = "22" }
+patina_smbios = { version = "22" }
+patina_stacktrace = { version = "22" }
+patina_test = { version = "22", features = ["test-runner"] }
+
+# Other dependencies
 log = { version = "^0.4", default-features = false, features = [
-    "release_max_level_info",
+  "release_max_level_info",
 ] }
-patina = { version = "21" }
-patina_stacktrace = { version = "21" }
-r-efi = { version = "^5", default-features = false }
-x86_64 = { version = "=0.15.2", default-features = false, features = [
-  "instructions"
+qemu-exit = { version = "4", optional = true }
+r-efi = { version = "^6", default-features = false }
+x86_64 = { version = "=0.15.4", default-features = false, features = [
+  "instructions",
 ], optional = true }
 zerocopy = { version = "0.8", features = ["derive"] }
-qemu-exit = { version = "3", optional = true }
 
 # DXE core specific dependencies
 patina_acpi = { version = "21", optional = true }
@@ -65,10 +78,19 @@ patina_mm_supervisor = { version = "21", optional = true }
 patina_mm_user_core = { version = "21", optional = true }
 
 [features]
+ci_features = [
+  'build_debugger',
+  'compatibility_mode_allowed',
+  'enable_debugger',
+  'exit_on_patina_test_failure',
+  'v1_resource_descriptor_support',
+]
 # Keep the default features here in sync with the features listed in BASE_FEATURES in Makefile.toml
 default = ["compatibility_mode_allowed", "exit_on_patina_test_failure"]
 compatibility_mode_allowed = ["patina_dxe_core/compatibility_mode_allowed"]
-v1_resource_descriptor_support = ["patina_dxe_core/v1_resource_descriptor_support"]
+v1_resource_descriptor_support = [
+  "patina_dxe_core/v1_resource_descriptor_support",
+]
 x64 = ["x86_64"]
 aarch64 = []
 doc = []
