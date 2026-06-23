@@ -618,7 +618,6 @@ dependencies = [
 name = "patina_mm_supervisor"
 version = "21.1.1"
 dependencies = [
- "linkme",
  "log",
  "patina",
  "patina_internal_cpu 21.1.1",
@@ -626,6 +625,8 @@ dependencies = [
  "patina_stacktrace",
  "r-efi",
  "spin",
+ "zerocopy",
+ "zerocopy-derive",
 ]
 
 [[package]]
