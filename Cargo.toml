@@ -36,17 +36,19 @@ path = "src/lib.rs"
 
 # Patina dependencies
 patina = { version = "22" }
-patina_acpi = { version = "22" }
-patina_adv_logger = { version = "22" }
-patina_debugger = { version = "22" }
-patina_dxe_core = { version = "22" }
-patina_ffs_extractors = { version = "22" }
-patina_mm = { version = "22" }
-patina_performance = { version = "22" }
-patina_samples = { version = "22" }
-patina_smbios = { version = "22" }
-patina_stacktrace = { version = "22" }
-patina_test = { version = "22", features = ["test-runner"] }
+patina_acpi = { version = "22", optional = true }
+patina_adv_logger = { version = "22", optional = true }
+patina_debugger = { version = "22", optional = true }
+patina_dxe_core = { version = "22", optional = true }
+patina_ffs_extractors = { version = "22", optional = true }
+patina_mm = { version = "22", optional = true }
+patina_mm_supervisor = { version = "22", optional = true }
+patina_mm_user_core = { version = "22", optional = true }
+patina_performance = { version = "22", optional = true }
+patina_samples = { version = "22", optional = true }
+patina_smbios = { version = "22", optional = true }
+patina_stacktrace = { version = "22", optional = true }
+patina_test = { version = "22", features = ["test-runner"], optional = true }
 
 # Other dependencies
 log = { version = "^0.4", default-features = false, features = [
@@ -57,25 +59,6 @@ r-efi = { version = "^6", default-features = false }
 x86_64 = { version = "=0.15.4", default-features = false, features = [
   "instructions",
 ], optional = true }
-zerocopy = { version = "0.8", features = ["derive"] }
-
-# DXE core specific dependencies
-patina_acpi = { version = "21", optional = true }
-patina_adv_logger = { version = "21", optional = true }
-patina_debugger = { version = "21", optional = true }
-patina_dxe_core = { version = "21", optional = true }
-patina_mm = { version = "21", optional = true }
-patina_performance = { version = "21", optional = true }
-patina_samples = { version = "21", optional = true }
-patina_smbios = { version = "21", optional = true }
-patina_test = { version = "21", features = ["test-runner"], optional = true }
-patina_ffs_extractors = { version = "21", optional = true }
-
-# MM supervisor specific dependencies
-patina_mm_supervisor = { version = "21", optional = true }
-
-# MM user core specific dependencies
-patina_mm_user_core = { version = "21", optional = true }
 
 [features]
 ci_features = [
@@ -111,7 +94,10 @@ dxe_core = [
     "patina_test",
     "patina_ffs_extractors",
 ]
-supv = ["patina_mm_supervisor"]
+supv = [
+  "patina_mm_supervisor",
+  "patina_stacktrace"
+]
 user_core = [
     "patina_mm_user_core",
     "patina_adv_logger",
