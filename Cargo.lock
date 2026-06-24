@@ -412,6 +412,7 @@ checksum = "2ee67f1008b1ba2321834326597b8e186293b049a023cdef258527550b9935b4"
 name = "patina"
 version = "22.0.1"
 dependencies = [
+ "bitvec",
  "cfg-if",
  "compile-time",
  "fallible-streaming-iterator",
@@ -420,7 +421,6 @@ dependencies = [
  "indoc",
  "linkme",
  "log",
- "mu_rust_helpers",
  "num-traits",
  "patina_macro 22.0.1",
  "r-efi",
@@ -455,7 +455,6 @@ name = "patina_adv_logger"
 version = "22.0.1"
 dependencies = [
  "log",
- "mu_rust_helpers",
  "patina",
  "patina_test 22.0.1",
  "r-efi",
@@ -688,6 +687,7 @@ dependencies = [
  "r-efi",
  "spin 0.12.0",
  "uuid",
+ "zerocopy",
 ]
 
 [[package]]

@@ -136,5 +136,8 @@ pub extern "efiapi" fn mm_supervisor_main(cpu_index: usize, hob_list: *const c_v
     }
 
     // The entry_point handles BSP vs AP routing internally
-    SUPERVISOR.entry_point(cpu_index, hob_list)
+    // SAFETY: The entry_point function is intrinsically unsafe as it performs
+    // low-level operations and assumes the HOB list is valid. The caller must
+    // ensure that the HOB list pointer is valid and that the CPU index is within bounds.
+    unsafe { SUPERVISOR.entry_point(cpu_index, hob_list) }
 }
