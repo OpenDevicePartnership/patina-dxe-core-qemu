@@ -57,6 +57,7 @@ words:
   - rustls
   - smbiosview
   - supv
+  - sysregs
   - tiano
   - uart
   - uefi
