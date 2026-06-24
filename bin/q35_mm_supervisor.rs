@@ -27,17 +27,16 @@
 //! SPDX-License-Identifier: Apache-2.0
 //!
 #![cfg(all(target_os = "uefi", target_arch = "x86_64"))]
-#![feature(generic_const_exprs)]
-#![allow(incomplete_features)]
 #![no_std]
 #![no_main]
 
-use core::{ffi::c_void, panic::PanicInfo};
-use core::sync::atomic::AtomicBool;
+use core::{ffi::c_void, panic::PanicInfo, sync::atomic::AtomicBool};
 use patina_mm_supervisor::*;
 // use the the uart from patina
-use patina::{log::Format, serial::uart::Uart16550};
-use patina::log::SerialLogger;
+use patina::{
+    log::{Format, SerialLogger},
+    serial::uart::Uart16550,
+};
 use patina_stacktrace::StackTrace;
 use qemu_resources::q35::timer;
 
@@ -62,11 +61,11 @@ impl CpuInfo for Q35Platform {
 
 impl PlatformInfo for Q35Platform {
     type CpuInfo = Self;
-
-    /// Maximum number of CPUs this platform supports.
-    /// This should match your hardware/VM configuration.
-    const MAX_CPU_COUNT: usize = 8;
 }
+
+/// Maximum number of CPUs this platform supports.
+/// This should match your hardware/VM configuration.
+const MAX_CPU_COUNT: usize = 8;
 
 /// Flag indicating that advanced logger initialization is complete.
 static ADV_LOGGER_INIT_COMPLETE: AtomicBool = AtomicBool::new(false);
@@ -74,7 +73,7 @@ static ADV_LOGGER_INIT_COMPLETE: AtomicBool = AtomicBool::new(false);
 /// The static MM Supervisor Core instance.
 ///
 /// This is instantiated at compile time with no heap allocation.
-static SUPERVISOR: MmSupervisorCore<Q35Platform> = MmSupervisorCore::new();
+static SUPERVISOR: MmSupervisorCore<Q35Platform, MAX_CPU_COUNT> = MmSupervisorCore::new();
 
 static LOGGER: SerialLogger<Uart16550> = SerialLogger::new(
     Format::Standard,
@@ -129,7 +128,6 @@ fn panic(info: &PanicInfo) -> ! {
 /// when loading the supervisor.
 #[unsafe(export_name = "rust_main")]
 pub extern "efiapi" fn mm_supervisor_main(cpu_index: usize, hob_list: *const c_void) {
-
     // Initialize the advanced logger on the first CPU to arrive (BSP)
     if !ADV_LOGGER_INIT_COMPLETE.swap(true, core::sync::atomic::Ordering::SeqCst) {
         log::set_logger(&LOGGER).map(|()| log::set_max_level(log::LevelFilter::Trace)).unwrap();

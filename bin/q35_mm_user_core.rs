@@ -29,11 +29,9 @@
 #![no_std]
 #![no_main]
 
-use core::panic::PanicInfo;
-use core::sync::atomic::AtomicBool;
-use core::ffi::c_void;
-use patina::{log::Format, serial::uart::Uart16550, management_mode::supervisor::UserCommandType};
-use patina_adv_logger::logger::{ AdvancedLogger, TargetFilter};
+use core::{ffi::c_void, panic::PanicInfo, sync::atomic::AtomicBool};
+use patina::{log::Format, management_mode::supervisor::UserCommandType, serial::uart::Uart16550};
+use patina_adv_logger::logger::{AdvancedLogger, TargetFilter};
 use patina_mm_user_core::MmUserCore;
 
 /// Flag indicating that advanced logger initialization is complete.
@@ -76,7 +74,6 @@ fn panic(info: &PanicInfo) -> ! {
 /// Returns 0 (`EFI_SUCCESS`) on success, or a non-zero EFI status code on failure.
 #[cfg_attr(target_os = "uefi", unsafe(export_name = "user_core_main"))]
 pub extern "efiapi" fn mm_user_main(op_code: u64, arg1: u64, arg2: u64) -> u64 {
-
     // Initialize the advanced logger on the first CPU to arrive (BSP)
     if !ADV_LOGGER_INIT_COMPLETE.swap(true, core::sync::atomic::Ordering::SeqCst) {
         // If this is our first time here, it better be that the op_code being MmUserRequestTypeInit
