@@ -57,7 +57,12 @@ static LOGGER: AdvancedLogger<Uart16550> = AdvancedLogger::new(
 );
 
 #[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {
+fn panic(info: &PanicInfo) -> ! {
+    // NOTE: Do not call StackTrace::dump() here. The MM User Core runs in restricted user mode
+    // and StackTrace::dump() probes memory page-by-page (via PE::locate_image), which can fault
+    // on unmapped pages and escalate to the supervisor, suppressing all output. Just log the panic.
+    log::error!("{}", info);
+
     loop {}
 }
 

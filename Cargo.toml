@@ -101,6 +101,7 @@ supv = [
 user_core = [
     "patina_mm_user_core",
     "patina_adv_logger",
+    "patina_stacktrace"
 ]
 
 [patch.crates-io]
