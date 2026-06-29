@@ -35,7 +35,7 @@ path = "src/lib.rs"
 [dependencies]
 
 # Patina dependencies
-patina = { version = "22" }
+patina = { version = "22", default-features = false }
 patina_acpi = { version = "22", optional = true }
 patina_adv_logger = { version = "22", optional = true }
 patina_debugger = { version = "22", optional = true }
