@@ -22,7 +22,7 @@ required-features = ["aarch64", "dxe_core"]
 [[bin]]
 name = "q35_mm_supervisor"
 path = "bin/q35_mm_supervisor.rs"
-required-features = ["x64", "save_state_amd", "supv"]
+required-features = ["x64", "supv"]
 
 [[bin]]
 name = "q35_mm_user_core"
@@ -82,6 +82,7 @@ build_debugger = ["patina_dxe_core/debugger_reload"]
 enable_debugger = ["build_debugger"]
 exit_on_patina_test_failure = ["qemu-exit"]
 save_state_amd = ["patina_mm_supervisor/save_state_amd"]
+save_state_intel = ["patina_mm_supervisor/save_state_intel"]
 dxe_core = [
     "patina_acpi",
     "patina_adv_logger",

@@ -32,13 +32,23 @@
 use core::{ffi::c_void, panic::PanicInfo, sync::atomic::AtomicBool};
 use patina::{log::Format, management_mode::supervisor::UserCommandType, serial::uart::Uart16550};
 use patina_adv_logger::logger::{AdvancedLogger, TargetFilter};
-use patina_mm_user_core::MmUserCore;
+use patina_mm_user_core::{MmUserCore, component_dispatcher::MmComponentInfo};
 
 /// Flag indicating that advanced logger initialization is complete.
 static ADV_LOGGER_INIT_COMPLETE: AtomicBool = AtomicBool::new(false);
 
 /// The static MM User Core instance.
 static USER_CORE: MmUserCore = MmUserCore::new();
+
+/// Platform component registration for the Q35 MM User Core.
+///
+/// This is the MM analogue of the DXE Core's `ComponentInfo`: components,
+/// configurations, and services registered here are dispatched during
+/// `StartUserCore`. No MM components are registered yet; future producers (e.g.
+/// the MM CPU save-state protocol) are added here via `add.component(...)`.
+struct Q35Mm;
+
+impl MmComponentInfo for Q35Mm {}
 
 static LOGGER: AdvancedLogger<Uart16550> = AdvancedLogger::new(
     Format::Standard,
@@ -91,5 +101,5 @@ pub extern "efiapi" fn mm_user_main(op_code: u64, arg1: u64, arg2: u64) -> u64 {
         }
     }
 
-    USER_CORE.entry_point_worker(op_code, arg1, arg2)
+    USER_CORE.entry_point_worker::<Q35Mm>(op_code, arg1, arg2)
 }
