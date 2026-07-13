@@ -3,15 +3,6 @@
 version = 4
 
 [[package]]
-name = "aarch64-cpu"
-version = "11.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "44171e22925ec72b63d86747bc3655c7849a5b8d865c980222128839f45ac034"
-dependencies = [
- "tock-registers",
-]
-
-[[package]]
 name = "alloc-no-stdlib"
 version = "2.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -19,14 +10,26 @@ checksum = "cc7bb162ec39d46ab1ca8c77bf72e890535becd1751bb45f64c597edb4c8c6b3"
 
 [[package]]
 name = "arm-gic"
-version = "0.7.2"
+version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c044ecf8760dd8ee5aa92c49cf7534942d289fb1f0247af92b5fbab8ab18a912"
+checksum = "84372c6068152f635a04870779f0fa0d1b0273dd09dbe1c6747688693d061f06"
 dependencies = [
+ "arm-sysregs",
  "bitflags 2.13.0",
  "safe-mmio",
  "thiserror",
  "zerocopy",
+]
+
+[[package]]
+name = "arm-sysregs"
+version = "0.2.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "27f98a99c7c6da5d54aa4d6e54504956aade8cdb0de9cd9a2363eb66b1d659a9"
+dependencies = [
+ "bitflags 2.13.0",
+ "num_enum",
+ "paste",
 ]
 
 [[package]]
@@ -43,9 +46,9 @@ checksum = "1e4b40c7323adcfc0a41c4b88143ed58346ff65a288fc144329c5c45e05d70c6"
 
 [[package]]
 name = "bitfield-struct"
-version = "0.12.1"
+version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8769c4854c5ada2852ddf6fd09d15cf43d4c2aaeccb4de6432f5402f08a6003b"
+checksum = "3ca6739863c590881f038d033a146c51ddae239186a4327014839fd864f44ed5"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -66,9 +69,9 @@ checksum = "b4388bee8683e3d04af747c73422af53102d2bd24d9eadb6cbc100baef4b43f8"
 
 [[package]]
 name = "bitvec"
-version = "1.0.1"
+version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1bc2832c24239b0141d5674bb9174f9d68a8b5b3f2753311927c172ca46f7e9c"
+checksum = "ddcec3d12c579d40898fe0a9a358a803c23e9c52ca3c425707f81c9436211837"
 dependencies = [
  "funty",
  "radium",
@@ -78,18 +81,12 @@ dependencies = [
 
 [[package]]
 name = "brotli-decompressor"
-version = "4.0.3"
+version = "5.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a334ef7c9e23abf0ce748e8cd309037da93e606ad52eb372e4ce327a0dcfbdfd"
+checksum = "3a32acac15fe1967bc3986b2a6347dffc965602354ea6f450ad07e8bfd253583"
 dependencies = [
  "alloc-no-stdlib",
 ]
-
-[[package]]
-name = "byteorder"
-version = "1.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1fd0f2584146f6f2ef48085050886acf353beff7305ebd1ae69500e27c67f64b"
 
 [[package]]
 name = "cfg-if"
@@ -129,21 +126,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "crc"
-version = "3.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5eb8a2a1cd12ab0d987a5d5e825195d372001a4094a0376319d5a0ad71c1ba0d"
-dependencies = [
- "crc-catalog",
-]
-
-[[package]]
-name = "crc-catalog"
-version = "2.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "217698eaf96b4a3f0bc4f3662aaa55bdf913cd54d7204591faa790070c6d0853"
-
-[[package]]
 name = "crc32fast"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -157,9 +139,6 @@ name = "deranged"
 version = "0.5.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7cd812cc2bc1d69d4764bd80df88b4317eaef9e773c75226407d9bc0876b211c"
-dependencies = [
- "powerfmt",
-]
 
 [[package]]
 name = "fallible-streaming-iterator"
@@ -214,21 +193,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "itoa"
-version = "1.0.18"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8f42a60cbdf9a97f5d2305f08a87dc4e09308d1276d28c869c684d7777685682"
-
-[[package]]
-name = "lazy_static"
-version = "1.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
-dependencies = [
- "spin",
-]
-
-[[package]]
 name = "linked_list_allocator"
 version = "0.10.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -268,9 +232,15 @@ dependencies = [
 
 [[package]]
 name = "log"
-version = "0.4.32"
+version = "0.4.33"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "953f07c43838f8e6f9758cab68bf5bed85465e7587ebe0b823f1bcd81978ad3a"
+checksum = "0ceec5bc11778974d1bcb055b18002eba7f4b3518b6a0081b3af5f21666da9ad"
+
+[[package]]
+name = "lzma-rust2"
+version = "0.16.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ca93e534d1142d1d0dcca6d25fe302508a5dfb40b302802904577725ea0b695b"
 
 [[package]]
 name = "managed"
@@ -285,47 +255,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "488016bfae457b036d996092f6cb448677611ce4449e970ceaf42695203f218a"
 dependencies = [
  "autocfg",
-]
-
-[[package]]
-name = "mu_rust_helpers"
-version = "4.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8f0939baed11fd68187c2fd292ee166944cdd8472bc8cf261b08e3cbd568d9d6"
-dependencies = [
- "mu_uefi_decompress",
- "mu_uefi_guid",
- "mu_uefi_perf_timer",
-]
-
-[[package]]
-name = "mu_uefi_decompress"
-version = "4.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5592026864b59cc927a2f42ad2721b9820271d6f70ba2e20a796621eb688389f"
-dependencies = [
- "bitvec",
- "log",
-]
-
-[[package]]
-name = "mu_uefi_guid"
-version = "4.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "392e8c601a9cc36a519c61063a3250e55a3b049a85ee314e49b8a1ad09ff70c3"
-dependencies = [
- "r-efi",
- "uuid",
-]
-
-[[package]]
-name = "mu_uefi_perf_timer"
-version = "4.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4819bbf728631dd84bc2511c5c3551687db00830998e4937a0ff7af33a591b15"
-dependencies = [
- "aarch64-cpu",
- "log",
 ]
 
 [[package]]
@@ -344,10 +273,37 @@ dependencies = [
 ]
 
 [[package]]
+name = "num_enum"
+version = "0.7.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5d0bca838442ec211fa11de3a8b0e0e8f3a4522575b5c4c06ed722e005036f26"
+dependencies = [
+ "num_enum_derive",
+ "rustversion",
+]
+
+[[package]]
+name = "num_enum_derive"
+version = "0.7.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "680998035259dcfcafe653688bf2aa6d3e2dc05e98be6ab46afb089dc84f1df8"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "once_cell"
 version = "1.21.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9f7c3e4beb33f85d45ae3e3a1792185706c8e16d043238c593331cc7cd313b50"
+
+[[package]]
+name = "paste"
+version = "1.0.15"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a"
 
 [[package]]
 name = "pastey"
@@ -357,10 +313,11 @@ checksum = "2ee67f1008b1ba2321834326597b8e186293b049a023cdef258527550b9935b4"
 
 [[package]]
 name = "patina"
-version = "22.0.0"
+version = "22.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "61ed5c35d03fb46d6b3049dff0eb7a78b8a8b3cfce09fe0e3627ad234d3fc3cb"
+checksum = "94b84f9588e257ebd77b1a86df01b311efc82de1220bb2ce851060c9dda17d03"
 dependencies = [
+ "bitvec",
  "cfg-if",
  "compile-time",
  "fallible-streaming-iterator",
@@ -369,7 +326,6 @@ dependencies = [
  "indoc",
  "linkme",
  "log",
- "mu_rust_helpers",
  "num-traits",
  "patina_macro",
  "r-efi",
@@ -384,9 +340,9 @@ dependencies = [
 
 [[package]]
 name = "patina_acpi"
-version = "22.0.0"
+version = "22.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "976fadb98c3139be0bf584a3a584a57216dfa18930d769566e6f42b2c855ae89"
+checksum = "f41f47c3037ac67d693c4f8b550330691816dac74e6cdcef0b51e13d63caf40c"
 dependencies = [
  "log",
  "memoffset",
@@ -401,12 +357,11 @@ dependencies = [
 
 [[package]]
 name = "patina_adv_logger"
-version = "22.0.0"
+version = "22.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2021f9b6ac77631b5ded17cdc9b86bc36d0cb53c988221d0e02c67a932cd2445"
+checksum = "03afe609f923b3c8c4cc7ae67ccbf0db229af3b7fd0d961877b5da4f7336b8e5"
 dependencies = [
  "log",
- "mu_rust_helpers",
  "patina",
  "patina_test",
  "r-efi",
@@ -417,9 +372,9 @@ dependencies = [
 
 [[package]]
 name = "patina_debugger"
-version = "22.0.0"
+version = "22.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "039063d2a25e058393df325a0f52ee766a60299856136d65eb9f6eb21d6d3b0a"
+checksum = "9dee6fccb019150be264e692ce5349153892bc1bca6b1f2c81df151903cb869b"
 dependencies = [
  "bitfield-struct",
  "cfg-if",
@@ -434,9 +389,9 @@ dependencies = [
 
 [[package]]
 name = "patina_dxe_core"
-version = "22.0.0"
+version = "22.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7a866acc553bf863a28a7524f7a9d3141643441179f0d37caf7e5071d06b36b4"
+checksum = "08cbcbf8d08f2bddcdcf3340dd36fbdf35c63391ef59fd195897d1216dbb4550"
 dependencies = [
  "arm-gic",
  "bitfield-struct",
@@ -444,16 +399,13 @@ dependencies = [
  "corosensei",
  "crc32fast",
  "goblin",
- "lazy_static",
  "linked_list_allocator",
  "log",
- "mu_rust_helpers",
  "patina",
  "patina_debugger",
  "patina_ffs",
- "patina_internal_collections",
+ "patina_internal_core",
  "patina_internal_cpu",
- "patina_internal_depex",
  "patina_paging",
  "patina_performance",
  "patina_test",
@@ -465,9 +417,9 @@ dependencies = [
 
 [[package]]
 name = "patina_ffs"
-version = "22.0.0"
+version = "22.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2c60cf63519fde3705eb67cc7378596de0ddd6132d8d07b2cee5c57229e505f6"
+checksum = "2c86b5949808dee9a83ac11b80e7563d999dc6fe76506a4a8662b97a69ec8cdb"
 dependencies = [
  "log",
  "patina",
@@ -476,38 +428,39 @@ dependencies = [
 
 [[package]]
 name = "patina_ffs_extractors"
-version = "22.0.0"
+version = "22.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a9d10bd1120e350f1b610a3181c16445eaae97994bed4156409ade6a03a43250"
+checksum = "5a13a594192f90edb113693520bd95d4b5edf903ccb4de3260d5ae8d55ecde0f"
 dependencies = [
  "alloc-no-stdlib",
  "brotli-decompressor",
  "crc32fast",
  "log",
+ "lzma-rust2",
  "patina",
  "patina_ffs",
- "patina_lzma_rs",
  "r-efi",
 ]
 
 [[package]]
-name = "patina_internal_collections"
-version = "22.0.0"
+name = "patina_internal_core"
+version = "22.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "31c81c7e3077ccbf43d0adeabb8e2404be1e2bc288ccf1818c6ab99e9ab7626a"
+checksum = "46507e99977fb333fdc02789c2dc2afb335401f0b75227a2e28242b6ef2d2f63"
 dependencies = [
  "log",
+ "r-efi",
+ "uuid",
 ]
 
 [[package]]
 name = "patina_internal_cpu"
-version = "22.0.0"
+version = "22.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bea5c7fde5b398b01d3b20cd41482461dcb1f9f7fad2a3b1435cca8d6c4f604e"
+checksum = "448dc731fea02a90c415b74a9bda0cd0c5d8388c2f7dd6572f9aeea3b938f36b"
 dependencies = [
  "arm-gic",
  "cfg-if",
- "lazy_static",
  "log",
  "patina",
  "patina_mtrr",
@@ -518,31 +471,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "patina_internal_depex"
-version = "22.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "64227e44b6035646744dc3de80b004b86f7bf8347e80425ba8facf96b9ef809f"
-dependencies = [
- "log",
- "r-efi",
- "uuid",
-]
-
-[[package]]
-name = "patina_lzma_rs"
-version = "0.3.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0f1c051398f240806259e84da37fe55caae85e784d2f9307c6067e2bb6f4fd95"
-dependencies = [
- "byteorder",
- "crc",
-]
-
-[[package]]
 name = "patina_macro"
-version = "22.0.0"
+version = "22.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0a74965ff8c18ef45a3dad49fba8fb84e58427200b28375783799a4759e8f3f4"
+checksum = "e28ff6a69110bb33a1f590a00d6160b1cb145b451d1410e57eec00f2c325c52c"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -552,9 +484,9 @@ dependencies = [
 
 [[package]]
 name = "patina_mm"
-version = "22.0.0"
+version = "22.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "be5bedaa627c20bf1d7eb2d11ce202eadf4a938ec50ac3d6ef9f24604c3ff594"
+checksum = "108ac8af498dafb836b224ea56e5362cde99005abb76d605f9a7bf53cc7a91e6"
 dependencies = [
  "cfg-if",
  "log",
@@ -566,9 +498,9 @@ dependencies = [
 
 [[package]]
 name = "patina_mtrr"
-version = "1.1.6"
+version = "1.1.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bfc41f2f46a1b1cf85cec0176ed92e776633dafd2f417d36f75025268b4abba8"
+checksum = "ccc376f419cba3a1ca9f36bfc806dc07892e2d52b0de1fac7c3483e3fc82851d"
 dependencies = [
  "bitfield-struct",
  "cfg-if",
@@ -576,9 +508,9 @@ dependencies = [
 
 [[package]]
 name = "patina_paging"
-version = "11.0.4"
+version = "11.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5265104f7091071dea0506fe9e733cf347cc49c3ae49eaf0067508297e0e296b"
+checksum = "60db4ac9d6e3da074a8a0b7f5102a1be3f8776e0e4f6a4a7e45a4d7e4c5e1bf7"
 dependencies = [
  "bitfield-struct",
  "bitflags 2.13.0",
@@ -588,12 +520,11 @@ dependencies = [
 
 [[package]]
 name = "patina_performance"
-version = "22.0.0"
+version = "22.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "643c7833e32a52250773413637731e4c73e8f386fd3ece09f1b0f0e79b264f4a"
+checksum = "562c05041e90a39f99f4f6792b40c338d37dcd83f313fb0d562135a4b3ce548f"
 dependencies = [
  "log",
- "mu_rust_helpers",
  "patina",
  "patina_mm",
  "r-efi",
@@ -604,9 +535,9 @@ dependencies = [
 
 [[package]]
 name = "patina_samples"
-version = "22.0.0"
+version = "22.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8c5a654a165a8147211e4fbd35d75bb39483db9009d1976e701cb1bcf23a8866"
+checksum = "87f0f7765acd65739837f4364c4e871f147d23b950d7c2597fef8fdedb227aa7"
 dependencies = [
  "log",
  "patina",
@@ -616,9 +547,9 @@ dependencies = [
 
 [[package]]
 name = "patina_smbios"
-version = "22.0.0"
+version = "22.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4552af3b960fd14e83d3d7aac78b197736e45de4168b2869c4d98b674ae6165b"
+checksum = "c695728ba6261b86269504061e4613e9ff8963c7fed3c6625aa84d46a558642e"
 dependencies = [
  "bitfield-struct",
  "log",
@@ -632,9 +563,9 @@ dependencies = [
 
 [[package]]
 name = "patina_stacktrace"
-version = "22.0.0"
+version = "22.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2b77dcd920470e59372f09d40186ea7040930ef62211cd9f5bdeb0e3c59dc7db"
+checksum = "0b68b4585f0f5dfffbdafd45194401f7f93ce2fde433d2330c31f3710b953699"
 dependencies = [
  "cfg-if",
  "log",
@@ -642,9 +573,9 @@ dependencies = [
 
 [[package]]
 name = "patina_test"
-version = "22.0.0"
+version = "22.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "03ceadc3ce5f3f45faa99f1a305f7659edeef018199d012d83ea3f9c87e327ba"
+checksum = "29a83ab805a4b9816814512f8d2bd5a46c262b4e6eb77506be19e952adfdbe83"
 dependencies = [
  "linkme",
  "log",
@@ -706,18 +637,18 @@ dependencies = [
 
 [[package]]
 name = "quote"
-version = "1.0.45"
+version = "1.0.46"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "41f2619966050689382d2b44f664f4bc593e129785a36d6ee376ddf37259b924"
+checksum = "dfbc457d0c7a0759a614551b11a6409e5951f6c7537be1f1b7682b9ae9230368"
 dependencies = [
  "proc-macro2",
 ]
 
 [[package]]
 name = "r-efi"
-version = "6.0.0"
+version = "7.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f8dcc9c7d52a811697d2151c701e0d08956f92b0e24136cf4cf27b57a6a0d9bf"
+checksum = "b1b35d612599fa2eed43b064164175ebe98c88de47c8cc6cc6c50d6502aa6abe"
 
 [[package]]
 name = "radium"
@@ -745,15 +676,15 @@ dependencies = [
 
 [[package]]
 name = "rustversion"
-version = "1.0.22"
+version = "1.0.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b39cdef0fa800fc44525c84ccb54a029961a8215f9619753635a9c0d2538d46d"
+checksum = "cf54715a573b99ac80df0bc206da022bcd442c974952c7b9720069370852e21f"
 
 [[package]]
 name = "safe-mmio"
-version = "0.2.7"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a0a69f884a1511aa811aa94e04559414a66b18ca63f50f84ca31e304f38bad0d"
+checksum = "4813ee49326057f105d6d8ca3d8f9265095f26aa7b42094e487028403a594f4c"
 dependencies = [
  "zerocopy",
 ]
@@ -812,9 +743,9 @@ dependencies = [
 
 [[package]]
 name = "spin"
-version = "0.9.8"
+version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6980e8d7511241f8acf4aebddbb1ff938df5eebe98691418c4468d0b72a96a67"
+checksum = "bd5231412d905519dca6a5deb0327d407be68d6c941feec004533401d3a0a715"
 dependencies = [
  "lock_api",
 ]
@@ -830,9 +761,9 @@ dependencies = [
 
 [[package]]
 name = "syn"
-version = "2.0.117"
+version = "2.0.118"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e665b8803e7b1d2a727f4023456bbbbe74da67099c585258af0ad9c5013b9b99"
+checksum = "1b9ae57f904213ebb649ce6895b8a66c66f0203b9319718f69a5612a065b1422"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -867,12 +798,11 @@ dependencies = [
 
 [[package]]
 name = "time"
-version = "0.3.47"
+version = "0.3.53"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "743bd48c283afc0388f9b8827b976905fb217ad9e647fae3a379a9283c4def2c"
+checksum = "18dfaaeddcb932337b5e7866ee7d0ce9b76d2fd092997146f187ec09b4558a50"
 dependencies = [
  "deranged",
- "itoa",
  "num-conv",
  "powerfmt",
  "serde_core",
@@ -882,25 +812,19 @@ dependencies = [
 
 [[package]]
 name = "time-core"
-version = "0.1.8"
+version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7694e1cfe791f8d31026952abf09c69ca6f6fa4e1a1229e18988f06a04a12dca"
+checksum = "9e1c906769ad99c88eaa54e728060edef082f8e358ff32030cb7c7d315e81109"
 
 [[package]]
 name = "time-macros"
-version = "0.2.27"
+version = "0.2.31"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2e70e4c5a0e0a8a4823ad65dfe1a6930e4f4d756dcd9dd7939022b5e8c501215"
+checksum = "c431b87111666e491a90baa837f914fb45cd5dc3c268591b0220ff5057f2085f"
 dependencies = [
  "num-conv",
  "time-core",
 ]
-
-[[package]]
-name = "tock-registers"
-version = "0.10.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8d2d250f87fb3fb6f225c907cf54381509f47b40b74b1d1f12d2dccbc915bdfe"
 
 [[package]]
 name = "uart_16550"
@@ -921,9 +845,9 @@ checksum = "e6e4313cd5fcd3dad5cafa179702e2b244f760991f45397d14d4ebf38247da75"
 
 [[package]]
 name = "uuid"
-version = "1.23.2"
+version = "1.23.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d258b83ceec21034727ecee8c382cfa6c3e133699b0742c64571814fb420c9f7"
+checksum = "bf80a72845275afea99e7f2b434723d3bc7e38470fcd1c7ed39a599c73319a53"
 
 [[package]]
 name = "volatile"
@@ -966,18 +890,18 @@ dependencies = [
 
 [[package]]
 name = "zerocopy"
-version = "0.8.50"
+version = "0.8.54"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3b065d4f0e55f82fae73202e189638116a87c55ab6b8e6c2721e13dd9d854ad1"
+checksum = "b7cbbc0a705a0fd05cc3676525980d2bf5a9bc4adac6d6475209a7887cf59d19"
 dependencies = [
  "zerocopy-derive",
 ]
 
 [[package]]
 name = "zerocopy-derive"
-version = "0.8.50"
+version = "0.8.54"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0b631b19d36a892ab55420c92dbc83ccd79274f25be714855d3074aa71cab639"
+checksum = "e2e817b7b52d0c7358d3246da9d69935ebb18116b2b102b4230dac079b4862f5"
 dependencies = [
  "proc-macro2",
  "quote",

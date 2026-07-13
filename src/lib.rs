@@ -15,3 +15,5 @@
 pub mod armvirt;
 #[cfg(any(feature = "x64", test))]
 pub mod q35;
+
+pub mod config;
