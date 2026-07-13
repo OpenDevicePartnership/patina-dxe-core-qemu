@@ -10,6 +10,16 @@ path = "bin/q35_dxe_core.rs"
 required-features = ["x64"]
 
 [[bin]]
+name = "msvm_x64_dxe_core"
+path = "bin/msvm_x64_dxe_core.rs"
+required-features = ["x64"]
+
+[[bin]]
+name = "msvm_aarch64_dxe_core"
+path = "bin/msvm_aarch64_dxe_core.rs"
+required-features = ["aarch64"]
+
+[[bin]]
 name = "qemu_ovmf_dxe_core"
 path = "bin/ovmf_dxe_core.rs"
 required-features = ["x64"]
@@ -26,18 +36,18 @@ path = "src/lib.rs"
 [dependencies]
 
 # Patina dependencies
-patina = { version = "22" }
-patina_acpi = { version = "22" }
-patina_adv_logger = { version = "22" }
-patina_debugger = { version = "22" }
-patina_dxe_core = { version = "22" }
-patina_ffs_extractors = { version = "22" }
-patina_mm = { version = "22" }
-patina_performance = { version = "22" }
-patina_samples = { version = "22" }
-patina_smbios = { version = "22" }
-patina_stacktrace = { version = "22" }
-patina_test = { version = "22", features = ["test-runner"] }
+patina = { version = "22.2.1" }
+patina_acpi = { version = "22.2.1" }
+patina_adv_logger = { version = "22.2.1" }
+patina_debugger = { version = "22.2.1" }
+patina_dxe_core = { version = "22.2.1" }
+patina_ffs_extractors = { version = "22.2.1" }
+patina_mm = { version = "22.2.1" }
+patina_performance = { version = "22.2.1" }
+patina_samples = { version = "22.2.1" }
+patina_smbios = { version = "22.2.1" }
+patina_stacktrace = { version = "22.2.1" }
+patina_test = { version = "22.2.1", features = ["test-runner"] }
 
 # Other dependencies
 log = { version = "^0.4", default-features = false, features = [

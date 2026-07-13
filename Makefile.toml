@@ -520,6 +520,26 @@ set_env COMBINED_FEATURES ${combined_features}
 dependencies = ["build-efi-prepare-features"]
 run_task = "build-efi-exec"
 
+[tasks.msvm-x64]
+description = """Builds the DEBUG MSVM X64 UEFI firmware."""
+env = { CARGO_BIN_NAME = "msvm_x64_dxe_core", "RUSTC_PROFILE" = "dev", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "${BASE_FEATURES},x64,build_debugger", CARGO_TARGET_X86_64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:msvm_x64_dxe_core.pdb" }
+run_task = "patch"
+
+[tasks.msvm-x64-release]
+description = """Builds the RELEASE MSVM X64 UEFI firmware."""
+env = { CARGO_BIN_NAME = "msvm_x64_dxe_core", "RUSTC_PROFILE" = "release", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "${BASE_FEATURES},x64", CARGO_TARGET_X86_64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:msvm_x64_dxe_core.pdb" }
+run_task = "patch"
+
+[tasks.msvm-aarch64]
+description = """Builds the DEBUG MSVM AARCH64 UEFI firmware."""
+env = { CARGO_BIN_NAME = "msvm_aarch64_dxe_core", "RUSTC_PROFILE" = "dev", CARGO_BIN_TARGET = "aarch64-unknown-uefi", CARGO_BIN_FEATURES = "${BASE_FEATURES},aarch64,build_debugger", CARGO_TARGET_AARCH64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:msvm_aarch64_dxe_core.pdb" }
+run_task = "patch"
+
+[tasks.msvm-aarch64-release]
+description = """Builds the RELEASE MSVM AARCH64 UEFI firmware."""
+env = { CARGO_BIN_NAME = "msvm_aarch64_dxe_core", "RUSTC_PROFILE" = "release", CARGO_BIN_TARGET = "aarch64-unknown-uefi", CARGO_BIN_FEATURES = "${BASE_FEATURES},aarch64", CARGO_TARGET_AARCH64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:msvm_aarch64_dxe_core.pdb" }
+run_task = "patch"
+
 [tasks.q35]
 description = """Builds the DEBUG Q35 UEFI firmware."""
 env = { CARGO_BIN_NAME = "qemu_q35_dxe_core", "RUSTC_PROFILE" = "dev", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "${BASE_FEATURES},x64,build_debugger", CARGO_TARGET_X86_64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:qemu_q35_dxe_core.pdb" }
@@ -615,7 +635,7 @@ args = ["deny", "check"]
 [tasks.bloat-q35-exec]
 private = true
 command = "cargo"
-args = ["bloat", "--target", "x86_64-unknown-uefi", "--features", "x64", "--bin", "qemu_q35_dxe_core", "--profile", "${RUSTC_PROFILE}", "-Zbuild-std=core,compiler_builtins,alloc", "-Zbuild-std-features=compiler-builtins-mem", "-Zunstable-options", "@@split(CLEANED_ARGS, )"]
+args = ["bloat", "--target", "x86_64-unknown-uefi", "--features", "x64", "--bin", "qemu_q35_dxe_core", "--profile", "${RUSTC_PROFILE}", "@@split(CLEANED_ARGS, )"]
 
 [tasks.bloat-q35]
 description = "Run cargo bloat for q35 (x86_64-unknown-uefi). Examples: `cargo make bloat-q35 -- --crates`, `cargo make bloat-q35 -- --crates -n 40`."
@@ -637,6 +657,33 @@ else
 end
 
 cm_run_task bloat-q35-exec
+'''
+
+[tasks.bloat-msvm-x64-exec]
+private = true
+command = "cargo"
+args = ["bloat", "--target", "x86_64-unknown-uefi", "--features", "x64", "--bin", "msvm_x64_dxe_core", "--profile", "${RUSTC_PROFILE}", "@@split(CLEANED_ARGS, )"]
+
+[tasks.bloat-msvm-x64]
+description = "Run cargo bloat for q35 (x86_64-unknown-uefi). Examples: `cargo make bloat-q35 -- --crates`, `cargo make bloat-q35 -- --crates -n 40`."
+script_runner = "@duckscript"
+script = '''
+args = get_env CARGO_MAKE_TASK_ARGS
+
+# Clean up the args by replacing semicolons with spaces
+if not is_empty ${args}
+    clean_args = replace ${args} ";;--" " --"
+    clean_args = replace ${clean_args} ";;" " "
+    clean_args = replace ${clean_args} ";" " "
+    # Remove leading/trailing whitespace and -- prefix
+    clean_args = trim ${clean_args}
+    clean_args = replace ${clean_args} "-- " ""
+    set_env CLEANED_ARGS ${clean_args}
+else
+    set_env CLEANED_ARGS ""
+end
+
+cm_run_task bloat-msvm-x64-exec
 '''
 
 [tasks.bloat-armvirt-exec]
