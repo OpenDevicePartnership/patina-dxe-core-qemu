@@ -68,7 +68,8 @@ static LOGGER: AdvancedLogger<Uart16550> = AdvancedLogger::new(
         TargetFilter { target: "patina_performance", log_level: log::LevelFilter::Off, hw_filter_override: None },
     ],
     log::LevelFilter::Info,
-    Uart16550::Io { base: 0x402 },
+    // SAFETY: 0x402 is the QEMU Q35 debug serial I/O port, owned exclusively by this binary.
+    unsafe { Uart16550::new_io(0x402) },
 );
 
 #[panic_handler]
