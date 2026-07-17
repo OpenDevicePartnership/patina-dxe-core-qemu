@@ -27,9 +27,9 @@ words:
   - depex
   - dimm
   - dxecore
-  - fadt
   - edk2
   - efiapi
+  - fadt
   - gdbstub
   - gicd
   - gicr
@@ -47,9 +47,9 @@ words:
   - pdata
   - pdbaltpath
   - pemfile
-  - pmic
   - pmbase
   - pmcon
+  - pmic
   - pytool
   - rdtsc
   - repr
@@ -62,6 +62,7 @@ words:
   - uart
   - uefi
   - virt
+  - virtio
   - vswhere
   - webpki
   - zbuild

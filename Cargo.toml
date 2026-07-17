@@ -1,6 +1,6 @@
 [package]
 name = "qemu_dxe_core"
-version = "3.0.9"
+version = "3.1.2"
 edition = "2024"
 license = "Apache-2.0"
 
@@ -56,7 +56,7 @@ log = { version = "^0.4", default-features = false, features = [
   "release_max_level_info",
 ] }
 qemu-exit = { version = "4", optional = true }
-r-efi = { version = "^6", default-features = false }
+r-efi = { version = "7", default-features = false }
 x86_64 = { version = "=0.15.4", default-features = false, features = [
   "instructions",
 ], optional = true }

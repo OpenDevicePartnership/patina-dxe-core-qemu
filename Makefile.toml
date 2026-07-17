@@ -22,6 +22,87 @@ RUSTC_PROFILE = "dev"
 [env.release]
 RUSTC_PROFILE = "release"
 
+[tasks.install-tools]
+description = """Installs the project tools pinned in the `[tools]` section of
+`rust-toolchain.toml` at their specified versions. Each tool is installed with
+`cargo binstall`, falling back to `cargo install` when a prebuilt binary is not
+available. CI also installs and tests the tools in this section.
+
+`cargo-binstall` (https://github.com/cargo-bins/cargo-binstall) is installed
+automatically with `cargo install` when it is not already present.
+
+Example:
+    `cargo make install-tools`
+"""
+clear = true
+install_crate = false
+script_runner = "@duckscript"
+script = '''
+# cargo-binstall is used to install tools.
+binstall_path = which cargo-binstall
+if is_empty ${binstall_path}
+    echo "==> cargo-binstall not found. Installing it with cargo install..."
+    exec --fail-on-error cargo install cargo-binstall
+end
+
+toolchain_file = readfile rust-toolchain.toml
+lines = split ${toolchain_file} "\n"
+
+# Track whether the current line is inside the `[tools]` section. Parsing runs
+# from the `[tools]` header until the next section header.
+in_tools = set false
+for line in ${lines}
+    trimmed = trim ${line}
+    is_section = starts_with ${trimmed} "["
+    if ${is_section}
+        if eq ${trimmed} "[tools]"
+            in_tools = set true
+        else
+            in_tools = set false
+        end
+    elseif ${in_tools}
+        is_comment = starts_with ${trimmed} "#"
+        is_blank = is_empty ${trimmed}
+        has_assignment = contains ${trimmed} "="
+        # Only process `name = "version"` lines.
+        if not ${is_blank}
+            if not ${is_comment}
+                if ${has_assignment}
+                    kv = split ${trimmed} "="
+                    name = array_get ${kv} 0
+                    name = trim ${name}
+
+                    version = array_get ${kv} 1
+                    version_parts = split ${version} "\""
+                    version = array_get ${version_parts} 1
+
+                    result = exec cargo binstall -y ${name} --version ${version}
+                    output = set "${result.stdout}${result.stderr}"
+                    if not eq ${result.code} "0"
+                        echo "  building ${name} ${version} from source (no prebuilt binary)..."
+                        result = exec cargo install ${name} --version ${version}
+                        output = set "${result.stdout}${result.stderr}"
+                    end
+
+                    if not eq ${result.code} "0"
+                        echo "  FAILED       ${name} ${version}"
+                        echo ${output}
+                        exit 1
+                    end
+
+                    already = contains ${output} "already installed"
+                    if ${already}
+                        echo "  up-to-date   ${name} ${version}"
+                    else
+                        echo "  installed    ${name} ${version}"
+                    end
+                end
+            end
+        end
+    end
+end
+'''
+
 [tasks.individual-package-targets]
 script_runner = "@duckscript"
 script = '''
