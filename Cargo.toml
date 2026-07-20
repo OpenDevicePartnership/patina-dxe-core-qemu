@@ -60,6 +60,7 @@ r-efi = { version = "7", default-features = false }
 x86_64 = { version = "=0.15.4", default-features = false, features = [
   "instructions",
 ], optional = true }
+zerocopy = { version = "0.8", features = ["derive"] }
 
 [features]
 ci_features = [
@@ -93,6 +94,7 @@ dxe_core = [
     "patina_performance",
     "patina_samples",
     "patina_smbios",
+    "patina_stacktrace",
     "patina_test",
     "patina_ffs_extractors",
 ]
@@ -118,3 +120,8 @@ patina_acpi = { git = "https://github.com/OpenDevicePartnership/patina.git", bra
 patina_adv_logger = { git = "https://github.com/OpenDevicePartnership/patina.git", branch = "feature/supv" }
 patina_performance = { git = "https://github.com/OpenDevicePartnership/patina.git", branch = "feature/supv" }
 patina_dxe_core = { git = "https://github.com/OpenDevicePartnership/patina.git", branch = "feature/supv" }
+patina_debugger = { git = "https://github.com/OpenDevicePartnership/patina.git", branch = "feature/supv" }
+patina_ffs_extractors = { git = "https://github.com/OpenDevicePartnership/patina.git", branch = "feature/supv" }
+patina_samples = { git = "https://github.com/OpenDevicePartnership/patina.git", branch = "feature/supv" }
+patina_smbios = { git = "https://github.com/OpenDevicePartnership/patina.git", branch = "feature/supv" }
+patina_test = { git = "https://github.com/OpenDevicePartnership/patina.git", branch = "feature/supv" }
