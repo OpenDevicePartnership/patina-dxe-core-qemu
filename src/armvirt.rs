@@ -8,5 +8,5 @@
 //!
 //! SPDX-License-Identifier: Apache-2.0
 //!
-#[cfg(any(test, feature = "dxe_core"))]
+#[cfg(feature = "dxe_core")]
 pub mod component;
