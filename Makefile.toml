@@ -581,7 +581,7 @@ args = ["clippy", "--target", "aarch64-unknown-uefi", "--features", "ci_features
 description = "Run cargo clippy for the host target (library and tests only)."
 private = true
 command = "cargo"
-args = ["clippy", "--tests", "--", "-D", "warnings"]
+args = ["clippy", "--tests", "--features", "dxe_core", "--", "-D", "warnings"]
 
 [tasks.fmt]
 description = "Run cargo format."
