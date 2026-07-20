@@ -66,6 +66,7 @@ zerocopy = { version = "0.8", features = ["derive"] }
 ci_features = [
   'build_debugger',
   'compatibility_mode_allowed',
+  'dxe_core',
   'enable_debugger',
   'exit_on_patina_test_failure',
   'v1_resource_descriptor_support',
