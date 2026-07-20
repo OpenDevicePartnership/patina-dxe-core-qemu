@@ -19,6 +19,7 @@ on:
     types: [opened, synchronize, reopened]
     branches:
       - main
+      - feature/**
 
 concurrency:
   group: qemu-pr-pending-${{ github.event.pull_request.number }}
