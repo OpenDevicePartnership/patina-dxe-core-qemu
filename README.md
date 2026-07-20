@@ -39,15 +39,15 @@ binary in the [patina-qemu](https://github.com/OpenDevicePartnership/patina-qemu
 - Q35 Supervisor (x64) debug
 
    ```shell
-   Compile Command:  'cargo build --target x86_64-unknown-uefi --bin q35_mm_supervisor --features x64,save_state_amd,supv --no-default-features'
-   Output File:      'target\x86_64-unknown-uefi\debug\q35_mm_supervisor.efi'
+   Compile Command:  'cargo make mm-supervisor'
+   Output File:      'target/x86_64-unknown-uefi/debug/q35_mm_supervisor.efi'
    ```
 
 - Q35 MM core (x64) debug
 
    ```shell
-   Compile Command:  'cargo build --target x86_64-unknown-uefi --bin q35_mm_user_core --features="x64 user_core"'
-   Output File:      'target\x86_64-unknown-uefi\debug\q35_mm_user_core.efi'
+   Compile Command:  'cargo make mm-user-core'
+   Output File:      'target/x86_64-unknown-uefi/debug/q35_mm_user_core.efi'
    ```
 
 - OVMF (x64) debug
