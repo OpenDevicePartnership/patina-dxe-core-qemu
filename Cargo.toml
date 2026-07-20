@@ -108,13 +108,13 @@ user_core = [
 ]
 
 [patch.crates-io]
-patina = { path = 'D:\Repos\patina\sdk\patina' }
-patina_mm = { path = 'D:\Repos\patina\components\patina_mm' }
-patina_mm_supervisor = { path = 'D:\Repos\patina\patina_mm_supervisor' }
-patina_stacktrace = { path = 'D:\Repos\patina\core\patina_stacktrace' }
-patina_mm_user_core = { path = 'D:\Repos\patina\patina_mm_user_core' }
-patina_mm_cpu = { path = 'D:\Repos\patina\components\patina_mm_cpu' }
-patina_acpi = { path = 'D:\Repos\patina\components\patina_acpi' }
-patina_adv_logger = { path = 'D:\Repos\patina\components\patina_adv_logger' }
-patina_performance = { path = 'D:\Repos\patina\components\patina_performance' }
-patina_dxe_core = { path = 'D:\Repos\patina\patina_dxe_core' }
+patina = { git = "https://github.com/OpenDevicePartnership/patina.git", branch = "feature/supv" }
+patina_mm = { git = "https://github.com/OpenDevicePartnership/patina.git", branch = "feature/supv" }
+patina_mm_supervisor = { git = "https://github.com/OpenDevicePartnership/patina.git", branch = "feature/supv" }
+patina_stacktrace = { git = "https://github.com/OpenDevicePartnership/patina.git", branch = "feature/supv" }
+patina_mm_user_core = { git = "https://github.com/OpenDevicePartnership/patina.git", branch = "feature/supv" }
+patina_mm_cpu = { git = "https://github.com/OpenDevicePartnership/patina.git", branch = "feature/supv" }
+patina_acpi = { git = "https://github.com/OpenDevicePartnership/patina.git", branch = "feature/supv" }
+patina_adv_logger = { git = "https://github.com/OpenDevicePartnership/patina.git", branch = "feature/supv" }
+patina_performance = { git = "https://github.com/OpenDevicePartnership/patina.git", branch = "feature/supv" }
+patina_dxe_core = { git = "https://github.com/OpenDevicePartnership/patina.git", branch = "feature/supv" }

@@ -314,6 +314,7 @@ checksum = "2ee67f1008b1ba2321834326597b8e186293b049a023cdef258527550b9935b4"
 [[package]]
 name = "patina"
 version = "22.2.1"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "bitvec",
  "cfg-if",
@@ -325,7 +326,7 @@ dependencies = [
  "linkme",
  "log",
  "num-traits",
- "patina_macro 22.2.1",
+ "patina_macro 22.2.1 (git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv)",
  "r-efi",
  "safe-mmio",
  "scroll",
@@ -339,11 +340,12 @@ dependencies = [
 [[package]]
 name = "patina_acpi"
 version = "22.2.1"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "log",
  "memoffset",
  "patina",
- "patina_test 22.2.1",
+ "patina_test 22.2.1 (git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv)",
  "r-efi",
  "scroll",
  "spin",
@@ -354,29 +356,15 @@ dependencies = [
 [[package]]
 name = "patina_adv_logger"
 version = "22.2.1"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "log",
  "patina",
- "patina_test 22.2.1",
+ "patina_test 22.2.1 (git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv)",
  "r-efi",
  "spin",
  "zerocopy",
  "zerocopy-derive",
-]
-
-[[package]]
-name = "patina_debugger"
-version = "22.2.1"
-dependencies = [
- "bitfield-struct",
- "cfg-if",
- "gdbstub",
- "log",
- "patina",
- "patina_internal_cpu 22.2.1",
- "patina_mtrr",
- "patina_paging",
- "spin",
 ]
 
 [[package]]
@@ -397,8 +385,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "patina_debugger"
+version = "22.2.1"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
+dependencies = [
+ "bitfield-struct",
+ "cfg-if",
+ "gdbstub",
+ "log",
+ "patina",
+ "patina_internal_cpu 22.2.1 (git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv)",
+ "patina_mtrr",
+ "patina_paging",
+ "spin",
+]
+
+[[package]]
 name = "patina_dxe_core"
 version = "22.2.1"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "arm-gic",
  "bitfield-struct",
@@ -409,13 +414,13 @@ dependencies = [
  "linked_list_allocator",
  "log",
  "patina",
- "patina_debugger 22.2.1",
- "patina_ffs 22.2.1",
+ "patina_debugger 22.2.1 (git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv)",
+ "patina_ffs 22.2.1 (git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv)",
  "patina_internal_core",
- "patina_internal_cpu 22.2.1",
+ "patina_internal_cpu 22.2.1 (git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv)",
  "patina_paging",
  "patina_performance",
- "patina_test 22.2.1",
+ "patina_test 22.2.1 (git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv)",
  "r-efi",
  "scroll",
  "spin",
@@ -425,6 +430,8 @@ dependencies = [
 [[package]]
 name = "patina_ffs"
 version = "22.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2c86b5949808dee9a83ac11b80e7563d999dc6fe76506a4a8662b97a69ec8cdb"
 dependencies = [
  "log",
  "patina",
@@ -434,8 +441,7 @@ dependencies = [
 [[package]]
 name = "patina_ffs"
 version = "22.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2c86b5949808dee9a83ac11b80e7563d999dc6fe76506a4a8662b97a69ec8cdb"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "log",
  "patina",
@@ -461,25 +467,11 @@ dependencies = [
 [[package]]
 name = "patina_internal_core"
 version = "22.2.1"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "log",
  "r-efi",
  "uuid",
-]
-
-[[package]]
-name = "patina_internal_cpu"
-version = "22.2.1"
-dependencies = [
- "arm-gic",
- "cfg-if",
- "log",
- "patina",
- "patina_mtrr",
- "patina_paging",
- "patina_stacktrace",
- "r-efi",
- "spin",
 ]
 
 [[package]]
@@ -500,13 +492,19 @@ dependencies = [
 ]
 
 [[package]]
-name = "patina_macro"
+name = "patina_internal_cpu"
 version = "22.2.1"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
- "proc-macro2",
- "quote",
- "syn",
- "uuid",
+ "arm-gic",
+ "cfg-if",
+ "log",
+ "patina",
+ "patina_mtrr",
+ "patina_paging",
+ "patina_stacktrace",
+ "r-efi",
+ "spin",
 ]
 
 [[package]]
@@ -522,8 +520,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "patina_macro"
+version = "22.2.1"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+ "uuid",
+]
+
+[[package]]
 name = "patina_mm"
 version = "22.2.1"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "cfg-if",
  "log",
@@ -536,6 +546,7 @@ dependencies = [
 [[package]]
 name = "patina_mm_cpu"
 version = "22.2.1"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "log",
  "patina",
@@ -545,10 +556,11 @@ dependencies = [
 [[package]]
 name = "patina_mm_supervisor"
 version = "22.2.1"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "log",
  "patina",
- "patina_internal_cpu 22.2.1",
+ "patina_internal_cpu 22.2.1 (git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv)",
  "patina_paging",
  "patina_stacktrace",
  "r-efi",
@@ -560,6 +572,7 @@ dependencies = [
 [[package]]
 name = "patina_mm_user_core"
 version = "22.2.1"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "goblin",
  "log",
@@ -596,6 +609,7 @@ dependencies = [
 [[package]]
 name = "patina_performance"
 version = "22.2.1"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "log",
  "patina",
@@ -637,21 +651,10 @@ dependencies = [
 [[package]]
 name = "patina_stacktrace"
 version = "22.2.1"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "cfg-if",
  "log",
-]
-
-[[package]]
-name = "patina_test"
-version = "22.2.1"
-dependencies = [
- "linkme",
- "log",
- "patina",
- "patina_macro 22.2.1",
- "r-efi",
- "spin",
 ]
 
 [[package]]
@@ -664,6 +667,19 @@ dependencies = [
  "log",
  "patina",
  "patina_macro 22.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "r-efi",
+ "spin",
+]
+
+[[package]]
+name = "patina_test"
+version = "22.2.1"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
+dependencies = [
+ "linkme",
+ "log",
+ "patina",
+ "patina_macro 22.2.1 (git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv)",
  "r-efi",
  "spin",
 ]
