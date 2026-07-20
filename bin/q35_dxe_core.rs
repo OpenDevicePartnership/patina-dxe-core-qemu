@@ -68,8 +68,8 @@ const _ENABLE_DEBUGGER: bool = false;
 static DEBUGGER: patina_debugger::PatinaDebugger<Uart16550> =
     // SAFETY: 0x3F8 is the valid I/O port base for the COM1 serial device on Q35.
     patina_debugger::PatinaDebugger::new(unsafe { Uart16550::new_io(0x3F8) })
-        .with_force_enable(_ENABLE_DEBUGGER)
-        .with_log_policy(patina_debugger::DebuggerLoggingPolicy::FullLogging);
+            .with_force_enable(_ENABLE_DEBUGGER)
+            .with_log_policy(patina_debugger::DebuggerLoggingPolicy::FullLogging);
 
 struct Q35;
 
