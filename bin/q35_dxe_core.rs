@@ -55,7 +55,8 @@ static LOGGER: AdvancedLogger<Uart16550> = AdvancedLogger::new(
         TargetFilter { target: "patina_performance", log_level: log::LevelFilter::Off, hw_filter_override: None },
     ],
     log::LevelFilter::Info,
-    Uart16550::Io { base: 0x402 },
+    // SAFETY: 0x402 is the valid I/O port base for the QEMU debug serial device on Q35.
+    unsafe { Uart16550::new_io(0x402) },
 );
 
 #[cfg(feature = "enable_debugger")]
@@ -65,7 +66,8 @@ const _ENABLE_DEBUGGER: bool = false;
 
 #[cfg(feature = "build_debugger")]
 static DEBUGGER: patina_debugger::PatinaDebugger<Uart16550> =
-    patina_debugger::PatinaDebugger::new(Uart16550::Io { base: 0x3F8 })
+    // SAFETY: 0x3F8 is the valid I/O port base for the COM1 serial device on Q35.
+    patina_debugger::PatinaDebugger::new(unsafe { Uart16550::new_io(0x3F8) })
         .with_force_enable(_ENABLE_DEBUGGER)
         .with_log_policy(patina_debugger::DebuggerLoggingPolicy::FullLogging);
 
