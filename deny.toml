@@ -204,5 +204,4 @@ allow-registry = [
 
 [sources.allow-org]
 # github.com organizations to allow git sources for
-# No source is currently used from the microsoft GitHub organization so it is commented
-# github = ["microsoft"]
+github = ["OpenDevicePartnership"]

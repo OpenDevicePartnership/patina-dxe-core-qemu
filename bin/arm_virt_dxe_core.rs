@@ -49,7 +49,8 @@ static LOGGER: AdvancedLogger<UartPl011> = AdvancedLogger::new(
         TargetFilter { target: "efi_memory_map", log_level: log::LevelFilter::Off, hw_filter_override: None },
     ],
     log::LevelFilter::Info,
-    UartPl011::new(PL011_UART_BASE),
+    // SAFETY: PL011_UART_BASE is the valid MMIO base for the PL011 UART on QEMU Arm Virt.
+    unsafe { UartPl011::new(PL011_UART_BASE) },
 );
 
 #[cfg(feature = "enable_debugger")]

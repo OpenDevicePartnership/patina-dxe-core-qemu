@@ -9,7 +9,7 @@ default_to_workspace = false
 
 [env]
 NO_STD_FLAGS = "--profile ${RUSTC_PROFILE} --timings"
-COV_FLAGS = { value = "--workspace --profile test --ignore-filename-regex .*test.*", condition = { env_not_set = ["COV_FLAGS"] } }
+COV_FLAGS = { value = "--workspace --profile test --features dxe_core --ignore-filename-regex .*test.*", condition = { env_not_set = ["COV_FLAGS"] } }
 RUSTDOCFLAGS = "-D warnings -D missing_docs"
 # Base features included in all platform firmware builds.
 # Keep this list in sync with the default features in Cargo.toml.
@@ -522,32 +522,52 @@ run_task = "build-efi-exec"
 
 [tasks.q35]
 description = """Builds the DEBUG Q35 UEFI firmware."""
-env = { CARGO_BIN_NAME = "qemu_q35_dxe_core", "RUSTC_PROFILE" = "dev", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "${BASE_FEATURES},x64,build_debugger", CARGO_TARGET_X86_64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:qemu_q35_dxe_core.pdb" }
+env = { CARGO_BIN_NAME = "qemu_q35_dxe_core", "RUSTC_PROFILE" = "dev", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "${BASE_FEATURES},x64,dxe_core,build_debugger", CARGO_TARGET_X86_64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:qemu_q35_dxe_core.pdb" }
 run_task = "patch"
 
 [tasks.q35-release]
 description = """Builds the RELEASE Q35 UEFI firmware."""
-env = { CARGO_BIN_NAME = "qemu_q35_dxe_core", "RUSTC_PROFILE" = "release", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "${BASE_FEATURES},x64", CARGO_TARGET_X86_64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:qemu_q35_dxe_core.pdb" }
+env = { CARGO_BIN_NAME = "qemu_q35_dxe_core", "RUSTC_PROFILE" = "release", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "${BASE_FEATURES},x64,dxe_core", CARGO_TARGET_X86_64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:qemu_q35_dxe_core.pdb" }
 run_task = "patch"
 
 [tasks.ovmf]
 description = """Builds the DEBUG OVMF UEFI firmware."""
-env = { CARGO_BIN_NAME = "qemu_ovmf_dxe_core", "RUSTC_PROFILE" = "dev", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "${BASE_FEATURES},x64,build_debugger,v1_resource_descriptor_support", CARGO_TARGET_X86_64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:qemu_ovmf_dxe_core.pdb" }
+env = { CARGO_BIN_NAME = "qemu_ovmf_dxe_core", "RUSTC_PROFILE" = "dev", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "${BASE_FEATURES},x64,dxe_core,build_debugger,v1_resource_descriptor_support", CARGO_TARGET_X86_64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:qemu_ovmf_dxe_core.pdb" }
 run_task = "patch"
 
 [tasks.ovmf-release]
 description = """Builds the RELEASE OVMF UEFI firmware."""
-env = { CARGO_BIN_NAME = "qemu_ovmf_dxe_core", "RUSTC_PROFILE" = "release", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "${BASE_FEATURES},x64,v1_resource_descriptor_support", CARGO_TARGET_X86_64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:qemu_ovmf_dxe_core.pdb" }
+env = { CARGO_BIN_NAME = "qemu_ovmf_dxe_core", "RUSTC_PROFILE" = "release", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "${BASE_FEATURES},x64,dxe_core,v1_resource_descriptor_support", CARGO_TARGET_X86_64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:qemu_ovmf_dxe_core.pdb" }
 run_task = "patch"
 
 [tasks.armvirt]
 description = """Builds the DEBUG VIRT UEFI firmware."""
-env = { CARGO_BIN_NAME = "qemu_armvirt_dxe_core", "RUSTC_PROFILE" = "dev", CARGO_BIN_TARGET = "aarch64-unknown-uefi", CARGO_BIN_FEATURES = "${BASE_FEATURES},aarch64,build_debugger", CARGO_TARGET_AARCH64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:qemu_armvirt_dxe_core.pdb" }
+env = { CARGO_BIN_NAME = "qemu_armvirt_dxe_core", "RUSTC_PROFILE" = "dev", CARGO_BIN_TARGET = "aarch64-unknown-uefi", CARGO_BIN_FEATURES = "${BASE_FEATURES},aarch64,dxe_core,build_debugger", CARGO_TARGET_AARCH64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:qemu_armvirt_dxe_core.pdb" }
 run_task = "patch"
 
 [tasks.armvirt-release]
 description = """Builds the RELEASE VIRT UEFI firmware."""
-env = { CARGO_BIN_NAME = "qemu_armvirt_dxe_core", "RUSTC_PROFILE" = "release", CARGO_BIN_TARGET = "aarch64-unknown-uefi", CARGO_BIN_FEATURES = "${BASE_FEATURES},aarch64", CARGO_TARGET_AARCH64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:qemu_armvirt_dxe_core.pdb" }
+env = { CARGO_BIN_NAME = "qemu_armvirt_dxe_core", "RUSTC_PROFILE" = "release", CARGO_BIN_TARGET = "aarch64-unknown-uefi", CARGO_BIN_FEATURES = "${BASE_FEATURES},aarch64,dxe_core", CARGO_TARGET_AARCH64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:qemu_armvirt_dxe_core.pdb" }
+run_task = "patch"
+
+[tasks.mm-supervisor]
+description = """Builds the DEBUG Q35 MM Supervisor firmware."""
+env = { CARGO_BIN_NAME = "q35_mm_supervisor", "RUSTC_PROFILE" = "dev", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "x64,supv,save_state_amd", CARGO_TARGET_X86_64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:q35_mm_supervisor.pdb" }
+run_task = "patch"
+
+[tasks.mm-supervisor-release]
+description = """Builds the RELEASE Q35 MM Supervisor firmware."""
+env = { CARGO_BIN_NAME = "q35_mm_supervisor", "RUSTC_PROFILE" = "release", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "x64,supv,save_state_amd", CARGO_TARGET_X86_64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:q35_mm_supervisor.pdb" }
+run_task = "patch"
+
+[tasks.mm-user-core]
+description = """Builds the DEBUG Q35 MM User Core firmware."""
+env = { CARGO_BIN_NAME = "q35_mm_user_core", "RUSTC_PROFILE" = "dev", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "x64,user_core", CARGO_TARGET_X86_64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:q35_mm_user_core.pdb" }
+run_task = "patch"
+
+[tasks.mm-user-core-release]
+description = """Builds the RELEASE Q35 MM User Core firmware."""
+env = { CARGO_BIN_NAME = "q35_mm_user_core", "RUSTC_PROFILE" = "release", CARGO_BIN_TARGET = "x86_64-unknown-uefi", CARGO_BIN_FEATURES = "x64,user_core", CARGO_TARGET_X86_64_UNKNOWN_UEFI_RUSTFLAGS = "-C link-arg=/PDBALTPATH:q35_mm_user_core.pdb" }
 run_task = "patch"
 
 [tasks.doc]
@@ -581,7 +601,7 @@ args = ["clippy", "--target", "aarch64-unknown-uefi", "--features", "ci_features
 description = "Run cargo clippy for the host target (library and tests only)."
 private = true
 command = "cargo"
-args = ["clippy", "--tests", "--", "-D", "warnings"]
+args = ["clippy", "--tests", "--features", "dxe_core", "--", "-D", "warnings"]
 
 [tasks.fmt]
 description = "Run cargo format."

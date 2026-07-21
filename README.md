@@ -36,6 +36,20 @@ binary in the [patina-qemu](https://github.com/OpenDevicePartnership/patina-qemu
    Output File:      'target/x86_64-unknown-uefi/release/qemu_q35_dxe_core.efi'
    ```
 
+- Q35 Supervisor (x64) debug
+
+   ```shell
+   Compile Command:  'cargo make mm-supervisor'
+   Output File:      'target/x86_64-unknown-uefi/debug/q35_mm_supervisor.efi'
+   ```
+
+- Q35 MM core (x64) debug
+
+   ```shell
+   Compile Command:  'cargo make mm-user-core'
+   Output File:      'target/x86_64-unknown-uefi/debug/q35_mm_user_core.efi'
+   ```
+
 - OVMF (x64) debug
 
    ```shell

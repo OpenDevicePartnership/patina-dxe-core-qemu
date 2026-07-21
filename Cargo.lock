@@ -314,8 +314,7 @@ checksum = "2ee67f1008b1ba2321834326597b8e186293b049a023cdef258527550b9935b4"
 [[package]]
 name = "patina"
 version = "22.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "94b84f9588e257ebd77b1a86df01b311efc82de1220bb2ce851060c9dda17d03"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "bitvec",
  "cfg-if",
@@ -341,8 +340,7 @@ dependencies = [
 [[package]]
 name = "patina_acpi"
 version = "22.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f41f47c3037ac67d693c4f8b550330691816dac74e6cdcef0b51e13d63caf40c"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "log",
  "memoffset",
@@ -358,8 +356,7 @@ dependencies = [
 [[package]]
 name = "patina_adv_logger"
 version = "22.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "03afe609f923b3c8c4cc7ae67ccbf0db229af3b7fd0d961877b5da4f7336b8e5"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "log",
  "patina",
@@ -373,8 +370,7 @@ dependencies = [
 [[package]]
 name = "patina_debugger"
 version = "22.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9dee6fccb019150be264e692ce5349153892bc1bca6b1f2c81df151903cb869b"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "bitfield-struct",
  "cfg-if",
@@ -390,8 +386,7 @@ dependencies = [
 [[package]]
 name = "patina_dxe_core"
 version = "22.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "08cbcbf8d08f2bddcdcf3340dd36fbdf35c63391ef59fd195897d1216dbb4550"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "arm-gic",
  "bitfield-struct",
@@ -418,8 +413,7 @@ dependencies = [
 [[package]]
 name = "patina_ffs"
 version = "22.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2c86b5949808dee9a83ac11b80e7563d999dc6fe76506a4a8662b97a69ec8cdb"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "log",
  "patina",
@@ -429,8 +423,7 @@ dependencies = [
 [[package]]
 name = "patina_ffs_extractors"
 version = "22.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5a13a594192f90edb113693520bd95d4b5edf903ccb4de3260d5ae8d55ecde0f"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "alloc-no-stdlib",
  "brotli-decompressor",
@@ -445,8 +438,7 @@ dependencies = [
 [[package]]
 name = "patina_internal_core"
 version = "22.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "46507e99977fb333fdc02789c2dc2afb335401f0b75227a2e28242b6ef2d2f63"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "log",
  "r-efi",
@@ -456,8 +448,7 @@ dependencies = [
 [[package]]
 name = "patina_internal_cpu"
 version = "22.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "448dc731fea02a90c415b74a9bda0cd0c5d8388c2f7dd6572f9aeea3b938f36b"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "arm-gic",
  "cfg-if",
@@ -473,8 +464,7 @@ dependencies = [
 [[package]]
 name = "patina_macro"
 version = "22.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e28ff6a69110bb33a1f590a00d6160b1cb145b451d1410e57eec00f2c325c52c"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -485,8 +475,7 @@ dependencies = [
 [[package]]
 name = "patina_mm"
 version = "22.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "108ac8af498dafb836b224ea56e5362cde99005abb76d605f9a7bf53cc7a91e6"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "cfg-if",
  "log",
@@ -494,6 +483,47 @@ dependencies = [
  "r-efi",
  "zerocopy",
  "zerocopy-derive",
+]
+
+[[package]]
+name = "patina_mm_cpu"
+version = "22.2.1"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
+dependencies = [
+ "log",
+ "patina",
+ "r-efi",
+]
+
+[[package]]
+name = "patina_mm_supervisor"
+version = "22.2.1"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
+dependencies = [
+ "log",
+ "patina",
+ "patina_internal_cpu",
+ "patina_paging",
+ "patina_stacktrace",
+ "r-efi",
+ "spin",
+ "zerocopy",
+ "zerocopy-derive",
+]
+
+[[package]]
+name = "patina_mm_user_core"
+version = "22.2.1"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
+dependencies = [
+ "goblin",
+ "log",
+ "patina",
+ "patina_internal_core",
+ "r-efi",
+ "spin",
+ "uuid",
+ "zerocopy",
 ]
 
 [[package]]
@@ -521,8 +551,7 @@ dependencies = [
 [[package]]
 name = "patina_performance"
 version = "22.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "562c05041e90a39f99f4f6792b40c338d37dcd83f313fb0d562135a4b3ce548f"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "log",
  "patina",
@@ -536,8 +565,7 @@ dependencies = [
 [[package]]
 name = "patina_samples"
 version = "22.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "87f0f7765acd65739837f4364c4e871f147d23b950d7c2597fef8fdedb227aa7"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "log",
  "patina",
@@ -548,8 +576,7 @@ dependencies = [
 [[package]]
 name = "patina_smbios"
 version = "22.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c695728ba6261b86269504061e4613e9ff8963c7fed3c6625aa84d46a558642e"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "bitfield-struct",
  "log",
@@ -564,8 +591,7 @@ dependencies = [
 [[package]]
 name = "patina_stacktrace"
 version = "22.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0b68b4585f0f5dfffbdafd45194401f7f93ce2fde433d2330c31f3710b953699"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "cfg-if",
  "log",
@@ -574,8 +600,7 @@ dependencies = [
 [[package]]
 name = "patina_test"
 version = "22.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "29a83ab805a4b9816814512f8d2bd5a46c262b4e6eb77506be19e952adfdbe83"
+source = "git+https://github.com/OpenDevicePartnership/patina.git?branch=feature%2Fsupv#c93395e57503a399476adb19b35449f918e6eda7"
 dependencies = [
  "linkme",
  "log",
@@ -624,6 +649,9 @@ dependencies = [
  "patina_dxe_core",
  "patina_ffs_extractors",
  "patina_mm",
+ "patina_mm_cpu",
+ "patina_mm_supervisor",
+ "patina_mm_user_core",
  "patina_performance",
  "patina_samples",
  "patina_smbios",

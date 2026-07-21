@@ -9,7 +9,7 @@
 //! SPDX-License-Identifier: Apache-2.0
 //!
 #![no_std]
-#![feature(coverage_attribute)]
+#![cfg_attr(any(test, feature = "aarch64", all(feature = "x64", feature = "dxe_core")), feature(coverage_attribute))]
 
 #[cfg(any(feature = "aarch64", test))]
 pub mod armvirt;

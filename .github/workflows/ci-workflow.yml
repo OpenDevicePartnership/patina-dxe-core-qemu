@@ -23,6 +23,7 @@ on:
   pull_request:
     branches:
       - main
+      - feature/**
 
 # Do not allow more than one instance of this workflow to run at the same
 # time for the same PR ref (branch). Prefer head_ref but fall back to ref
@@ -38,6 +39,6 @@ jobs:
     name: Run
     uses: OpenDevicePartnership/patina-devops/.github/workflows/CiWorkflow.yml@v0.3.12
     with:
-      build-tasks: q35,armvirt,q35-release,armvirt-release,ovmf,ovmf-release
+      build-tasks: q35,armvirt,q35-release,armvirt-release,ovmf,ovmf-release,mm-supervisor,mm-supervisor-release,mm-user-core,mm-user-core-release
       run-cargo-vet: false
     secrets: inherit
