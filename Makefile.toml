@@ -9,7 +9,7 @@ default_to_workspace = false
 
 [env]
 NO_STD_FLAGS = "--profile ${RUSTC_PROFILE} --timings"
-COV_FLAGS = { value = "--workspace --profile test --ignore-filename-regex .*test.*", condition = { env_not_set = ["COV_FLAGS"] } }
+COV_FLAGS = { value = "--workspace --profile test --features dxe_core --ignore-filename-regex .*test.*", condition = { env_not_set = ["COV_FLAGS"] } }
 RUSTDOCFLAGS = "-D warnings -D missing_docs"
 # Base features included in all platform firmware builds.
 # Keep this list in sync with the default features in Cargo.toml.
