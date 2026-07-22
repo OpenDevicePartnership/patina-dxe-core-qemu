@@ -11,10 +11,9 @@
 #![no_main]
 
 use core::{ffi::c_void, panic::PanicInfo};
-use patina::{
-    log::Format,
-    serial::{uart::UartPl011, virtio::VirtioSerial},
-};
+#[cfg(feature = "build_debugger")]
+use patina::serial::virtio::VirtioSerial;
+use patina::{log::Format, serial::uart::UartPl011};
 use patina_adv_logger::{
     component::AdvancedLoggerComponent,
     logger::{AdvancedLogger, TargetFilter},
@@ -68,6 +67,7 @@ const GICR_BASE: u64 = 0x080A_0000;
 
 /// The virtio-serial-mmio base address used. This is the only device
 /// so it's the last of 32 0x200 byte blocks start at 0xA000000.
+#[cfg(feature = "build_debugger")]
 const VIRTIO_SERIAL_MMIO: usize = 0x0A00_0000 + (31 * 0x200);
 
 #[cfg(feature = "build_debugger")]
