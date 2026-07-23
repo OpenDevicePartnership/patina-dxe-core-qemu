@@ -50,6 +50,14 @@ x86_64 = { version = "=0.15.4", default-features = false, features = [
 ], optional = true }
 zerocopy = { version = "0.8", features = ["derive"] }
 
+[lints]
+workspace = true
+
+[workspace.lints.rust]
+# Set by cargo-llvm-cov during coverage runs. Declared here so gating
+# `coverage_attribute` behind it does not trigger unexpected_cfgs warnings.
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(coverage)'] }
+
 [features]
 ci_features = [
   'build_debugger',
