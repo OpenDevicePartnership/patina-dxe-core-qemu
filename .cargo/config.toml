@@ -18,9 +18,12 @@ RUSTC_BOOTSTRAP = "1"
 # they fail with E0725. If you must run `-Zbuild-std`, override rustflags for that invocation with
 # the RUSTFLAGS env var (which replaces these config rustflags), keeping everything else but dropping
 # `-Z allow-features`.
+#
+# Note: `coverage_attribute` is intentionally not in this list. It is only set in allow-features
+# when running coverage.
 [build]
 rustflags = [
-    "-Z", "allow-features=c_variadic,allocator_api,coverage_attribute",
+    "-Z", "allow-features=c_variadic,allocator_api",
 ]
 
 [profile.dev]
@@ -78,7 +81,8 @@ rustflags = [
     # Preserve stack unwind info
     "-C", "force-unwind-tables",
     # Restrict the unstable features RUSTC_BOOTSTRAP unlocks to the accepted set
-    "-Z", "allow-features=c_variadic,allocator_api,coverage_attribute",
+    # (coverage_attribute excluded on purpose; coverage runs add it via RUSTFLAGS)
+    "-Z", "allow-features=c_variadic,allocator_api",
 ]
 
 [target.aarch64-unknown-uefi]
@@ -90,5 +94,6 @@ rustflags = [
     # Preserve stack unwind info
     "-C", "force-unwind-tables",
     # Restrict the unstable features RUSTC_BOOTSTRAP unlocks to the accepted set
-    "-Z", "allow-features=c_variadic,allocator_api,coverage_attribute",
+    # (coverage_attribute excluded on purpose; coverage runs add it via RUSTFLAGS)
+    "-Z", "allow-features=c_variadic,allocator_api",
 ]
