@@ -8,7 +8,7 @@
 //!
 //! SPDX-License-Identifier: Apache-2.0
 //!
-#[coverage(off)]
+#[cfg_attr(coverage, coverage(off))]
 pub mod smbios_platform;
-#[coverage(off)]
+#[cfg_attr(coverage, coverage(off))]
 pub mod smbios_test;
