@@ -61,6 +61,7 @@ words:
   - tiano
   - uart
   - uefi
+  - ungated
   - virt
   - virtio
   - vswhere
