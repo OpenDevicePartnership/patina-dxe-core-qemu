@@ -175,6 +175,11 @@ args = ["test", "@@split(CARGO_MAKE_TASK_ARGS,;)"]
 description = "Run tests and collect coverage data without generating reports."
 install_crate = false
 clear = true
+# `coverage_attribute` is deliberately excluded from the default allow-features in
+# .cargo/config.toml so ungated `#[cfg_attr(coverage, coverage(off))]` fails to compile. Coverage runs set the
+# `coverage` cfg (set by cargo-llvm-cov), which needs the feature, so re-add it here.
+# Note: RUSTFLAGS replaces build.rustflags.
+env = { RUSTFLAGS = "-Z allow-features=c_variadic,allocator_api,coverage_attribute" }
 command = "cargo"
 args = ["llvm-cov", "@@split(COV_FLAGS, )", "--no-report"]
 dependencies = ["individual-package-targets"]
