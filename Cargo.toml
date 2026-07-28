@@ -74,7 +74,6 @@ v1_resource_descriptor_support = [
 ]
 x64 = ["x86_64"]
 aarch64 = []
-doc = []
 std = []
 build_debugger = ["patina_dxe_core/debugger_reload"]
 enable_debugger = ["build_debugger"]
