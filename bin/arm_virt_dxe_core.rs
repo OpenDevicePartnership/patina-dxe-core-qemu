@@ -21,7 +21,6 @@ use patina_adv_logger::{
 use patina_dxe_core::*;
 use patina_ffs_extractors::CompositeSectionExtractor;
 use patina_stacktrace::StackTrace;
-#[cfg(feature = "exit_on_patina_test_failure")]
 use qemu_exit::QEMUExit;
 use qemu_resources::armvirt::component::service as armvirt_services;
 extern crate alloc;
