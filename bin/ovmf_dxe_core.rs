@@ -30,6 +30,8 @@ fn panic(info: &PanicInfo) -> ! {
 
     patina_debugger::breakpoint();
 
+    // Because OVMF does not have a QEMU exit device, we cannot exit the emulator on panic.
+    // Instead, we enter an infinite loop to halt execution.
     loop {}
 }
 
