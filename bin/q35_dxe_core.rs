@@ -22,7 +22,6 @@ use patina_stacktrace::StackTrace;
 use qemu_resources::q35::component::service as q35_services;
 extern crate alloc;
 use alloc::vec;
-#[cfg(feature = "exit_on_patina_test_failure")]
 use qemu_exit::QEMUExit;
 use qemu_resources::q35::timer;
 
@@ -36,7 +35,7 @@ fn panic(info: &PanicInfo) -> ! {
 
     patina_debugger::breakpoint();
 
-    loop {}
+    qemu_fail()
 }
 
 /// Port address of the ACPI PM Timer.
@@ -114,11 +113,7 @@ impl ComponentInfo for Q35 {
         add.component(patina_test::component::TestRunner::default().with_callback(|test_name, err_msg| {
             log::error!("Test {} failed: {}", test_name, err_msg);
             #[cfg(feature = "exit_on_patina_test_failure")]
-            // SAFETY: `X86::new` is unsafe as of qemu-exit 4.0.0 because the caller must
-            // ensure that the provided I/O base matches a QEMU `isa-debug-exit` device. The
-            // QEMU command line used to launch this firmware (in patina-qemu) configures
-            // `isa-debug-exit,iobase=0xf4,iosize=0x04`.
-            unsafe { qemu_exit::X86::new(0xf4, 0x1) }.exit_failure();
+            qemu_fail();
         }));
     }
 }
@@ -148,4 +143,12 @@ pub unsafe extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
 
     log::info!("DXE Core Platform Binary v{}", env!("CARGO_PKG_VERSION"));
     CORE.entry_point(physical_hob_list)
+}
+
+fn qemu_fail() -> ! {
+    // SAFETY: `X86::new` is unsafe as of qemu-exit 4.0.0 because the caller must
+    // ensure that the provided I/O base matches a QEMU `isa-debug-exit` device. The
+    // QEMU command line used to launch this firmware (in patina-qemu) configures
+    // `isa-debug-exit,iobase=0xf4,iosize=0x04`.
+    unsafe { qemu_exit::X86::new(0xf4, 0x1) }.exit_failure()
 }

@@ -43,7 +43,7 @@ patina_test = { version = "22", features = ["test-runner"] }
 log = { version = "^0.4", default-features = false, features = [
   "release_max_level_info",
 ] }
-qemu-exit = { version = "4", optional = true }
+qemu-exit = { version = "4" }
 r-efi = { version = "7", default-features = false }
 x86_64 = { version = "=0.15.4", default-features = false, features = [
   "instructions",
@@ -77,4 +77,4 @@ aarch64 = []
 std = []
 build_debugger = ["patina_dxe_core/debugger_reload"]
 enable_debugger = ["build_debugger"]
-exit_on_patina_test_failure = ["qemu-exit"]
+exit_on_patina_test_failure = []
