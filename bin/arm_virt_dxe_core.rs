@@ -36,7 +36,7 @@ fn panic(info: &PanicInfo) -> ! {
 
     patina_debugger::breakpoint();
 
-    loop {}
+    qemu_fail()
 }
 
 static LOGGER: AdvancedLogger<UartPl011> = AdvancedLogger::new(
@@ -98,7 +98,7 @@ impl ComponentInfo for ArmVirt {
         add.component(patina_test::component::TestRunner::default().with_callback(|test_name, err_msg| {
             log::error!("Test {} failed: {}", test_name, err_msg);
             #[cfg(feature = "exit_on_patina_test_failure")]
-            qemu_exit::AArch64::new().exit_failure();
+            qemu_fail();
         }));
         add.component(patina_performance::component::Performance::new().with_measurements(
             patina::performance::Measurement::DriverBindingStart     // Adds driver binding start measurements.
@@ -137,4 +137,8 @@ pub unsafe extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
 
     log::info!("DXE Core Platform Binary v{}", env!("CARGO_PKG_VERSION"));
     CORE.entry_point(physical_hob_list)
+}
+
+fn qemu_fail() -> ! {
+    qemu_exit::AArch64::new().exit_failure()
 }
