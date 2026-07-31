@@ -14,10 +14,10 @@ extern crate alloc;
 use alloc::{ffi::CString, vec, vec::Vec};
 use core::ffi::c_char;
 
-use patina::boot_services::{BootServices, StandardBootServices};
+use patina::standard::efi;
+use patina::uefi::boot_services::{BootServices, StandardBootServices};
 use patina_smbios::service::{SMBIOS_HANDLE_PI_RESERVED, SmbiosHandle, SmbiosTableHeader};
 use patina_test::{patina_test, u_assert, u_assert_eq, u_assert_ne};
-use r_efi::efi;
 
 /// Tests the SMBIOS C Protocol FFI layer by calling the protocol functions directly.
 /// This exercises the EDK2-compatible protocol layer (Add, UpdateString, Remove, GetNext)

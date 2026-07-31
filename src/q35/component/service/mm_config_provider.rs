@@ -93,7 +93,7 @@ impl MmConfigurationProvider {
             let buffer = unsafe {
                 CommunicateBuffer::from_raw_parts(
                     hob.address as usize as *mut u8,
-                    hob.pages as usize * patina::base::UEFI_PAGE_SIZE,
+                    hob.pages as usize * patina::UEFI_PAGE_SIZE,
                     hob.buffer_type as u8,
                 )
             };

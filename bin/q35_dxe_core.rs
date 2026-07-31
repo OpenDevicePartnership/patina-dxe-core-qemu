@@ -11,7 +11,7 @@
 #![no_main]
 
 use core::{ffi::c_void, panic::PanicInfo};
-use patina::{log::Format, serial::uart::Uart16550};
+use patina::{debug::log::Format, performance::config::PerformanceConfig, peripheral::serial::uart::Uart16550};
 use patina_adv_logger::{
     component::AdvancedLoggerComponent,
     logger::{AdvancedLogger, TargetFilter},
@@ -54,7 +54,8 @@ static LOGGER: AdvancedLogger<Uart16550> = AdvancedLogger::new(
         TargetFilter { target: "patina_performance", log_level: log::LevelFilter::Off, hw_filter_override: None },
     ],
     log::LevelFilter::Info,
-    Uart16550::Io { base: 0x402 },
+    // SAFETY: 0x402 is the QEMU Q35 debug-console I/O port owned by this logger.
+    unsafe { Uart16550::new_io(0x402) },
 );
 
 #[cfg(feature = "enable_debugger")]
@@ -64,9 +65,10 @@ const _ENABLE_DEBUGGER: bool = false;
 
 #[cfg(feature = "build_debugger")]
 static DEBUGGER: patina_debugger::PatinaDebugger<Uart16550> =
-    patina_debugger::PatinaDebugger::new(Uart16550::Io { base: 0x3F8 })
-        .with_force_enable(_ENABLE_DEBUGGER)
-        .with_log_policy(patina_debugger::DebuggerLoggingPolicy::FullLogging);
+    // SAFETY: 0x3F8 is the standard COM1 I/O port owned by the debugger.
+    patina_debugger::PatinaDebugger::new(unsafe { Uart16550::new_io(0x3F8) })
+            .with_force_enable(_ENABLE_DEBUGGER)
+            .with_log_policy(patina_debugger::DebuggerLoggingPolicy::FullLogging);
 
 struct Q35;
 
@@ -101,12 +103,7 @@ impl ComponentInfo for Q35 {
         add.component(patina_mm::component::sw_mmi_manager::SwMmiManager::new());
         add.component(patina_mm::component::communicator::MmCommunicator::new());
         add.component(q35_services::mm_test::QemuQ35MmTest::new());
-        add.component(patina_performance::component::Performance::new().with_measurements(
-            patina::performance::Measurement::DriverBindingStart     // Adds driver binding start measurements.
-               | patina::performance::Measurement::DriverBindingStop // Adds driver binding stop measurements.
-               | patina::performance::Measurement::LoadImage         // Adds load image measurements.
-               | patina::performance::Measurement::StartImage, // Adds start image measurements.
-        ));
+        add.component(patina_performance::component::Performance::new());
         add.component(patina_smbios::component::SmbiosProvider::new(3, 9));
         add.component(q35_services::smbios_platform::Q35SmbiosPlatform::new());
         add.component(patina_acpi::component::AcpiComponent::default());
@@ -123,6 +120,12 @@ impl PlatformInfo for Q35 {
     type MemoryInfo = Self;
     type ComponentInfo = Self;
     type Extractor = CompositeSectionExtractor;
+
+    const DEFAULT_PERFORMANCE_CONFIG: PerformanceConfig = PerformanceConfig::new()
+        .with_measurement(patina::performance::Measurement::DriverBindingStart)
+        .with_measurement(patina::performance::Measurement::DriverBindingStop)
+        .with_measurement(patina::performance::Measurement::LoadImage)
+        .with_measurement(patina::performance::Measurement::StartImage);
 }
 
 static CORE: Core<Q35> = Core::new(CompositeSectionExtractor::new());
