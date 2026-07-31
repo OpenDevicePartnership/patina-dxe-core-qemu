@@ -12,8 +12,8 @@
 
 use core::{ffi::c_void, panic::PanicInfo};
 use patina::{
-    log::{Format, SerialLogger},
-    serial::uart::Uart16550,
+    debug::log::{Format, SerialLogger},
+    peripheral::serial::uart::Uart16550,
 };
 use patina_dxe_core::*;
 use patina_ffs_extractors::CompositeSectionExtractor;

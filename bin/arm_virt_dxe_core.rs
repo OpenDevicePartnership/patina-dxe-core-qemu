@@ -12,8 +12,8 @@
 
 use core::{ffi::c_void, panic::PanicInfo};
 #[cfg(feature = "build_debugger")]
-use patina::serial::virtio::VirtioSerial;
-use patina::{log::Format, serial::uart::UartPl011};
+use patina::peripheral::serial::virtio::VirtioSerial;
+use patina::{debug::log::Format, performance::config::PerformanceConfig, peripheral::serial::uart::UartPl011};
 use patina_adv_logger::{
     component::AdvancedLoggerComponent,
     logger::{AdvancedLogger, TargetFilter},
@@ -47,7 +47,8 @@ static LOGGER: AdvancedLogger<UartPl011> = AdvancedLogger::new(
         TargetFilter { target: "efi_memory_map", log_level: log::LevelFilter::Off, hw_filter_override: None },
     ],
     log::LevelFilter::Info,
-    UartPl011::new(PL011_UART_BASE),
+    // SAFETY: PL011_UART_BASE is the valid PL011 UART MMIO base owned by this logger.
+    unsafe { UartPl011::new(PL011_UART_BASE) },
 );
 
 #[cfg(feature = "enable_debugger")]
@@ -99,12 +100,7 @@ impl ComponentInfo for ArmVirt {
             #[cfg(feature = "exit_on_patina_test_failure")]
             qemu_fail();
         }));
-        add.component(patina_performance::component::Performance::new().with_measurements(
-            patina::performance::Measurement::DriverBindingStart     // Adds driver binding start measurements.
-               | patina::performance::Measurement::DriverBindingStop // Adds driver binding stop measurements.
-               | patina::performance::Measurement::LoadImage         // Adds load image measurements.
-               | patina::performance::Measurement::StartImage, // Adds start image measurements.
-        ));
+        add.component(patina_performance::component::Performance::new());
         add.component(patina_acpi::component::AcpiComponent::default());
     }
 
@@ -116,6 +112,12 @@ impl PlatformInfo for ArmVirt {
     type MemoryInfo = Self;
     type ComponentInfo = Self;
     type Extractor = CompositeSectionExtractor;
+
+    const DEFAULT_PERFORMANCE_CONFIG: PerformanceConfig = PerformanceConfig::new()
+        .with_measurement(patina::performance::Measurement::DriverBindingStart)
+        .with_measurement(patina::performance::Measurement::DriverBindingStop)
+        .with_measurement(patina::performance::Measurement::LoadImage)
+        .with_measurement(patina::performance::Measurement::StartImage);
 }
 
 static CORE: Core<ArmVirt> = Core::new(CompositeSectionExtractor::new());
