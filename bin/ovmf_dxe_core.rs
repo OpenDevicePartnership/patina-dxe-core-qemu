@@ -44,7 +44,8 @@ static LOGGER: SerialLogger<Uart16550> = SerialLogger::new(
         ("goblin", log::LevelFilter::Off),
     ],
     log::LevelFilter::Info,
-    Uart16550::Io { base: 0x402 },
+    // SAFETY: 0x402 is the QEMU OVMF debug-console I/O port owned by this logger.
+    unsafe { Uart16550::new_io(0x402) },
 );
 
 const PM_TIMER_PORT: u16 = 0x608;
@@ -52,9 +53,10 @@ const _ENABLE_DEBUGGER: bool = cfg!(feature = "enable_debugger");
 
 #[cfg(feature = "build_debugger")]
 static DEBUGGER: patina_debugger::PatinaDebugger<Uart16550> =
-    patina_debugger::PatinaDebugger::new(Uart16550::Io { base: 0x3F8 })
-        .with_force_enable(_ENABLE_DEBUGGER)
-        .with_log_policy(patina_debugger::DebuggerLoggingPolicy::FullLogging);
+    // SAFETY: 0x3F8 is the standard COM1 I/O port owned by the debugger.
+    patina_debugger::PatinaDebugger::new(unsafe { Uart16550::new_io(0x3F8) })
+            .with_force_enable(_ENABLE_DEBUGGER)
+            .with_log_policy(patina_debugger::DebuggerLoggingPolicy::FullLogging);
 
 struct Ovmf;
 
