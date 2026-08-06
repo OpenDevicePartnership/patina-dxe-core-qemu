@@ -14,8 +14,8 @@ extern crate alloc;
 use alloc::{ffi::CString, vec, vec::Vec};
 use core::ffi::c_char;
 
+use patina::component::service::{Service, uefi_services::protocol::ProtocolServices};
 use patina::standard::efi;
-use patina::uefi::boot_services::{BootServices, StandardBootServices};
 use patina_smbios::service::{SMBIOS_HANDLE_PI_RESERVED, SmbiosHandle, SmbiosTableHeader};
 use patina_test::{patina_test, u_assert, u_assert_eq, u_assert_ne};
 
@@ -23,30 +23,31 @@ use patina_test::{patina_test, u_assert, u_assert_eq, u_assert_ne};
 /// This exercises the EDK2-compatible protocol layer (Add, UpdateString, Remove, GetNext)
 /// which are the FFI functions that C code calls.
 #[patina_test]
-fn armvirt_smbios_ffi_test(boot_services: StandardBootServices) -> patina_test::error::Result {
+fn armvirt_smbios_ffi_test(protocols: Service<dyn ProtocolServices>) -> patina_test::error::Result {
     log::debug!("SMBIOS FFI Test - Testing C Protocol FFI Layer");
 
-    test_c_protocol_layer(&boot_services)?;
+    test_c_protocol_layer(&protocols)?;
 
     log::debug!("SMBIOS FFI Test complete");
     Ok(())
 }
 
 /// Test the C Protocol FFI layer by calling the protocol functions directly
-fn test_c_protocol_layer(boot_services: &StandardBootServices) -> patina_test::error::Result {
+fn test_c_protocol_layer(protocols: &Service<dyn ProtocolServices>) -> patina_test::error::Result {
     log::trace!("Testing SMBIOS C Protocol functions...");
 
     // Define the SMBIOS protocol GUID
-    const SMBIOS_PROTOCOL_GUID: efi::Guid =
-        efi::Guid::from_fields(0x03583ff6, 0xcb36, 0x4940, 0x94, 0x7e, &[0xb9, 0xb3, 0x9f, 0x4a, 0xfa, 0xf7]);
+    const SMBIOS_PROTOCOL_GUID: patina::BinaryGuid =
+        patina::BinaryGuid::from_fields(0x03583ff6, 0xcb36, 0x4940, 0x94, 0x7e, &[0xb9, 0xb3, 0x9f, 0x4a, 0xfa, 0xf7]);
 
     // Locate the SMBIOS protocol
-    let protocol_ptr = unsafe {
-        boot_services.locate_protocol_unchecked(&SMBIOS_PROTOCOL_GUID, core::ptr::null_mut()).map_err(|e| {
+    let protocol_ptr = protocols
+        .locate_interface(SMBIOS_PROTOCOL_GUID)
+        .map_err(|e| {
             log::error!("Failed to locate SMBIOS protocol: {:?}", e);
             "Failed to locate SMBIOS protocol"
         })?
-    };
+        .as_raw();
 
     // Cast to protocol structure
     // SAFETY: We know this is the correct protocol structure because we just located it

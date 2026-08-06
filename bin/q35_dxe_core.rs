@@ -98,13 +98,34 @@ impl ComponentInfo for Q35 {
 
     fn components(mut add: Add<Component>) {
         add.component(AdvancedLoggerComponent::<Uart16550>::new(&LOGGER));
+        add.component(patina_samples::component::uefi_services::configuration_table::ConfigurationTableSample::new());
+        add.component(
+            patina_samples::component::uefi_services::configuration_table::DynamicConfigurationTableSample::new(),
+        );
+        add.component(patina_samples::component::uefi_services::driver_connect::DriverConnectSample::new());
+        add.component(patina_samples::component::uefi_services::overview::UefiServicesSample::new());
+        add.component(patina_samples::component::uefi_services::protocol_publisher::ProtocolPublisherSample::new());
+        add.component(patina_samples::component::uefi_services::protocol_publisher::ProtocolConsumerSample::new());
+        add.component(patina_samples::component::uefi_services::protocol_consumer::ProtocolConsumerSample::new());
+        add.component(patina_samples::component::uefi_services::timers::TimerSample::new());
+        add.component(patina_samples::component::uefi_services::tpl_critical_section::TplCriticalSectionSample::new());
+        add.component(
+            patina_samples::component::uefi_services::end_of_dxe_protocol_consumer::EndOfDxeProtocolConsumerSample::new(
+            ),
+        );
+        add.component(patina_graphics_console::component::graphics_console::GraphicsConsoleProvider::new());
         add.component(q35_services::mm_config_provider::MmConfigurationProvider);
         add.component(q35_services::mm_control::QemuQ35PlatformMmControl::new());
         add.component(patina_mm::component::sw_mmi_manager::SwMmiManager::new());
         add.component(patina_mm::component::communicator::MmCommunicator::new());
         add.component(q35_services::mm_test::QemuQ35MmTest::new());
-        add.component(patina_performance::component::Performance::new());
-        add.component(patina_smbios::component::SmbiosProvider::new(3, 9));
+        add.component(patina_performance::component::protocol::MeasurementProtocolPublisher::new());
+        add.component(patina_performance::component::property::PropertyPublisher::new());
+        add.component(patina_performance::component::fbpt::FbptPublisher::new());
+        // Only needed on platforms with an MM communication region.
+        add.component(patina_performance::component::mm_records::MmRecordCollector::new());
+        add.component(patina_smbios::component::provider::SmbiosProvider::new(3, 9));
+        add.component(patina_smbios::component::protocol_publisher::SmbiosProtocolPublisher::new());
         add.component(q35_services::smbios_platform::Q35SmbiosPlatform::new());
         add.component(patina_acpi::component::AcpiComponent::default());
         add.component(patina_test::component::TestRunner::default().with_callback(|test_name, err_msg| {

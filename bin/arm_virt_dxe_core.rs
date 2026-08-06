@@ -93,14 +93,16 @@ impl CpuInfo for ArmVirt {
 impl ComponentInfo for ArmVirt {
     fn components(mut add: Add<Component>) {
         add.component(AdvancedLoggerComponent::<UartPl011>::new(&LOGGER));
-        add.component(patina_smbios::component::SmbiosProvider::new(3, 9));
+        add.component(patina_smbios::component::provider::SmbiosProvider::new(3, 9));
         add.component(armvirt_services::smbios_platform::ArmVirtSmbiosPlatform::new());
         add.component(patina_test::component::TestRunner::default().with_callback(|test_name, err_msg| {
             log::error!("Test {} failed: {}", test_name, err_msg);
             #[cfg(feature = "exit_on_patina_test_failure")]
             qemu_fail();
         }));
-        add.component(patina_performance::component::Performance::new());
+        add.component(patina_performance::component::protocol::MeasurementProtocolPublisher::new());
+        add.component(patina_performance::component::property::PropertyPublisher::new());
+        add.component(patina_performance::component::fbpt::FbptPublisher::new());
         add.component(patina_acpi::component::AcpiComponent::default());
     }
 
