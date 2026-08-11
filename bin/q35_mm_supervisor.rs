@@ -67,8 +67,8 @@ impl PlatformInfo for Q35Platform {
 /// This should match your hardware/VM configuration.
 const MAX_CPU_COUNT: usize = 8;
 
-/// Flag indicating that advanced logger initialization is complete.
-static ADV_LOGGER_INIT_COMPLETE: AtomicBool = AtomicBool::new(false);
+/// Flag indicating that logger initialization is complete.
+static LOGGER_INIT_COMPLETE: AtomicBool = AtomicBool::new(false);
 
 /// The static MM Supervisor Core instance.
 ///
@@ -130,7 +130,7 @@ fn panic(info: &PanicInfo) -> ! {
 #[unsafe(export_name = "rust_main")]
 pub extern "efiapi" fn mm_supervisor_main(cpu_index: usize, hob_list: *const c_void) {
     // Initialize the advanced logger on the first CPU to arrive (BSP)
-    if !ADV_LOGGER_INIT_COMPLETE.swap(true, core::sync::atomic::Ordering::SeqCst) {
+    if !LOGGER_INIT_COMPLETE.swap(true, core::sync::atomic::Ordering::SeqCst) {
         log::set_logger(&LOGGER).map(|()| log::set_max_level(log::LevelFilter::Trace)).unwrap();
     }
 

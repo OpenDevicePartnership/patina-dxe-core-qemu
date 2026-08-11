@@ -29,16 +29,19 @@
 #![no_std]
 #![no_main]
 
-use core::{ffi::c_void, panic::PanicInfo, sync::atomic::AtomicBool};
-use patina::{log::Format, management_mode::supervisor::UserCommandType, serial::uart::Uart16550};
-use patina_adv_logger::logger::{AdvancedLogger, TargetFilter};
+use core::{panic::PanicInfo, sync::atomic::AtomicBool};
+use patina::{
+    log::{Format, SerialLogger},
+    management_mode::supervisor::UserCommandType,
+    serial::uart::Uart16550,
+};
 use patina_mm_user_core::{
     MmUserCore,
     component_dispatcher::{Add, Component, MmComponentInfo},
 };
 
-/// Flag indicating that advanced logger initialization is complete.
-static ADV_LOGGER_INIT_COMPLETE: AtomicBool = AtomicBool::new(false);
+/// Flag indicating that logger initialization is complete.
+static LOGGER_INIT_COMPLETE: AtomicBool = AtomicBool::new(false);
 
 /// The static MM User Core instance.
 static USER_CORE: MmUserCore = MmUserCore::new();
@@ -57,15 +60,15 @@ impl MmComponentInfo for Q35Mm {
     }
 }
 
-static LOGGER: AdvancedLogger<Uart16550> = AdvancedLogger::new(
+static LOGGER: SerialLogger<Uart16550> = SerialLogger::new(
     Format::Standard,
     &[
-        TargetFilter { target: "goblin", log_level: log::LevelFilter::Off, hw_filter_override: None },
-        TargetFilter { target: "allocations", log_level: log::LevelFilter::Off, hw_filter_override: None },
-        TargetFilter { target: "efi_memory_map", log_level: log::LevelFilter::Off, hw_filter_override: None },
-        TargetFilter { target: "mm_comm", log_level: log::LevelFilter::Off, hw_filter_override: None },
-        TargetFilter { target: "sw_mmi", log_level: log::LevelFilter::Off, hw_filter_override: None },
-        TargetFilter { target: "patina_performance", log_level: log::LevelFilter::Off, hw_filter_override: None },
+        ("goblin", log::LevelFilter::Off),
+        ("allocations", log::LevelFilter::Off),
+        ("efi_memory_map", log::LevelFilter::Off),
+        ("mm_comm", log::LevelFilter::Off),
+        ("sw_mmi", log::LevelFilter::Off),
+        ("patina_performance", log::LevelFilter::Off),
     ],
     log::LevelFilter::Info,
     // SAFETY: 0x402 is the QEMU Q35 debug serial I/O port, owned exclusively by this binary.
@@ -93,7 +96,7 @@ fn panic(info: &PanicInfo) -> ! {
 #[cfg_attr(target_os = "uefi", unsafe(export_name = "user_core_main"))]
 pub extern "efiapi" fn mm_user_main(op_code: u64, arg1: u64, arg2: u64) -> u64 {
     // Initialize the advanced logger on the first CPU to arrive (BSP)
-    if !ADV_LOGGER_INIT_COMPLETE.swap(true, core::sync::atomic::Ordering::SeqCst) {
+    if !LOGGER_INIT_COMPLETE.swap(true, core::sync::atomic::Ordering::SeqCst) {
         // If this is our first time here, it better be that the op_code being MmUserRequestTypeInit
         if op_code != UserCommandType::StartUserCore as u64 {
             // This means the BSP didn't send the expected init command first, which is a problem.
@@ -102,11 +105,6 @@ pub extern "efiapi" fn mm_user_main(op_code: u64, arg1: u64, arg2: u64) -> u64 {
         }
 
         log::set_logger(&LOGGER).map(|()| log::set_max_level(log::LevelFilter::Trace)).unwrap();
-        // SAFETY: The physical_hob_list pointer is considered valid at this point as it's provided by the core
-        // to the entry point.
-        unsafe {
-            LOGGER.init(arg1 as *const c_void).unwrap();
-        }
     }
 
     USER_CORE.entry_point_worker::<Q35Mm>(op_code, arg1, arg2)
