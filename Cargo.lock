@@ -597,7 +597,6 @@ dependencies = [
  "patina_stacktrace",
  "patina_test",
  "qemu-exit",
- "r-efi",
  "x86_64",
  "zerocopy",
 ]
