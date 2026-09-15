@@ -615,20 +615,21 @@ cm_run_task bloat-armvirt-exec
 
 [tasks.all]
 description = "Run all tasks for PR readiness."
-dependencies = [
-    "fmt-check",
-    "deny",
-    "clippy",
-    "cspell",
-    "check-no-default-features",
-    "q35",
-    "ovmf",
-    "armvirt",
-    "q35-release",
-    "ovmf-release",
-    "armvirt-release",
-    "test",
-    "coverage",
-    "doc-test",
-    "doc",
+env = { CARGO_INCREMENTAL = "0" }
+run_task = [
+    { name = ["fmt-check", "deny", "cspell"], parallel = true },
+    { name = [
+        "clippy",
+        "check-no-default-features",
+        "q35",
+        "ovmf",
+        "armvirt",
+        "q35-release",
+        "ovmf-release",
+        "armvirt-release",
+        "test",
+        "coverage",
+        "doc-test",
+        "doc",
+    ] },
 ]
