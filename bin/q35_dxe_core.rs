@@ -75,6 +75,7 @@ impl MemoryInfo for Q35 {}
 
 // Q35 should use TSC frequency calibrated from ACPI PM Timer.
 impl CpuInfo for Q35 {
+    const ENABLE_MP_SERVICES: bool = true;
     fn perf_timer_frequency() -> Option<u64> {
         Some(PATINA_QEMU_Q35_TSC_FREQUENCY)
     }
