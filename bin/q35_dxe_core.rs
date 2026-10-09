@@ -77,6 +77,7 @@ impl MemoryInfo for Q35 {}
 
 // Q35 should use TSC frequency calibrated from ACPI PM Timer.
 impl CpuInfo for Q35 {
+    const ENABLE_MP_SERVICES: bool = true;
     fn perf_timer_frequency() -> Option<u64> {
         // SAFETY: Reading from the PM Timer I/O port is safe as long as the port is valid.
         // On Q35, the PM Timer is always available at the specified port address.
