@@ -100,8 +100,12 @@ impl ComponentInfo for Q35 {
         add.component(patina_mm::component::sw_mmi_manager::SwMmiManager::new());
         add.component(patina_mm::component::communicator::MmCommunicator::new());
         add.component(q35_services::mm_test::QemuQ35MmTest::new());
-        add.component(patina_performance::component::Performance::new());
-        add.component(patina_smbios::component::SmbiosProvider::new(3, 9));
+        add.component(patina_performance::component::protocol::MeasurementProtocolPublisher::new());
+        add.component(patina_performance::component::property::PropertyPublisher::new());
+        add.component(patina_performance::component::fbpt::FbptPublisher::new());
+        add.component(patina_performance::component::mm_records::MmRecordCollector::new());
+        add.component(patina_smbios::component::provider::SmbiosProvider::new(3, 9));
+        add.component(patina_smbios::component::protocol_publisher::SmbiosProtocolPublisher::new());
         add.component(q35_services::smbios_platform::Q35SmbiosPlatform::new());
         add.component(patina_acpi::component::AcpiComponent::default());
         add.component(patina_test::component::TestRunner::default().with_callback(|test_name, err_msg| {
@@ -113,6 +117,7 @@ impl ComponentInfo for Q35 {
 }
 
 impl PlatformInfo for Q35 {
+    const UEFI_SPEC_VERSION: patina::UefiSpecVersion = patina::UefiSpecVersion::V2_7;
     type CpuInfo = Self;
     type MemoryInfo = Self;
     type ComponentInfo = Self;

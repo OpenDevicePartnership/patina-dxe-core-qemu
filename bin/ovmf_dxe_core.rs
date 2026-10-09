@@ -83,6 +83,8 @@ impl ComponentInfo for Ovmf {
 }
 
 impl PlatformInfo for Ovmf {
+    const UEFI_SPEC_VERSION: patina::UefiSpecVersion = patina::UefiSpecVersion::V2_7;
+
     type CpuInfo = Self;
     type MemoryInfo = Self;
     type ComponentInfo = Self;
