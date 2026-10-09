@@ -69,6 +69,24 @@ built by default on debug builds, but not release builds. It can be built on rel
 `build_debugger` feature to the build, e.g. `cargo make q35-release --features build_debugger`. The debugger
 is disabled by default, passing the `enable_debugger` feature to the build will enable it.
 
+### Passing Arguments to Cargo
+
+Any arguments given after the task name are forwarded to the underlying `cargo` command unchanged, so the normal cargo
+flags work:
+
+```shell
+cargo make check --features build_debugger
+cargo make test --no-capture
+cargo make coverage -p qemu_dxe_core
+cargo make fmt-check -p qemu_dxe_core
+```
+
+Note that `-p` *before* the task name selects the `cargo-make` profile (`development` or `release`), while `-p` *after*
+the task name is passed through to `cargo` as the usual package selector.
+
+The firmware build tasks (`q35`, `ovmf`, `armvirt`, and their `-release` variants) are the exception. They interpret
+`--features`, `--exclude-features`, `--crate-patch`, `--leave-patch`, and `--no-build` themselves, as described below.
+
 ## Patching Local Dependencies
 
 During development, you may need to build against local versions of Patina crates. This repo's build supports patching
