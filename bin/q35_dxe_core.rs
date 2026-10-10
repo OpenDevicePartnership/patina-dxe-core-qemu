@@ -23,7 +23,6 @@ use qemu_resources::q35::component::service as q35_services;
 extern crate alloc;
 use alloc::vec;
 use qemu_exit::QEMUExit;
-use qemu_resources::q35::timer;
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
@@ -38,9 +37,8 @@ fn panic(info: &PanicInfo) -> ! {
     qemu_fail()
 }
 
-/// Port address of the ACPI PM Timer.
-/// Obtained from ACPI FADT `X_PM_TIMER_BLOCK`. It is always at 0x608 on Q35.
-const PM_TIMER_PORT: u16 = 0x608;
+/// patina-qemu sets the TSC frequency to 4 GHz for Q35.
+const PATINA_QEMU_Q35_TSC_FREQUENCY: u64 = 4_000_000_000;
 
 static LOGGER: AdvancedLogger<Uart16550> = AdvancedLogger::new(
     Format::Standard,
@@ -78,9 +76,7 @@ impl MemoryInfo for Q35 {}
 // Q35 should use TSC frequency calibrated from ACPI PM Timer.
 impl CpuInfo for Q35 {
     fn perf_timer_frequency() -> Option<u64> {
-        // SAFETY: Reading from the PM Timer I/O port is safe as long as the port is valid.
-        // On Q35, the PM Timer is always available at the specified port address.
-        Some(unsafe { timer::calibrate_tsc_frequency(PM_TIMER_PORT) })
+        Some(PATINA_QEMU_Q35_TSC_FREQUENCY)
     }
 }
 
