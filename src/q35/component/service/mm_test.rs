@@ -64,7 +64,7 @@ impl QemuQ35MmTest {
         log::debug!("MM Test Entry Point - Testing MM Communication");
 
         let mm_supv_req_header = MmSupervisorRequestHeader {
-            signature: u32::from_le_bytes([b'M', b'S', b'U', b'P']),
+            signature: u32::from_le_bytes(*b"MSUP"),
             revision: 1,
             request: 0x0003, // Request Version Info
             reserved: 0,

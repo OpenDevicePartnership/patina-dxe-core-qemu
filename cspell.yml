@@ -43,6 +43,7 @@ words:
   - mmio
   - mmram
   - msuefi
+  - msup
   - msvc
   - nocapture
   - ovmf
