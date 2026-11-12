@@ -27,7 +27,6 @@ path = "src/lib.rs"
 
 # Patina dependencies
 patina = { version = "24" }
-patina_acpi = { version = "24" }
 patina_adv_logger = { version = "24" }
 patina_debugger = { version = "24" }
 patina_dxe_core = { version = "24" }

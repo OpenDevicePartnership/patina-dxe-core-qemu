@@ -105,7 +105,6 @@ impl ComponentInfo for ArmVirt {
         add.component(patina_performance::component::protocol::MeasurementProtocolPublisher::new());
         add.component(patina_performance::component::property::PropertyPublisher::new());
         add.component(patina_performance::component::fbpt::FbptPublisher::new());
-        add.component(patina_acpi::component::AcpiComponent::default());
     }
 
     fn configs(mut add: Add<Config>) {
