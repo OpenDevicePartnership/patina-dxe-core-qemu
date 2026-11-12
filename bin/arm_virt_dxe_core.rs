@@ -22,7 +22,7 @@ use patina_dxe_core::*;
 use patina_ffs_extractors::CompositeSectionExtractor;
 use patina_stacktrace::StackTrace;
 use qemu_exit::QEMUExit;
-use qemu_resources::armvirt::component::service as armvirt_services;
+use qemu_resources::{armvirt::component::service as armvirt_services, samples};
 extern crate alloc;
 
 #[panic_handler]
@@ -93,6 +93,7 @@ impl CpuInfo for ArmVirt {
 impl ComponentInfo for ArmVirt {
     fn components(mut add: Add<Component>) {
         add.component(AdvancedLoggerComponent::<UartPl011>::new(&LOGGER));
+        samples::add_components(&mut add);
         add.component(patina_smbios::component::provider::SmbiosProvider::new(3, 9));
         add.component(patina_smbios::component::protocol_publisher::SmbiosProtocolPublisher::new());
         add.component(armvirt_services::smbios_platform::ArmVirtSmbiosPlatform::new());
@@ -107,7 +108,9 @@ impl ComponentInfo for ArmVirt {
         add.component(patina_acpi::component::AcpiComponent::default());
     }
 
-    fn configs(_add: Add<Config>) {}
+    fn configs(mut add: Add<Config>) {
+        samples::add_configs(&mut add);
+    }
 }
 
 impl PlatformInfo for ArmVirt {

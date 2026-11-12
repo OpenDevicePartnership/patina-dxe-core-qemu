@@ -18,7 +18,7 @@ use patina::{
 use patina_dxe_core::*;
 use patina_ffs_extractors::CompositeSectionExtractor;
 use patina_stacktrace::StackTrace;
-use qemu_resources::q35::timer;
+use qemu_resources::{q35::timer, samples};
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
@@ -73,12 +73,12 @@ impl CpuInfo for Ovmf {
 }
 
 impl ComponentInfo for Ovmf {
-    fn configs(_add: Add<Config>) {
-        // Add components and configs later
+    fn configs(mut add: Add<Config>) {
+        samples::add_configs(&mut add);
     }
 
-    fn components(_add: Add<Component>) {
-        // Add components and configs later
+    fn components(mut add: Add<Component>) {
+        samples::add_components(&mut add);
     }
 }
 

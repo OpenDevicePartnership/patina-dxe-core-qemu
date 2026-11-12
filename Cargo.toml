@@ -34,7 +34,7 @@ patina_dxe_core = { version = "24" }
 patina_ffs_extractors = { version = "24" }
 patina_mm = { version = "24" }
 patina_performance = { version = "24" }
-patina_samples = { version = "24" }
+patina_samples = { version = "24", optional = true }
 patina_smbios = { version = "24" }
 patina_stacktrace = { version = "24" }
 patina_test = { version = "24", features = ["test-runner"] }
@@ -63,6 +63,7 @@ ci_features = [
   'compatibility_mode_allowed',
   'enable_debugger',
   'exit_on_patina_test_failure',
+  'samples',
   'v1_resource_descriptor_support',
 ]
 # Keep the default features here in sync with the features listed in BASE_FEATURES in Makefile.toml
@@ -71,6 +72,7 @@ compatibility_mode_allowed = ["patina_dxe_core/compatibility_mode_allowed"]
 v1_resource_descriptor_support = [
   "patina_dxe_core/v1_resource_descriptor_support",
 ]
+samples = ["dep:patina_samples"]
 x64 = ["x86_64"]
 aarch64 = []
 std = []

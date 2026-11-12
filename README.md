@@ -69,6 +69,9 @@ built by default on debug builds, but not release builds. It can be built on rel
 `build_debugger` feature to the build, e.g. `cargo make q35-release --features build_debugger`. The debugger
 is disabled by default, passing the `enable_debugger` feature to the build will enable it.
 
+The sample components from [patina_samples](https://crates.io/crates/patina_samples) are not built by default. Pass the
+`samples` feature to include them, e.g. `cargo make q35 --features samples`.
+
 ## Patching Local Dependencies
 
 During development, you may need to build against local versions of Patina crates. This repo's build supports patching
