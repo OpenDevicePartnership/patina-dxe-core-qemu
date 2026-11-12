@@ -19,7 +19,7 @@ use patina_adv_logger::{
 use patina_dxe_core::*;
 use patina_ffs_extractors::CompositeSectionExtractor;
 use patina_stacktrace::StackTrace;
-use qemu_resources::q35::component::service as q35_services;
+use qemu_resources::{q35::component::service as q35_services, samples};
 extern crate alloc;
 use alloc::vec;
 use qemu_exit::QEMUExit;
@@ -91,10 +91,12 @@ impl ComponentInfo for Q35 {
             updatable_buffer_id: None,
             comm_buffers: vec![],
         });
+        samples::add_configs(&mut add);
     }
 
     fn components(mut add: Add<Component>) {
         add.component(AdvancedLoggerComponent::<Uart16550>::new(&LOGGER));
+        samples::add_components(&mut add);
         add.component(q35_services::mm_config_provider::MmConfigurationProvider);
         add.component(q35_services::mm_control::QemuQ35PlatformMmControl::new());
         add.component(patina_mm::component::sw_mmi_manager::SwMmiManager::new());
