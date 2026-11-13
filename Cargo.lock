@@ -198,15 +198,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0ca88d725a0a943b096803bd34e73a4437208b6077654cc4ecb2947a5f91618d"
 
 [[package]]
-name = "memoffset"
-version = "0.9.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "488016bfae457b036d996092f6cb448677611ce4449e970ceaf42695203f218a"
-dependencies = [
- "autocfg",
-]
-
-[[package]]
 name = "num-conv"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -279,20 +270,6 @@ dependencies = [
  "spin",
  "uart_16550",
  "uuid",
- "zerocopy",
- "zerocopy-derive",
-]
-
-[[package]]
-name = "patina_acpi"
-version = "24.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ba83eee215c475809e8d83ff1fea34906c6c8fa374d5ed892f5e7b12e6403156"
-dependencies = [
- "log",
- "memoffset",
- "patina",
- "patina_test",
  "zerocopy",
  "zerocopy-derive",
 ]
@@ -544,7 +521,6 @@ version = "4.0.6"
 dependencies = [
  "log",
  "patina",
- "patina_acpi",
  "patina_adv_logger",
  "patina_debugger",
  "patina_dxe_core",
