@@ -1,6 +1,6 @@
 [package]
 name = "qemu_dxe_core"
-version = "4.0.6"
+version = "5.0.0"
 edition = "2024"
 license = "Apache-2.0"
 
