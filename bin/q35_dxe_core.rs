@@ -107,7 +107,6 @@ impl ComponentInfo for Q35 {
         add.component(patina_smbios::component::provider::SmbiosProvider::new(3, 9));
         add.component(patina_smbios::component::protocol_publisher::SmbiosProtocolPublisher::new());
         add.component(q35_services::smbios_platform::Q35SmbiosPlatform::new());
-        add.component(patina_acpi::component::AcpiComponent::default());
         add.component(patina_test::component::TestRunner::default().with_callback(|test_name, err_msg| {
             log::error!("Test {} failed: {}", test_name, err_msg);
             #[cfg(feature = "exit_on_patina_test_failure")]
