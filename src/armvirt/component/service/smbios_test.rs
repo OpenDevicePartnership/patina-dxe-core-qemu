@@ -79,7 +79,7 @@ fn test_c_protocol_layer(protocols: &Service<dyn ProtocolServices>) -> patina_te
     // Test 1: Add a record using the C protocol Add function
     log::trace!("  Test 1: Protocol Add function...");
     let test_record = create_test_type2_record();
-    let mut handle: SmbiosHandle = 0;
+    let mut handle: SmbiosHandle = SMBIOS_HANDLE_PI_RESERVED;
 
     let status = (protocol.add)(
         protocol,
