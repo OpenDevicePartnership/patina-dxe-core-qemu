@@ -9,5 +9,6 @@
 //! SPDX-License-Identifier: Apache-2.0
 //!
 pub mod component;
+pub mod fw_cfg;
 pub mod registers;
 pub mod timer;

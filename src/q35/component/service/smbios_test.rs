@@ -17,8 +17,21 @@ use core::ffi::c_char;
 use patina::component::service::{Service, uefi_services::protocol::ProtocolServices};
 use patina::guid::BinaryGuid;
 use patina::standard::efi;
-use patina_smbios::service::{SMBIOS_HANDLE_PI_RESERVED, SmbiosHandle, SmbiosTableHeader};
+use patina_smbios::service::{SMBIOS_HANDLE_PI_RESERVED, Smbios, SmbiosHandle, SmbiosTableHeader};
 use patina_test::{patina_test, u_assert, u_assert_eq, u_assert_ne};
+
+/// Verifies that the CPU, memory array, memory device and memory mapped address records that QEMU describes through
+/// fw_cfg (Types 4, 16, 17 and 19) are present in the published SMBIOS table.
+#[patina_test]
+fn q35_smbios_fw_cfg_records_test(smbios: Service<dyn Smbios>) -> patina_test::error::Result {
+    for record_type in [4u8, 16, 17, 19] {
+        let found = smbios
+            .next_record(SMBIOS_HANDLE_PI_RESERVED, Some(record_type))
+            .map_err(|_| "Failed to enumerate SMBIOS records")?;
+        u_assert!(found.is_some(), "Expected SMBIOS record type from fw_cfg is missing");
+    }
+    Ok(())
+}
 
 /// Tests the SMBIOS C Protocol FFI layer by calling the protocol functions directly.
 /// This exercises the EDK2-compatible protocol layer (Add, UpdateString, Remove, GetNext)
