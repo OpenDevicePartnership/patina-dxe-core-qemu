@@ -13,10 +13,12 @@
 #[cfg_attr(coverage, coverage(off))]
 #[cfg(any(feature = "aarch64", test))]
 pub mod armvirt;
+pub mod fw_cfg;
 #[cfg(any(feature = "x64", test))]
 pub mod q35;
 #[cfg_attr(coverage, coverage(off))]
 pub mod samples;
+pub mod smbios_blob;
 
 // This is a placeholder test to allow test commands to run without
 // error given there are no other unit tests in this crate right now.
