@@ -63,6 +63,11 @@ impl ArmVirtSmbiosPlatform {
             add_static_records(&smbios)?;
         }
 
+        // QEMU's fw_cfg does not produce a Type 2 (Base Board) record, so it is always supplied statically
+        // (like Type 0). It references the Type 3 (System Enclosure) handle that is now on the table, whether
+        // that came from fw_cfg or from the static fallback above.
+        add_baseboard_record(&smbios);
+
         publish(*smbios)
     }
 }
@@ -167,40 +172,9 @@ fn add_static_records(smbios: &Service<dyn Smbios>) -> Result<()> {
         ],
     };
 
-    let mut type3_handle = 0xFFFF;
     match smbios.add_record(None, &enclosure_info) {
-        Ok(handle) => {
-            log::trace!("  Type 3 (System Enclosure) - Handle 0x{:04X}", handle);
-            type3_handle = handle;
-        }
+        Ok(handle) => log::trace!("  Type 3 (System Enclosure) - Handle 0x{:04X}", handle),
         Err(e) => log::warn!("  Failed to add Type 3: {:?}", e),
-    }
-
-    let baseboard_info = Type2BaseboardInformation {
-        header: SmbiosTableHeader::new(2, 0, SMBIOS_HANDLE_PI_RESERVED),
-        manufacturer: 1,
-        product: 2,
-        version: 3,
-        serial_number: 4,
-        asset_tag: 5,
-        feature_flags: FeatureFlags::new().with_hosting_board(true),
-        location_in_chassis: 6,
-        chassis_handle: type3_handle,
-        board_type: BoardType::Motherboard,
-        contained_object_handles: 0,
-        string_pool: vec![
-            String::from("Example Corporation"),
-            String::from("Example Baseboard"),
-            String::from("1.0"),
-            String::from("MB-67890"),
-            String::from("ASSET-MB-001"),
-            String::from("Main Board Slot"),
-        ],
-    };
-
-    match smbios.add_record(None, &baseboard_info) {
-        Ok(handle) => log::trace!("  Type 2 (Base Board Info) - Handle 0x{:04X}", handle),
-        Err(e) => log::warn!("  Failed to add Type 2: {:?}", e),
     }
 
     // Type 7: Cache Information - L1 and L2 caches for the virtual processor
@@ -410,6 +384,44 @@ fn add_static_records(smbios: &Service<dyn Smbios>) -> Result<()> {
     }
 
     Ok(())
+}
+
+/// Adds the Type 2 (Base Board Information) record. QEMU's fw_cfg does not produce one. This references
+/// whichever Type 3 (System Enclosure) handle is on the table, from fw_cfg or the static fallback.
+fn add_baseboard_record(smbios: &Service<dyn Smbios>) {
+    let chassis_handle = smbios
+        .next_record(SMBIOS_HANDLE_PI_RESERVED, Some(3))
+        .ok()
+        .flatten()
+        .map(|(header, _)| header.handle)
+        .unwrap_or(0xFFFF);
+
+    let baseboard_info = Type2BaseboardInformation {
+        header: SmbiosTableHeader::new(2, 0, SMBIOS_HANDLE_PI_RESERVED),
+        manufacturer: 1,
+        product: 2,
+        version: 3,
+        serial_number: 4,
+        asset_tag: 5,
+        feature_flags: FeatureFlags::new().with_hosting_board(true),
+        location_in_chassis: 6,
+        chassis_handle,
+        board_type: BoardType::Motherboard,
+        contained_object_handles: 0,
+        string_pool: vec![
+            String::from("Example Corporation"),
+            String::from("Example Baseboard"),
+            String::from("1.0"),
+            String::from("MB-67890"),
+            String::from("ASSET-MB-001"),
+            String::from("Main Board Slot"),
+        ],
+    };
+
+    match smbios.add_record(None, &baseboard_info) {
+        Ok(handle) => log::trace!("  Type 2 (Base Board Info) - Handle 0x{:04X}", handle),
+        Err(e) => log::warn!("  Failed to add Type 2: {:?}", e),
+    }
 }
 
 fn publish(smbios: &dyn Smbios) -> Result<()> {

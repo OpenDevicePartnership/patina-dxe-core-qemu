@@ -66,6 +66,11 @@ impl Q35SmbiosPlatform {
             add_static_records(&smbios);
         }
 
+        // QEMU's fw_cfg does not produce a Type 2 (Base Board) record, so it is always supplied statically,
+        // (like Type 0). It references the Type 3 (System Enclosure) handle that is now on the table, whether
+        // that came from fw_cfg or from the static fallback above.
+        add_baseboard_record(&smbios);
+
         publish(*smbios);
         log::debug!("SMBIOS platform component initialized successfully");
         Ok(())
@@ -170,14 +175,24 @@ fn add_static_records(smbios: &Service<dyn Smbios>) {
         ],
     };
 
-    let mut type3_handle = 0xFFFF;
     match smbios.add_record(None, &enclosure_info) {
-        Ok(handle) => {
-            log::trace!("  Type 3 (System Enclosure) - Handle 0x{:04X}", handle);
-            type3_handle = handle;
-        }
+        Ok(handle) => log::trace!("  Type 3 (System Enclosure) - Handle 0x{:04X}", handle),
         Err(e) => log::warn!("  Failed to add Type 3: {:?}", e),
     }
+
+    // Type 127 End-of-Table marker is automatically added by the manager during initialization
+    log::trace!("Platform SMBIOS records created successfully");
+}
+
+/// Adds the Type 2 (Base Board Information) record. QEMU's fw_cfg does not produce one. This references
+/// whichever Type 3 (System Enclosure) handle is on the table, whether from fw_cfg or the static fallback.
+fn add_baseboard_record(smbios: &Service<dyn Smbios>) {
+    let chassis_handle = smbios
+        .next_record(SMBIOS_HANDLE_PI_RESERVED, Some(3))
+        .ok()
+        .flatten()
+        .map(|(header, _)| header.handle)
+        .unwrap_or(0xFFFF);
 
     let baseboard_info = Type2BaseboardInformation {
         header: SmbiosTableHeader::new(2, 0, SMBIOS_HANDLE_PI_RESERVED),
@@ -188,7 +203,7 @@ fn add_static_records(smbios: &Service<dyn Smbios>) {
         asset_tag: 5,
         feature_flags: FeatureFlags::new().with_hosting_board(true),
         location_in_chassis: 6,
-        chassis_handle: type3_handle,
+        chassis_handle,
         board_type: BoardType::Motherboard,
         contained_object_handles: 0,
         string_pool: vec![
@@ -205,9 +220,6 @@ fn add_static_records(smbios: &Service<dyn Smbios>) {
         Ok(handle) => log::trace!("  Type 2 (Base Board Info) - Handle 0x{:04X}", handle),
         Err(e) => log::warn!("  Failed to add Type 2: {:?}", e),
     }
-
-    // Type 127 End-of-Table marker is automatically added by the manager during initialization
-    log::trace!("Platform SMBIOS records created successfully");
 }
 
 fn publish(smbios: &dyn Smbios) {

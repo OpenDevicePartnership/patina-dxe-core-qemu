@@ -13,6 +13,9 @@
 
 use patina_smbios::service::Smbios;
 
+extern crate alloc;
+use alloc::vec::Vec;
+
 /// Name of the fw_cfg file that holds the SMBIOS structure table.
 pub const SMBIOS_TABLES_FILE: &str = "etc/smbios/smbios-tables";
 
@@ -21,6 +24,9 @@ pub const SMBIOS_TYPE_END_OF_TABLE: u8 = 127;
 
 /// SMBIOS structure type of BIOS Information.
 pub const SMBIOS_TYPE_BIOS_INFORMATION: u8 = 0;
+
+/// SMBIOS structure type of Base Board (or Module) Information.
+pub const SMBIOS_TYPE_BASEBOARD_INFORMATION: u8 = 2;
 
 /// Minimum length of an SMBIOS structure (the common header).
 const SMBIOS_HEADER_LENGTH: usize = 4;
@@ -87,8 +93,11 @@ fn next_structure(data: &[u8]) -> Result<&[u8], SmbiosBlobError> {
 
 /// Adds every structure in the QEMU SMBIOS table blob and returns the number of records added.
 ///
-/// The End-of-Table marker is skipped because the SMBIOS service manages it, and Type 0 is skipped because the
-/// firmware produces its own. Records that the service rejects are logged and skipped.
+/// The End-of-Table marker is skipped because the SMBIOS service manages it. Type 0 (BIOS Information) and Type 2
+/// (Base Board Information) are skipped because the firmware supplies those statically. QEMU's fw_cfg does not describe
+/// For Type 4 (Processor Information) and Type 17 (Memory Device), QEMU's defaults omit the Serial Number and Asset
+/// Tag strings; `fill_missing_identifiers` fills those with static placeholders so they match the values the firmware
+/// used to report. Records that the service rejects are logged and skipped.
 pub fn import_tables(smbios: &dyn Smbios, blob: &[u8]) -> usize {
     let mut added = 0;
     for structure in SmbiosBlobIter::new(blob) {
@@ -103,11 +112,15 @@ pub fn import_tables(smbios: &dyn Smbios, blob: &[u8]) -> usize {
         let Some(&record_type) = structure.first() else {
             continue;
         };
-        if record_type == SMBIOS_TYPE_END_OF_TABLE || record_type == SMBIOS_TYPE_BIOS_INFORMATION {
+        if record_type == SMBIOS_TYPE_END_OF_TABLE
+            || record_type == SMBIOS_TYPE_BIOS_INFORMATION
+            || record_type == SMBIOS_TYPE_BASEBOARD_INFORMATION
+        {
             continue;
         }
 
-        match smbios.add_from_bytes(None, structure) {
+        let structure = fill_missing_identifiers(structure);
+        match smbios.add_from_bytes(None, &structure) {
             Ok(handle) => {
                 log::trace!("  Type {} (fw_cfg) - Handle 0x{:04X}", record_type, handle);
                 added += 1;
@@ -118,6 +131,88 @@ pub fn import_tables(smbios: &dyn Smbios, blob: &[u8]) -> usize {
     added
 }
 
+/// Byte offset of an identifying string field within a structure's formatted area, and the placeholder value to use
+/// if QEMU did not assign a string there.
+struct IdentifierField {
+    offset: usize,
+    placeholder: &'static str,
+}
+
+/// Returns the Serial Number / Asset Tag fields known for a structure type, if any.
+///
+/// Offsets are fixed by the SMBIOS specification and so apply regardless of which producer built the structure.
+fn identifier_fields(record_type: u8) -> &'static [IdentifierField] {
+    const TYPE4_FIELDS: [IdentifierField; 2] = [
+        IdentifierField { offset: 0x20, placeholder: "SN-CPU-001" },
+        IdentifierField { offset: 0x21, placeholder: "ASSET-CPU-001" },
+    ];
+    const TYPE17_FIELDS: [IdentifierField; 2] = [
+        IdentifierField { offset: 0x18, placeholder: "SN-DIMM-001" },
+        IdentifierField { offset: 0x19, placeholder: "ASSET-DIMM-001" },
+    ];
+    const TYPE3_FIELDS: [IdentifierField; 2] = [
+        IdentifierField { offset: 0x07, placeholder: "CHASSIS-99999" },
+        IdentifierField { offset: 0x08, placeholder: "ASSET-CHASSIS-001" },
+    ];
+    match record_type {
+        3 => &TYPE3_FIELDS,
+        4 => &TYPE4_FIELDS,
+        17 => &TYPE17_FIELDS,
+        _ => &[],
+    }
+}
+
+/// Fills unassigned Serial Number / Asset Tag string fields in a Type 4 or Type 17 structure with static
+/// placeholders, leaving everything else (including any string QEMU already assigned) untouched.
+///
+/// Returns `structure` unchanged, as an owned copy, if its type has no known identifier fields or every known field
+/// already has a string assigned.
+fn fill_missing_identifiers(structure: &[u8]) -> Vec<u8> {
+    let fields = identifier_fields(structure.first().copied().unwrap_or(0xFF));
+    let formatted_length = structure.get(1).copied().unwrap_or(0) as usize;
+    if fields.is_empty() || formatted_length > structure.len() {
+        return structure.to_vec();
+    }
+
+    // The string pool is either two NUL bytes or one or more NUL-terminated strings followed by one extra NUL.
+    // Splitting the latter on NUL bytes yields one segment per string plus two trailing empty segments, one for the
+    // final string's own terminator and one for the pool's extra terminator.
+    let pool = &structure[formatted_length..];
+    let mut strings: Vec<&[u8]> = if pool.first() == Some(&0) {
+        Vec::new()
+    } else {
+        let segments: Vec<&[u8]> = pool.split(|&b| b == 0).collect();
+        segments[..segments.len().saturating_sub(2)].to_vec()
+    };
+
+    let mut formatted = structure[..formatted_length].to_vec();
+    let mut changed = false;
+    for field in fields {
+        match formatted.get(field.offset) {
+            Some(0) => {}
+            _ => continue, // Field does not exist in this record version, or QEMU already assigned a string.
+        }
+
+        strings.push(field.placeholder.as_bytes());
+        if let Some(byte) = formatted.get_mut(field.offset) {
+            *byte = strings.len() as u8;
+        }
+        changed = true;
+    }
+
+    if !changed {
+        return structure.to_vec();
+    }
+
+    let mut rebuilt = formatted;
+    for s in &strings {
+        rebuilt.extend_from_slice(s);
+        rebuilt.push(0);
+    }
+    rebuilt.push(0);
+    rebuilt
+}
+
 #[cfg(test)]
 mod tests {
     extern crate alloc;
@@ -126,6 +221,90 @@ mod tests {
     use patina_smbios::{error::SmbiosError, service::SmbiosHandle};
 
     use super::*;
+
+    /// Minimal Type 4 structure (formatted area only, no strings) with Serial Number and Asset Tag unassigned
+    /// (byte 0 at their offsets), matching what QEMU's fw_cfg defaults produce.
+    fn type4_missing_identifiers() -> Vec<u8> {
+        let mut record = alloc::vec![0u8; 0x23];
+        record[0] = 4; // type
+        record[1] = 0x23; // formatted length
+        record[7] = 1; // processor_manufacturer string index
+        record
+    }
+
+    fn type17_missing_identifiers() -> Vec<u8> {
+        let mut record = alloc::vec![0u8; 0x1B];
+        record[0] = 17;
+        record[1] = 0x1B;
+        record
+    }
+
+    #[test]
+    fn fill_missing_identifiers_adds_placeholders_to_type4() {
+        let mut record = type4_missing_identifiers();
+        record.extend_from_slice(b"QEMU\0\0"); // existing string 1 (manufacturer)
+
+        let filled = fill_missing_identifiers(&record);
+
+        assert_eq!(filled[0x20], 2, "Serial Number should point at the first appended string");
+        assert_eq!(filled[0x21], 3, "Asset Tag should point at the second appended string");
+        let pool = &filled[0x23..];
+        assert_eq!(pool, b"QEMU\0SN-CPU-001\0ASSET-CPU-001\0\0");
+    }
+
+    #[test]
+    fn fill_missing_identifiers_adds_placeholders_to_type3() {
+        let mut record = alloc::vec![0u8; 0x09];
+        record[0] = 3;
+        record[1] = 0x09;
+        record[4] = 1; // manufacturer string index
+        record.extend_from_slice(b"QEMU\0\0");
+
+        let filled = fill_missing_identifiers(&record);
+
+        assert_eq!(filled[0x07], 2);
+        assert_eq!(filled[0x08], 3);
+        assert_eq!(&filled[0x09..], b"QEMU\0CHASSIS-99999\0ASSET-CHASSIS-001\0\0");
+    }
+
+    #[test]
+    fn fill_missing_identifiers_adds_placeholders_to_type17() {
+        let mut record = type17_missing_identifiers();
+        record.extend_from_slice(b"\0\0"); // empty string pool
+
+        let filled = fill_missing_identifiers(&record);
+
+        assert_eq!(filled[0x18], 1);
+        assert_eq!(filled[0x19], 2);
+        let pool = &filled[0x1B..];
+        assert_eq!(pool, b"SN-DIMM-001\0ASSET-DIMM-001\0\0");
+    }
+
+    #[test]
+    fn fill_missing_identifiers_leaves_assigned_strings_untouched() {
+        let mut record = type4_missing_identifiers();
+        record[0x20] = 2; // QEMU already assigned a serial number string
+        record.extend_from_slice(b"QEMU\0SN-1234\0\0");
+
+        let filled = fill_missing_identifiers(&record);
+
+        assert_eq!(filled[0x20], 2, "existing Serial Number index must be preserved");
+        assert_eq!(filled[0x21], 3, "Asset Tag should still get a placeholder");
+        assert_eq!(&filled[0x23..], b"QEMU\0SN-1234\0ASSET-CPU-001\0\0");
+    }
+
+    #[test]
+    fn fill_missing_identifiers_ignores_unknown_types() {
+        let mut record = alloc::vec![1u8, 8, 0, 0, 0, 0, 0, 0];
+        record.extend_from_slice(b"\0\0");
+        assert_eq!(fill_missing_identifiers(&record), record);
+    }
+
+    #[test]
+    fn fill_missing_identifiers_ignores_truncated_record() {
+        let record = alloc::vec![4u8, 0x40, 0, 0, 0, 0];
+        assert_eq!(fill_missing_identifiers(&record), record);
+    }
 
     fn type1_with_strings() -> Vec<u8> {
         let mut record = alloc::vec![1u8, 8, 0x00, 0x01, 1, 2, 0, 0];
